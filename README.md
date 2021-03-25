@@ -4,16 +4,7 @@
 
   - IDE : IntelliJ CE/Ultimate Editions
   - Database : PostgreSQL 12
-  - LifeRay : Portal 7.3 GA 6
+  - LifeRay : dxp-7.3-sp1
   - Java JDK: Version 11
-
  
-
-
-
-
-
-
-
-
 -Instruction : https://docs.google.com/document/d/1l3TQtetkPsuNZsxEzqHLBsfxgBZmUp__Wjijj_Zesm8/edit
