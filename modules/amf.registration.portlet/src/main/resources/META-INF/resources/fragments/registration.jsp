@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/init.jsp" %>
 <%@ page import="com.amf.registration.portlet.constants.MVCCommandNames" %>
+<%@ page import="com.liferay.portal.kernel.model.Region" %>
 
 <liferay-ui:error key="serviceErrorDetails">
     <liferay-ui:message arguments='<%= SessionErrors.get(liferayPortletRequest, "serviceErrorDetails") %>'
@@ -19,15 +20,23 @@
 <liferay-ui:error key="invalidLastName" message="error.field-last-name"/>
 <liferay-ui:error key="invalidFirstName" message="error.field-first-name" focusField="firstName"/>
 
+<portlet:renderURL var="regionalListsURL">
+    <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_REGIONS_INFO%>"/>
+    <portlet:param name="redirect" value="${currentURL}"/>
+    <portlet:param name="regionId" value="${region.regionId}"/>
+</portlet:renderURL>
+
 <portlet:actionURL var="registerMembershipURL" name="<%=MVCCommandNames.AMF_ADD %>">
     <portlet:param name="redirect" value="${param.redirect}"/>
 </portlet:actionURL>
 
 <div class="container-fluid-1280">
     <h2><liferay-ui:message key="amf-registration.caption"/></h2>
+    <h4 style="text-decoration: underline"><liferay-ui:message key="eligibility-country"/></h4>
     <aui:model-context bean="${amfUser}" model="${userClass}"/>
     <aui:form action="${registerMembershipURL}" name="fm" method="post">
         <aui:input name="amfUserId" field="amfUserId" type="hidden"/>
+
         <aui:fieldset-group markupView="lexicon">
             <aui:fieldset label="Basic Info">
                 <aui:row>
@@ -113,9 +122,18 @@
                         </aui:input>
                     </aui:col>
                     <aui:col width="50">
-                        <aui:input name="state" type="text" max="255">
-                            <aui:validator name="required" errorMessage="error.field-address"/>
-                        </aui:input>
+                        <aui:form action="${regionalListsURL}" name="fm" method="get">
+                            <aui:select name="region"
+                                        label="State"
+                                        required="true"
+                                        showRequiredLabel="true"
+                                        showEmptyOption="true">
+                                <aui:validator name="number" errorMessage="error.field-zipcode"/>
+                                <c:forEach items="${regions}" var="regionName" varStatus="loop">
+                                    <aui:option value="${regionName.regionId}">${regionName.name}</aui:option>
+                                </c:forEach>
+                            </aui:select>
+                        </aui:form>
                     </aui:col>
                     <aui:col width="50">
                         <aui:input name="zip" type="number" maxlength="5" pattern="\d*">
