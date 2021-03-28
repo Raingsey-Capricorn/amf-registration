@@ -38,11 +38,11 @@ public class AMFBoardItemDetailsMVCRenderCommand implements MVCRenderCommand {
             DateFormat dateFormat = DateFormatFactoryUtil.getSimpleDateFormat("EEEEE, MMMMM dd, yyyy", renderRequest.getLocale());
             renderRequest.setAttribute("amfUser", amfUser);
             renderRequest.setAttribute("created", dateFormat.format(amfUser.getCreateDate()));
-            renderRequest.setAttribute("emailAddress", amfUser.getEmailAddress());
-            renderRequest.setAttribute("name", String.format("%s - %s", amfUser.getFirstName(), amfUser.getLastName()));
+//            renderRequest.setAttribute("emailAddress", amfUser.getUser.getEmailAddress());
+//            renderRequest.setAttribute("name", String.format("%s - %s", amfUser.getFirstName(), amfUser.getLastName()));
             renderRequest.setAttribute("companyId", amfUser.getCompanyId());
-            renderRequest.setAttribute("address", amfUser.getAddress());
-            renderRequest.setAttribute("state", amfUser.getState());
+//            renderRequest.setAttribute("address", amfUser.getAddress());
+//            renderRequest.setAttribute("state", amfUser.getState());
             renderRequest.setAttribute("modifiedDate", dateFormat.format(amfUser.getModifiedDate()));
             PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
             String redirect = renderRequest.getParameter("redirect");

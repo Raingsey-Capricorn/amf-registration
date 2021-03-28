@@ -19,30 +19,20 @@
         <column name="userName" type="String"/>
         <column name="createDate" type="Date"/>
         <column name="modifiedDate" type="Date"/>
+        <column name="userCreatorID" type="long"/>
+
         <!-- User info fields -->
-        <column name="firstName" type="String"/>
-        <column name="lastName" type="String"/>
-        <column name="emailAddress" type="String"/>
         <column name="gender" type="String"/>
-        <column name="birthDay" type="int"/>
-        <column name="birthMonth" type="int"/>
-        <column name="birthYear" type="int"/>
-        <column name="password" type="String"/>
-        <column name="confirmedPassword" type="String"/>
         <column name="homePhone" type="String"/>
         <column name="mobilePhone" type="String"/>
-        <column name="address" type="String"/>
-        <column name="address2" type="String"/>
-        <column name="city" type="String"/>
-        <column name="state" type="String"/>
-        <column name="zip" type="String"/>
+        <column name="addressID" type="long"/>
         <column name="securityQuestion" type="String" localized="true"/>
         <column name="securityAnswer" type="String" localized="true"/>
         <column name="acceptedTOU" type="String" localized="true"/>
 
         <!-- Order -->
         <order by="asc">
-            <order-column name="firstName"/>
+            <order-column name="userName"/>
         </order>
 
         <!-- Finder methods -->

@@ -14,6 +14,7 @@
 
 package com.amf.registration.service;
 
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 
 /**
@@ -48,7 +49,7 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	/**
-	 * @param groupId
+	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -59,34 +60,35 @@ public class AMFUserLocalServiceWrapper
 	 * @param confirmedPassword
 	 * @param homePhone
 	 * @param mobilePhone
-	 * @param address
-	 * @param address2
+	 * @param addressLineOne
+	 * @param addressLineTwo
 	 * @param city
-	 * @param state
+	 * @param regionId
 	 * @param zip
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
 	 * @param serviceContext
 	 * @return
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
+			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
+			String userName, String firstName, String lastName,
 			String emailAddress, String gender, java.util.Date birthDate,
 			String password, String confirmedPassword, String homePhone,
-			String mobilePhone, String address, String address2, String city,
-			String state, String zip, String securityQuestion,
+			String mobilePhone, String addressLineOne, String addressLineTwo,
+			String city, String regionId, String zip, String securityQuestion,
 			String securityAnswer, String acceptedTOU,
-			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+			ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _amfUserLocalService.addAMFUser(
-			groupId, userName, firstName, lastName, emailAddress, gender,
+			themeDisplay, userName, firstName, lastName, emailAddress, gender,
 			birthDate, password, confirmedPassword, homePhone, mobilePhone,
-			address, address2, city, state, zip, securityQuestion,
-			securityAnswer, acceptedTOU, serviceContext);
+			addressLineOne, addressLineTwo, city, regionId, zip,
+			securityQuestion, securityAnswer, acceptedTOU, serviceContext);
 	}
 
 	/**
@@ -101,7 +103,7 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	/**
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	@Override
 	public com.liferay.portal.kernel.model.PersistedModel createPersistedModel(
@@ -137,7 +139,7 @@ public class AMFUserLocalServiceWrapper
 	 *
 	 * @param amfUserId the primary key of the amf user
 	 * @return the amf user that was removed
-	 * @throws PortalException if a amf user with the primary key could not be found
+	 * @throws com.liferay.portal.kernel.exception.PortalException if a amf user with the primary key could not be found
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser deleteAMFUser(long amfUserId)
@@ -147,7 +149,7 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	/**
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	@Override
 	public com.liferay.portal.kernel.model.PersistedModel deletePersistedModel(
@@ -277,7 +279,7 @@ public class AMFUserLocalServiceWrapper
 	 *
 	 * @param amfUserId the primary key of the amf user
 	 * @return the amf user
-	 * @throws PortalException if a amf user with the primary key could not be found
+	 * @throws com.liferay.portal.kernel.exception.PortalException if a amf user with the primary key could not be found
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser getAMFUser(long amfUserId)
@@ -302,7 +304,7 @@ public class AMFUserLocalServiceWrapper
 	 * @param uuid the amf user's UUID
 	 * @param groupId the primary key of the group
 	 * @return the matching amf user
-	 * @throws PortalException if a matching amf user could not be found
+	 * @throws com.liferay.portal.kernel.exception.PortalException if a matching amf user could not be found
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser getAMFUserByUuidAndGroupId(
@@ -434,7 +436,7 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	/**
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	@Override
 	public com.liferay.portal.kernel.model.PersistedModel getPersistedModel(

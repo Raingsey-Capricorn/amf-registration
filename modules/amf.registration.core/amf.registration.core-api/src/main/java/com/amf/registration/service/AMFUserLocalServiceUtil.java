@@ -14,6 +14,7 @@
 
 package com.amf.registration.service;
 
+import com.liferay.portal.kernel.service.ServiceContext;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.util.tracker.ServiceTracker;
@@ -55,7 +56,7 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
-	 * @param groupId
+	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -66,33 +67,34 @@ public class AMFUserLocalServiceUtil {
 	 * @param confirmedPassword
 	 * @param homePhone
 	 * @param mobilePhone
-	 * @param address
-	 * @param address2
+	 * @param addressLineOne
+	 * @param addressLineTwo
 	 * @param city
-	 * @param state
+	 * @param regionId
 	 * @param zip
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
 	 * @param serviceContext
 	 * @return
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	public static com.amf.registration.model.AMFUser addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
+			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
+			String userName, String firstName, String lastName,
 			String emailAddress, String gender, java.util.Date birthDate,
 			String password, String confirmedPassword, String homePhone,
-			String mobilePhone, String address, String address2, String city,
-			String state, String zip, String securityQuestion,
+			String mobilePhone, String addressLineOne, String addressLineTwo,
+			String city, String regionId, String zip, String securityQuestion,
 			String securityAnswer, String acceptedTOU,
-			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+			ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().addAMFUser(
-			groupId, userName, firstName, lastName, emailAddress, gender,
+			themeDisplay, userName, firstName, lastName, emailAddress, gender,
 			birthDate, password, confirmedPassword, homePhone, mobilePhone,
-			address, address2, city, state, zip, securityQuestion,
-			securityAnswer, acceptedTOU, serviceContext);
+			addressLineOne, addressLineTwo, city, regionId, zip,
+			securityQuestion, securityAnswer, acceptedTOU, serviceContext);
 	}
 
 	/**
@@ -108,7 +110,7 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	public static com.liferay.portal.kernel.model.PersistedModel
 			createPersistedModel(java.io.Serializable primaryKeyObj)
@@ -152,7 +154,7 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	public static com.liferay.portal.kernel.model.PersistedModel
 			deletePersistedModel(

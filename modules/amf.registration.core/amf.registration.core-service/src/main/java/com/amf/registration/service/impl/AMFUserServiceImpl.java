@@ -14,13 +14,19 @@
 
 package com.amf.registration.service.impl;
 
+import com.amf.registration.constant.AMFUserConstants;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.base.AMFUserServiceBaseImpl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import java.util.Date;
 import java.util.List;
@@ -54,7 +60,7 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
      */
 
     /**
-     * @param groupId
+     * @param themeDisplay
      * @param userName
      * @param firstName
      * @param lastName
@@ -65,14 +71,20 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
      * @param confirmedPassword
      * @param homePhone
      * @param mobilePhone
+     * @param address
+     * @param address2
+     * @param city
+     * @param state
      * @param zip
      * @param securityQuestion
      * @param securityAnswer
      * @param acceptedTOU
+     * @param serviceContext
      * @return
+     * @throws PortalException
      */
     public AMFUser addAMFUser(
-            long groupId,
+            ThemeDisplay themeDisplay,
             String userName,
             String firstName,
             String lastName,
@@ -93,8 +105,9 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
             String acceptedTOU,
             ServiceContext serviceContext) throws PortalException {
 
+
         return amfUserLocalService.addAMFUser(
-                groupId
+                themeDisplay
                 , userName
                 , firstName
                 , lastName
@@ -144,4 +157,5 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
     public AMFUser getAmfUser(long amdUserId) throws PortalException {
         return amfUserLocalService.getAMFUser(amdUserId);
     }
+
 }

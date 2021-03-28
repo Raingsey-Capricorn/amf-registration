@@ -1,7 +1,7 @@
+<%@ taglib prefix="form" uri="http://liferay.com/tld/aui" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/init.jsp" %>
 <%@ page import="com.amf.registration.portlet.constants.MVCCommandNames" %>
-<%@ page import="com.liferay.portal.kernel.model.Region" %>
 
 <liferay-ui:error key="serviceErrorDetails">
     <liferay-ui:message arguments='<%= SessionErrors.get(liferayPortletRequest, "serviceErrorDetails") %>'
@@ -122,18 +122,17 @@
                         </aui:input>
                     </aui:col>
                     <aui:col width="50">
-                        <aui:form action="${regionalListsURL}" name="fm" method="get">
-                            <aui:select name="region"
-                                        label="State"
-                                        required="true"
-                                        showRequiredLabel="true"
-                                        showEmptyOption="true">
-                                <aui:validator name="number" errorMessage="error.field-zipcode"/>
-                                <c:forEach items="${regions}" var="regionName" varStatus="loop">
-                                    <aui:option value="${regionName.regionId}">${regionName.name}</aui:option>
-                                </c:forEach>
-                            </aui:select>
-                        </aui:form>
+                        <aui:select name="region"
+                                    label="State/Region"
+                                    required="true"
+                                    showRequiredLabel="true"
+                                    showEmptyOption="true"
+                                    value="${regionalListsURL}">
+                            <aui:validator name="number" errorMessage="error.field-zipcode"/>
+                            <c:forEach items="${regions}" var="region" varStatus="loop">
+                                <aui:option value="${region.regionId}">${region.name}</aui:option>
+                            </c:forEach>
+                        </aui:select>
                     </aui:col>
                     <aui:col width="50">
                         <aui:input name="zip" type="number" maxlength="5" pattern="\d*">
@@ -161,7 +160,7 @@
                 </aui:row>
                 <aui:row>
                     <aui:col>
-                        <aui:input name="securityAnswer" type="text" required="true">
+                        <aui:input name="securityAnswer" type="text" required="true" label="Security Answer">
                             <aui:validator name="required" errorMessage="error.field-security-answer"/>
                         </aui:input>
                     </aui:col>

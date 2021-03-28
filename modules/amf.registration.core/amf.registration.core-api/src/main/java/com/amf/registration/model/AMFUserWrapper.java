@@ -51,22 +51,11 @@ public class AMFUserWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("firstName", getFirstName());
-		attributes.put("lastName", getLastName());
-		attributes.put("emailAddress", getEmailAddress());
+		attributes.put("userCreatorID", getUserCreatorID());
 		attributes.put("gender", getGender());
-		attributes.put("birthDay", getBirthDay());
-		attributes.put("birthMonth", getBirthMonth());
-		attributes.put("birthYear", getBirthYear());
-		attributes.put("password", getPassword());
-		attributes.put("confirmedPassword", getConfirmedPassword());
 		attributes.put("homePhone", getHomePhone());
 		attributes.put("mobilePhone", getMobilePhone());
-		attributes.put("address", getAddress());
-		attributes.put("address2", getAddress2());
-		attributes.put("city", getCity());
-		attributes.put("state", getState());
-		attributes.put("zip", getZip());
+		attributes.put("addressID", getAddressID());
 		attributes.put("securityQuestion", getSecurityQuestion());
 		attributes.put("securityAnswer", getSecurityAnswer());
 		attributes.put("acceptedTOU", getAcceptedTOU());
@@ -124,58 +113,16 @@ public class AMFUserWrapper
 			setModifiedDate(modifiedDate);
 		}
 
-		String firstName = (String)attributes.get("firstName");
+		Long userCreatorID = (Long)attributes.get("userCreatorID");
 
-		if (firstName != null) {
-			setFirstName(firstName);
-		}
-
-		String lastName = (String)attributes.get("lastName");
-
-		if (lastName != null) {
-			setLastName(lastName);
-		}
-
-		String emailAddress = (String)attributes.get("emailAddress");
-
-		if (emailAddress != null) {
-			setEmailAddress(emailAddress);
+		if (userCreatorID != null) {
+			setUserCreatorID(userCreatorID);
 		}
 
 		String gender = (String)attributes.get("gender");
 
 		if (gender != null) {
 			setGender(gender);
-		}
-
-		Integer birthDay = (Integer)attributes.get("birthDay");
-
-		if (birthDay != null) {
-			setBirthDay(birthDay);
-		}
-
-		Integer birthMonth = (Integer)attributes.get("birthMonth");
-
-		if (birthMonth != null) {
-			setBirthMonth(birthMonth);
-		}
-
-		Integer birthYear = (Integer)attributes.get("birthYear");
-
-		if (birthYear != null) {
-			setBirthYear(birthYear);
-		}
-
-		String password = (String)attributes.get("password");
-
-		if (password != null) {
-			setPassword(password);
-		}
-
-		String confirmedPassword = (String)attributes.get("confirmedPassword");
-
-		if (confirmedPassword != null) {
-			setConfirmedPassword(confirmedPassword);
 		}
 
 		String homePhone = (String)attributes.get("homePhone");
@@ -190,34 +137,10 @@ public class AMFUserWrapper
 			setMobilePhone(mobilePhone);
 		}
 
-		String address = (String)attributes.get("address");
+		Long addressID = (Long)attributes.get("addressID");
 
-		if (address != null) {
-			setAddress(address);
-		}
-
-		String address2 = (String)attributes.get("address2");
-
-		if (address2 != null) {
-			setAddress2(address2);
-		}
-
-		String city = (String)attributes.get("city");
-
-		if (city != null) {
-			setCity(city);
-		}
-
-		String state = (String)attributes.get("state");
-
-		if (state != null) {
-			setState(state);
-		}
-
-		String zip = (String)attributes.get("zip");
-
-		if (zip != null) {
-			setZip(zip);
+		if (addressID != null) {
+			setAddressID(addressID);
 		}
 
 		String securityQuestion = (String)attributes.get("securityQuestion");
@@ -316,23 +239,13 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Returns the address of this amf user.
+	 * Returns the address ID of this amf user.
 	 *
-	 * @return the address of this amf user
+	 * @return the address ID of this amf user
 	 */
 	@Override
-	public String getAddress() {
-		return model.getAddress();
-	}
-
-	/**
-	 * Returns the address2 of this amf user.
-	 *
-	 * @return the address2 of this amf user
-	 */
-	@Override
-	public String getAddress2() {
-		return model.getAddress2();
+	public long getAddressID() {
+		return model.getAddressID();
 	}
 
 	/**
@@ -361,46 +274,6 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Returns the birth day of this amf user.
-	 *
-	 * @return the birth day of this amf user
-	 */
-	@Override
-	public int getBirthDay() {
-		return model.getBirthDay();
-	}
-
-	/**
-	 * Returns the birth month of this amf user.
-	 *
-	 * @return the birth month of this amf user
-	 */
-	@Override
-	public int getBirthMonth() {
-		return model.getBirthMonth();
-	}
-
-	/**
-	 * Returns the birth year of this amf user.
-	 *
-	 * @return the birth year of this amf user
-	 */
-	@Override
-	public int getBirthYear() {
-		return model.getBirthYear();
-	}
-
-	/**
-	 * Returns the city of this amf user.
-	 *
-	 * @return the city of this amf user
-	 */
-	@Override
-	public String getCity() {
-		return model.getCity();
-	}
-
-	/**
 	 * Returns the company ID of this amf user.
 	 *
 	 * @return the company ID of this amf user
@@ -408,16 +281,6 @@ public class AMFUserWrapper
 	@Override
 	public long getCompanyId() {
 		return model.getCompanyId();
-	}
-
-	/**
-	 * Returns the confirmed password of this amf user.
-	 *
-	 * @return the confirmed password of this amf user
-	 */
-	@Override
-	public String getConfirmedPassword() {
-		return model.getConfirmedPassword();
 	}
 
 	/**
@@ -433,26 +296,6 @@ public class AMFUserWrapper
 	@Override
 	public String getDefaultLanguageId() {
 		return model.getDefaultLanguageId();
-	}
-
-	/**
-	 * Returns the email address of this amf user.
-	 *
-	 * @return the email address of this amf user
-	 */
-	@Override
-	public String getEmailAddress() {
-		return model.getEmailAddress();
-	}
-
-	/**
-	 * Returns the first name of this amf user.
-	 *
-	 * @return the first name of this amf user
-	 */
-	@Override
-	public String getFirstName() {
-		return model.getFirstName();
 	}
 
 	/**
@@ -486,16 +329,6 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Returns the last name of this amf user.
-	 *
-	 * @return the last name of this amf user
-	 */
-	@Override
-	public String getLastName() {
-		return model.getLastName();
-	}
-
-	/**
 	 * Returns the mobile phone of this amf user.
 	 *
 	 * @return the mobile phone of this amf user
@@ -513,16 +346,6 @@ public class AMFUserWrapper
 	@Override
 	public Date getModifiedDate() {
 		return model.getModifiedDate();
-	}
-
-	/**
-	 * Returns the password of this amf user.
-	 *
-	 * @return the password of this amf user
-	 */
-	@Override
-	public String getPassword() {
-		return model.getPassword();
 	}
 
 	/**
@@ -692,13 +515,13 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Returns the state of this amf user.
+	 * Returns the user creator ID of this amf user.
 	 *
-	 * @return the state of this amf user
+	 * @return the user creator ID of this amf user
 	 */
 	@Override
-	public String getState() {
-		return model.getState();
+	public long getUserCreatorID() {
+		return model.getUserCreatorID();
 	}
 
 	/**
@@ -739,16 +562,6 @@ public class AMFUserWrapper
 	@Override
 	public String getUuid() {
 		return model.getUuid();
-	}
-
-	/**
-	 * Returns the zip of this amf user.
-	 *
-	 * @return the zip of this amf user
-	 */
-	@Override
-	public String getZip() {
-		return model.getZip();
 	}
 
 	@Override
@@ -839,23 +652,13 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Sets the address of this amf user.
+	 * Sets the address ID of this amf user.
 	 *
-	 * @param address the address of this amf user
+	 * @param addressID the address ID of this amf user
 	 */
 	@Override
-	public void setAddress(String address) {
-		model.setAddress(address);
-	}
-
-	/**
-	 * Sets the address2 of this amf user.
-	 *
-	 * @param address2 the address2 of this amf user
-	 */
-	@Override
-	public void setAddress2(String address2) {
-		model.setAddress2(address2);
+	public void setAddressID(long addressID) {
+		model.setAddressID(addressID);
 	}
 
 	/**
@@ -879,46 +682,6 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Sets the birth day of this amf user.
-	 *
-	 * @param birthDay the birth day of this amf user
-	 */
-	@Override
-	public void setBirthDay(int birthDay) {
-		model.setBirthDay(birthDay);
-	}
-
-	/**
-	 * Sets the birth month of this amf user.
-	 *
-	 * @param birthMonth the birth month of this amf user
-	 */
-	@Override
-	public void setBirthMonth(int birthMonth) {
-		model.setBirthMonth(birthMonth);
-	}
-
-	/**
-	 * Sets the birth year of this amf user.
-	 *
-	 * @param birthYear the birth year of this amf user
-	 */
-	@Override
-	public void setBirthYear(int birthYear) {
-		model.setBirthYear(birthYear);
-	}
-
-	/**
-	 * Sets the city of this amf user.
-	 *
-	 * @param city the city of this amf user
-	 */
-	@Override
-	public void setCity(String city) {
-		model.setCity(city);
-	}
-
-	/**
 	 * Sets the company ID of this amf user.
 	 *
 	 * @param companyId the company ID of this amf user
@@ -929,16 +692,6 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Sets the confirmed password of this amf user.
-	 *
-	 * @param confirmedPassword the confirmed password of this amf user
-	 */
-	@Override
-	public void setConfirmedPassword(String confirmedPassword) {
-		model.setConfirmedPassword(confirmedPassword);
-	}
-
-	/**
 	 * Sets the create date of this amf user.
 	 *
 	 * @param createDate the create date of this amf user
@@ -946,26 +699,6 @@ public class AMFUserWrapper
 	@Override
 	public void setCreateDate(Date createDate) {
 		model.setCreateDate(createDate);
-	}
-
-	/**
-	 * Sets the email address of this amf user.
-	 *
-	 * @param emailAddress the email address of this amf user
-	 */
-	@Override
-	public void setEmailAddress(String emailAddress) {
-		model.setEmailAddress(emailAddress);
-	}
-
-	/**
-	 * Sets the first name of this amf user.
-	 *
-	 * @param firstName the first name of this amf user
-	 */
-	@Override
-	public void setFirstName(String firstName) {
-		model.setFirstName(firstName);
 	}
 
 	/**
@@ -999,16 +732,6 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Sets the last name of this amf user.
-	 *
-	 * @param lastName the last name of this amf user
-	 */
-	@Override
-	public void setLastName(String lastName) {
-		model.setLastName(lastName);
-	}
-
-	/**
 	 * Sets the mobile phone of this amf user.
 	 *
 	 * @param mobilePhone the mobile phone of this amf user
@@ -1026,16 +749,6 @@ public class AMFUserWrapper
 	@Override
 	public void setModifiedDate(Date modifiedDate) {
 		model.setModifiedDate(modifiedDate);
-	}
-
-	/**
-	 * Sets the password of this amf user.
-	 *
-	 * @param password the password of this amf user
-	 */
-	@Override
-	public void setPassword(String password) {
-		model.setPassword(password);
 	}
 
 	/**
@@ -1187,13 +900,13 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Sets the state of this amf user.
+	 * Sets the user creator ID of this amf user.
 	 *
-	 * @param state the state of this amf user
+	 * @param userCreatorID the user creator ID of this amf user
 	 */
 	@Override
-	public void setState(String state) {
-		model.setState(state);
+	public void setUserCreatorID(long userCreatorID) {
+		model.setUserCreatorID(userCreatorID);
 	}
 
 	/**
@@ -1234,16 +947,6 @@ public class AMFUserWrapper
 	@Override
 	public void setUuid(String uuid) {
 		model.setUuid(uuid);
-	}
-
-	/**
-	 * Sets the zip of this amf user.
-	 *
-	 * @param zip the zip of this amf user
-	 */
-	@Override
-	public void setZip(String zip) {
-		model.setZip(zip);
 	}
 
 	@Override

@@ -86,16 +86,10 @@ public class AMFUserModelImpl
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"firstName", Types.VARCHAR}, {"lastName", Types.VARCHAR},
-		{"emailAddress", Types.VARCHAR}, {"gender", Types.VARCHAR},
-		{"birthDay", Types.INTEGER}, {"birthMonth", Types.INTEGER},
-		{"birthYear", Types.INTEGER}, {"password_", Types.VARCHAR},
-		{"confirmedPassword", Types.VARCHAR}, {"homePhone", Types.VARCHAR},
-		{"mobilePhone", Types.VARCHAR}, {"address", Types.VARCHAR},
-		{"address2", Types.VARCHAR}, {"city", Types.VARCHAR},
-		{"state_", Types.VARCHAR}, {"zip", Types.VARCHAR},
-		{"securityQuestion", Types.VARCHAR}, {"securityAnswer", Types.VARCHAR},
-		{"acceptedTOU", Types.VARCHAR}
+		{"userCreatorID", Types.BIGINT}, {"gender", Types.VARCHAR},
+		{"homePhone", Types.VARCHAR}, {"mobilePhone", Types.VARCHAR},
+		{"addressID", Types.BIGINT}, {"securityQuestion", Types.VARCHAR},
+		{"securityAnswer", Types.VARCHAR}, {"acceptedTOU", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -110,36 +104,24 @@ public class AMFUserModelImpl
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("firstName", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("lastName", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("emailAddress", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("userCreatorID", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("gender", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("birthDay", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("birthMonth", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("birthYear", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("password_", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("confirmedPassword", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("homePhone", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("mobilePhone", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("address", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("address2", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("city", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("state_", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("zip", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("addressID", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("securityQuestion", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("securityAnswer", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("acceptedTOU", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,firstName VARCHAR(75) null,lastName VARCHAR(75) null,emailAddress VARCHAR(75) null,gender VARCHAR(75) null,birthDay INTEGER,birthMonth INTEGER,birthYear INTEGER,password_ VARCHAR(75) null,confirmedPassword VARCHAR(75) null,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null,address VARCHAR(75) null,address2 VARCHAR(75) null,city VARCHAR(75) null,state_ VARCHAR(75) null,zip VARCHAR(75) null,securityQuestion STRING null,securityAnswer STRING null,acceptedTOU STRING null)";
+		"create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,userCreatorID LONG,gender VARCHAR(75) null,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null,addressID LONG,securityQuestion STRING null,securityAnswer STRING null,acceptedTOU STRING null)";
 
 	public static final String TABLE_SQL_DROP = "drop table amfuser";
 
-	public static final String ORDER_BY_JPQL =
-		" ORDER BY amfUser.firstName ASC";
+	public static final String ORDER_BY_JPQL = " ORDER BY amfUser.userName ASC";
 
-	public static final String ORDER_BY_SQL = " ORDER BY amfuser.firstName ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY amfuser.userName ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -170,7 +152,7 @@ public class AMFUserModelImpl
 	 *		#getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long FIRSTNAME_COLUMN_BITMASK = 8L;
+	public static final long USERNAME_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -209,22 +191,11 @@ public class AMFUserModelImpl
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setFirstName(soapModel.getFirstName());
-		model.setLastName(soapModel.getLastName());
-		model.setEmailAddress(soapModel.getEmailAddress());
+		model.setUserCreatorID(soapModel.getUserCreatorID());
 		model.setGender(soapModel.getGender());
-		model.setBirthDay(soapModel.getBirthDay());
-		model.setBirthMonth(soapModel.getBirthMonth());
-		model.setBirthYear(soapModel.getBirthYear());
-		model.setPassword(soapModel.getPassword());
-		model.setConfirmedPassword(soapModel.getConfirmedPassword());
 		model.setHomePhone(soapModel.getHomePhone());
 		model.setMobilePhone(soapModel.getMobilePhone());
-		model.setAddress(soapModel.getAddress());
-		model.setAddress2(soapModel.getAddress2());
-		model.setCity(soapModel.getCity());
-		model.setState(soapModel.getState());
-		model.setZip(soapModel.getZip());
+		model.setAddressID(soapModel.getAddressID());
 		model.setSecurityQuestion(soapModel.getSecurityQuestion());
 		model.setSecurityAnswer(soapModel.getSecurityAnswer());
 		model.setAcceptedTOU(soapModel.getAcceptedTOU());
@@ -401,36 +372,14 @@ public class AMFUserModelImpl
 		attributeSetterBiConsumers.put(
 			"modifiedDate",
 			(BiConsumer<AMFUser, Date>)AMFUser::setModifiedDate);
-		attributeGetterFunctions.put("firstName", AMFUser::getFirstName);
+		attributeGetterFunctions.put(
+			"userCreatorID", AMFUser::getUserCreatorID);
 		attributeSetterBiConsumers.put(
-			"firstName", (BiConsumer<AMFUser, String>)AMFUser::setFirstName);
-		attributeGetterFunctions.put("lastName", AMFUser::getLastName);
-		attributeSetterBiConsumers.put(
-			"lastName", (BiConsumer<AMFUser, String>)AMFUser::setLastName);
-		attributeGetterFunctions.put("emailAddress", AMFUser::getEmailAddress);
-		attributeSetterBiConsumers.put(
-			"emailAddress",
-			(BiConsumer<AMFUser, String>)AMFUser::setEmailAddress);
+			"userCreatorID",
+			(BiConsumer<AMFUser, Long>)AMFUser::setUserCreatorID);
 		attributeGetterFunctions.put("gender", AMFUser::getGender);
 		attributeSetterBiConsumers.put(
 			"gender", (BiConsumer<AMFUser, String>)AMFUser::setGender);
-		attributeGetterFunctions.put("birthDay", AMFUser::getBirthDay);
-		attributeSetterBiConsumers.put(
-			"birthDay", (BiConsumer<AMFUser, Integer>)AMFUser::setBirthDay);
-		attributeGetterFunctions.put("birthMonth", AMFUser::getBirthMonth);
-		attributeSetterBiConsumers.put(
-			"birthMonth", (BiConsumer<AMFUser, Integer>)AMFUser::setBirthMonth);
-		attributeGetterFunctions.put("birthYear", AMFUser::getBirthYear);
-		attributeSetterBiConsumers.put(
-			"birthYear", (BiConsumer<AMFUser, Integer>)AMFUser::setBirthYear);
-		attributeGetterFunctions.put("password", AMFUser::getPassword);
-		attributeSetterBiConsumers.put(
-			"password", (BiConsumer<AMFUser, String>)AMFUser::setPassword);
-		attributeGetterFunctions.put(
-			"confirmedPassword", AMFUser::getConfirmedPassword);
-		attributeSetterBiConsumers.put(
-			"confirmedPassword",
-			(BiConsumer<AMFUser, String>)AMFUser::setConfirmedPassword);
 		attributeGetterFunctions.put("homePhone", AMFUser::getHomePhone);
 		attributeSetterBiConsumers.put(
 			"homePhone", (BiConsumer<AMFUser, String>)AMFUser::setHomePhone);
@@ -438,21 +387,9 @@ public class AMFUserModelImpl
 		attributeSetterBiConsumers.put(
 			"mobilePhone",
 			(BiConsumer<AMFUser, String>)AMFUser::setMobilePhone);
-		attributeGetterFunctions.put("address", AMFUser::getAddress);
+		attributeGetterFunctions.put("addressID", AMFUser::getAddressID);
 		attributeSetterBiConsumers.put(
-			"address", (BiConsumer<AMFUser, String>)AMFUser::setAddress);
-		attributeGetterFunctions.put("address2", AMFUser::getAddress2);
-		attributeSetterBiConsumers.put(
-			"address2", (BiConsumer<AMFUser, String>)AMFUser::setAddress2);
-		attributeGetterFunctions.put("city", AMFUser::getCity);
-		attributeSetterBiConsumers.put(
-			"city", (BiConsumer<AMFUser, String>)AMFUser::setCity);
-		attributeGetterFunctions.put("state", AMFUser::getState);
-		attributeSetterBiConsumers.put(
-			"state", (BiConsumer<AMFUser, String>)AMFUser::setState);
-		attributeGetterFunctions.put("zip", AMFUser::getZip);
-		attributeSetterBiConsumers.put(
-			"zip", (BiConsumer<AMFUser, String>)AMFUser::setZip);
+			"addressID", (BiConsumer<AMFUser, Long>)AMFUser::setAddressID);
 		attributeGetterFunctions.put(
 			"securityQuestion", AMFUser::getSecurityQuestion);
 		attributeSetterBiConsumers.put(
@@ -672,62 +609,17 @@ public class AMFUserModelImpl
 
 	@JSON
 	@Override
-	public String getFirstName() {
-		if (_firstName == null) {
-			return "";
-		}
-		else {
-			return _firstName;
-		}
+	public long getUserCreatorID() {
+		return _userCreatorID;
 	}
 
 	@Override
-	public void setFirstName(String firstName) {
+	public void setUserCreatorID(long userCreatorID) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_firstName = firstName;
-	}
-
-	@JSON
-	@Override
-	public String getLastName() {
-		if (_lastName == null) {
-			return "";
-		}
-		else {
-			return _lastName;
-		}
-	}
-
-	@Override
-	public void setLastName(String lastName) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_lastName = lastName;
-	}
-
-	@JSON
-	@Override
-	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
-	}
-
-	@Override
-	public void setEmailAddress(String emailAddress) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_emailAddress = emailAddress;
+		_userCreatorID = userCreatorID;
 	}
 
 	@JSON
@@ -748,91 +640,6 @@ public class AMFUserModelImpl
 		}
 
 		_gender = gender;
-	}
-
-	@JSON
-	@Override
-	public int getBirthDay() {
-		return _birthDay;
-	}
-
-	@Override
-	public void setBirthDay(int birthDay) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_birthDay = birthDay;
-	}
-
-	@JSON
-	@Override
-	public int getBirthMonth() {
-		return _birthMonth;
-	}
-
-	@Override
-	public void setBirthMonth(int birthMonth) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_birthMonth = birthMonth;
-	}
-
-	@JSON
-	@Override
-	public int getBirthYear() {
-		return _birthYear;
-	}
-
-	@Override
-	public void setBirthYear(int birthYear) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_birthYear = birthYear;
-	}
-
-	@JSON
-	@Override
-	public String getPassword() {
-		if (_password == null) {
-			return "";
-		}
-		else {
-			return _password;
-		}
-	}
-
-	@Override
-	public void setPassword(String password) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_password = password;
-	}
-
-	@JSON
-	@Override
-	public String getConfirmedPassword() {
-		if (_confirmedPassword == null) {
-			return "";
-		}
-		else {
-			return _confirmedPassword;
-		}
-	}
-
-	@Override
-	public void setConfirmedPassword(String confirmedPassword) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_confirmedPassword = confirmedPassword;
 	}
 
 	@JSON
@@ -877,102 +684,17 @@ public class AMFUserModelImpl
 
 	@JSON
 	@Override
-	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
+	public long getAddressID() {
+		return _addressID;
 	}
 
 	@Override
-	public void setAddress(String address) {
+	public void setAddressID(long addressID) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_address = address;
-	}
-
-	@JSON
-	@Override
-	public String getAddress2() {
-		if (_address2 == null) {
-			return "";
-		}
-		else {
-			return _address2;
-		}
-	}
-
-	@Override
-	public void setAddress2(String address2) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_address2 = address2;
-	}
-
-	@JSON
-	@Override
-	public String getCity() {
-		if (_city == null) {
-			return "";
-		}
-		else {
-			return _city;
-		}
-	}
-
-	@Override
-	public void setCity(String city) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_city = city;
-	}
-
-	@JSON
-	@Override
-	public String getState() {
-		if (_state == null) {
-			return "";
-		}
-		else {
-			return _state;
-		}
-	}
-
-	@Override
-	public void setState(String state) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_state = state;
-	}
-
-	@JSON
-	@Override
-	public String getZip() {
-		if (_zip == null) {
-			return "";
-		}
-		else {
-			return _zip;
-		}
-	}
-
-	@Override
-	public void setZip(String zip) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_zip = zip;
+		_addressID = addressID;
 	}
 
 	@JSON
@@ -1498,22 +1220,11 @@ public class AMFUserModelImpl
 		amfUserImpl.setUserName(getUserName());
 		amfUserImpl.setCreateDate(getCreateDate());
 		amfUserImpl.setModifiedDate(getModifiedDate());
-		amfUserImpl.setFirstName(getFirstName());
-		amfUserImpl.setLastName(getLastName());
-		amfUserImpl.setEmailAddress(getEmailAddress());
+		amfUserImpl.setUserCreatorID(getUserCreatorID());
 		amfUserImpl.setGender(getGender());
-		amfUserImpl.setBirthDay(getBirthDay());
-		amfUserImpl.setBirthMonth(getBirthMonth());
-		amfUserImpl.setBirthYear(getBirthYear());
-		amfUserImpl.setPassword(getPassword());
-		amfUserImpl.setConfirmedPassword(getConfirmedPassword());
 		amfUserImpl.setHomePhone(getHomePhone());
 		amfUserImpl.setMobilePhone(getMobilePhone());
-		amfUserImpl.setAddress(getAddress());
-		amfUserImpl.setAddress2(getAddress2());
-		amfUserImpl.setCity(getCity());
-		amfUserImpl.setState(getState());
-		amfUserImpl.setZip(getZip());
+		amfUserImpl.setAddressID(getAddressID());
 		amfUserImpl.setSecurityQuestion(getSecurityQuestion());
 		amfUserImpl.setSecurityAnswer(getSecurityAnswer());
 		amfUserImpl.setAcceptedTOU(getAcceptedTOU());
@@ -1527,7 +1238,7 @@ public class AMFUserModelImpl
 	public int compareTo(AMFUser amfUser) {
 		int value = 0;
 
-		value = getFirstName().compareTo(amfUser.getFirstName());
+		value = getUserName().compareTo(amfUser.getUserName());
 
 		if (value != 0) {
 			return value;
@@ -1636,29 +1347,7 @@ public class AMFUserModelImpl
 			amfUserCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		amfUserCacheModel.firstName = getFirstName();
-
-		String firstName = amfUserCacheModel.firstName;
-
-		if ((firstName != null) && (firstName.length() == 0)) {
-			amfUserCacheModel.firstName = null;
-		}
-
-		amfUserCacheModel.lastName = getLastName();
-
-		String lastName = amfUserCacheModel.lastName;
-
-		if ((lastName != null) && (lastName.length() == 0)) {
-			amfUserCacheModel.lastName = null;
-		}
-
-		amfUserCacheModel.emailAddress = getEmailAddress();
-
-		String emailAddress = amfUserCacheModel.emailAddress;
-
-		if ((emailAddress != null) && (emailAddress.length() == 0)) {
-			amfUserCacheModel.emailAddress = null;
-		}
+		amfUserCacheModel.userCreatorID = getUserCreatorID();
 
 		amfUserCacheModel.gender = getGender();
 
@@ -1666,28 +1355,6 @@ public class AMFUserModelImpl
 
 		if ((gender != null) && (gender.length() == 0)) {
 			amfUserCacheModel.gender = null;
-		}
-
-		amfUserCacheModel.birthDay = getBirthDay();
-
-		amfUserCacheModel.birthMonth = getBirthMonth();
-
-		amfUserCacheModel.birthYear = getBirthYear();
-
-		amfUserCacheModel.password = getPassword();
-
-		String password = amfUserCacheModel.password;
-
-		if ((password != null) && (password.length() == 0)) {
-			amfUserCacheModel.password = null;
-		}
-
-		amfUserCacheModel.confirmedPassword = getConfirmedPassword();
-
-		String confirmedPassword = amfUserCacheModel.confirmedPassword;
-
-		if ((confirmedPassword != null) && (confirmedPassword.length() == 0)) {
-			amfUserCacheModel.confirmedPassword = null;
 		}
 
 		amfUserCacheModel.homePhone = getHomePhone();
@@ -1706,45 +1373,7 @@ public class AMFUserModelImpl
 			amfUserCacheModel.mobilePhone = null;
 		}
 
-		amfUserCacheModel.address = getAddress();
-
-		String address = amfUserCacheModel.address;
-
-		if ((address != null) && (address.length() == 0)) {
-			amfUserCacheModel.address = null;
-		}
-
-		amfUserCacheModel.address2 = getAddress2();
-
-		String address2 = amfUserCacheModel.address2;
-
-		if ((address2 != null) && (address2.length() == 0)) {
-			amfUserCacheModel.address2 = null;
-		}
-
-		amfUserCacheModel.city = getCity();
-
-		String city = amfUserCacheModel.city;
-
-		if ((city != null) && (city.length() == 0)) {
-			amfUserCacheModel.city = null;
-		}
-
-		amfUserCacheModel.state = getState();
-
-		String state = amfUserCacheModel.state;
-
-		if ((state != null) && (state.length() == 0)) {
-			amfUserCacheModel.state = null;
-		}
-
-		amfUserCacheModel.zip = getZip();
-
-		String zip = amfUserCacheModel.zip;
-
-		if ((zip != null) && (zip.length() == 0)) {
-			amfUserCacheModel.zip = null;
-		}
+		amfUserCacheModel.addressID = getAddressID();
 
 		amfUserCacheModel.securityQuestion = getSecurityQuestion();
 
@@ -1852,22 +1481,11 @@ public class AMFUserModelImpl
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _firstName;
-	private String _lastName;
-	private String _emailAddress;
+	private long _userCreatorID;
 	private String _gender;
-	private int _birthDay;
-	private int _birthMonth;
-	private int _birthYear;
-	private String _password;
-	private String _confirmedPassword;
 	private String _homePhone;
 	private String _mobilePhone;
-	private String _address;
-	private String _address2;
-	private String _city;
-	private String _state;
-	private String _zip;
+	private long _addressID;
 	private String _securityQuestion;
 	private String _securityQuestionCurrentLanguageId;
 	private String _securityAnswer;
@@ -1912,22 +1530,11 @@ public class AMFUserModelImpl
 		_columnOriginalValues.put("userName", _userName);
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
-		_columnOriginalValues.put("firstName", _firstName);
-		_columnOriginalValues.put("lastName", _lastName);
-		_columnOriginalValues.put("emailAddress", _emailAddress);
+		_columnOriginalValues.put("userCreatorID", _userCreatorID);
 		_columnOriginalValues.put("gender", _gender);
-		_columnOriginalValues.put("birthDay", _birthDay);
-		_columnOriginalValues.put("birthMonth", _birthMonth);
-		_columnOriginalValues.put("birthYear", _birthYear);
-		_columnOriginalValues.put("password_", _password);
-		_columnOriginalValues.put("confirmedPassword", _confirmedPassword);
 		_columnOriginalValues.put("homePhone", _homePhone);
 		_columnOriginalValues.put("mobilePhone", _mobilePhone);
-		_columnOriginalValues.put("address", _address);
-		_columnOriginalValues.put("address2", _address2);
-		_columnOriginalValues.put("city", _city);
-		_columnOriginalValues.put("state_", _state);
-		_columnOriginalValues.put("zip", _zip);
+		_columnOriginalValues.put("addressID", _addressID);
 		_columnOriginalValues.put("securityQuestion", _securityQuestion);
 		_columnOriginalValues.put("securityAnswer", _securityAnswer);
 		_columnOriginalValues.put("acceptedTOU", _acceptedTOU);
@@ -1939,8 +1546,6 @@ public class AMFUserModelImpl
 		Map<String, String> attributeNames = new HashMap<>();
 
 		attributeNames.put("uuid_", "uuid");
-		attributeNames.put("password_", "password");
-		attributeNames.put("state_", "state");
 
 		_attributeNames = Collections.unmodifiableMap(attributeNames);
 	}
@@ -1972,43 +1577,21 @@ public class AMFUserModelImpl
 
 		columnBitmasks.put("modifiedDate", 128L);
 
-		columnBitmasks.put("firstName", 256L);
+		columnBitmasks.put("userCreatorID", 256L);
 
-		columnBitmasks.put("lastName", 512L);
+		columnBitmasks.put("gender", 512L);
 
-		columnBitmasks.put("emailAddress", 1024L);
+		columnBitmasks.put("homePhone", 1024L);
 
-		columnBitmasks.put("gender", 2048L);
+		columnBitmasks.put("mobilePhone", 2048L);
 
-		columnBitmasks.put("birthDay", 4096L);
+		columnBitmasks.put("addressID", 4096L);
 
-		columnBitmasks.put("birthMonth", 8192L);
+		columnBitmasks.put("securityQuestion", 8192L);
 
-		columnBitmasks.put("birthYear", 16384L);
+		columnBitmasks.put("securityAnswer", 16384L);
 
-		columnBitmasks.put("password_", 32768L);
-
-		columnBitmasks.put("confirmedPassword", 65536L);
-
-		columnBitmasks.put("homePhone", 131072L);
-
-		columnBitmasks.put("mobilePhone", 262144L);
-
-		columnBitmasks.put("address", 524288L);
-
-		columnBitmasks.put("address2", 1048576L);
-
-		columnBitmasks.put("city", 2097152L);
-
-		columnBitmasks.put("state_", 4194304L);
-
-		columnBitmasks.put("zip", 8388608L);
-
-		columnBitmasks.put("securityQuestion", 16777216L);
-
-		columnBitmasks.put("securityAnswer", 33554432L);
-
-		columnBitmasks.put("acceptedTOU", 67108864L);
+		columnBitmasks.put("acceptedTOU", 32768L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
         },
         service = MVCActionCommand.class
 )
-public class AMFRegistrationPageMVCActionCommand extends BaseMVCActionCommand {
+public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
     /**
      * @param actionRequest
      * @param actionResponse
@@ -43,7 +43,7 @@ public class AMFRegistrationPageMVCActionCommand extends BaseMVCActionCommand {
         ServiceContext serviceContext = ServiceContextFactory.getInstance(AMFUser.class.getName(), actionRequest);
         try {
             amfUserService.addAMFUser(
-                    themeDisplay.getScopeGroupId(),
+                    themeDisplay,
                     ParamUtil.getString(actionRequest, "userName"),
                     ParamUtil.getString(actionRequest, "firstName"),
                     ParamUtil.getString(actionRequest, "lastName"),
@@ -57,7 +57,7 @@ public class AMFRegistrationPageMVCActionCommand extends BaseMVCActionCommand {
                     ParamUtil.getString(actionRequest, "address"),
                     ParamUtil.getString(actionRequest, "address2"),
                     ParamUtil.getString(actionRequest, "city"),
-                    ParamUtil.getString(actionRequest, "state"),
+                    ParamUtil.getString(actionRequest, "region"),
                     ParamUtil.getString(actionRequest, "zip"),
                     ParamUtil.getString(actionRequest, "securityQuestion"),
                     ParamUtil.getString(actionRequest, "securityAnswer"),

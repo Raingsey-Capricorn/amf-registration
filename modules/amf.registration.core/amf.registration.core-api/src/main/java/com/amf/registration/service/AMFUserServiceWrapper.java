@@ -50,7 +50,8 @@ public class AMFUserServiceWrapper
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
+			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
+			String userName, String firstName, String lastName,
 			String emailAddress, String gender, java.util.Date birthDate,
 			String password, String confirmedPassword, String homePhone,
 			String mobilePhone, String address, String address2, String city,
@@ -60,7 +61,7 @@ public class AMFUserServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _amfUserService.addAMFUser(
-			groupId, userName, firstName, lastName, emailAddress, gender,
+			themeDisplay, userName, firstName, lastName, emailAddress, gender,
 			birthDate, password, confirmedPassword, homePhone, mobilePhone,
 			address, address2, city, state, zip, securityQuestion,
 			securityAnswer, acceptedTOU, serviceContext);
@@ -69,7 +70,7 @@ public class AMFUserServiceWrapper
 	/**
 	 * @param amdUserId
 	 * @return
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser getAmfUser(long amdUserId)

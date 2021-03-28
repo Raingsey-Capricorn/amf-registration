@@ -22,11 +22,14 @@ import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.model.*;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.*;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import lombok.Getter;
 import lombok.Setter;
 import org.osgi.service.component.annotations.Component;
@@ -66,7 +69,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      */
 
     /**
-     * @param groupId
+     * @param themeDisplay
      * @param userName
      * @param firstName
      * @param lastName
@@ -77,10 +80,10 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @param confirmedPassword
      * @param homePhone
      * @param mobilePhone
-     * @param address
-     * @param address2
+     * @param addressLineOne
+     * @param addressLineTwo
      * @param city
-     * @param state
+     * @param regionId
      * @param zip
      * @param securityQuestion
      * @param securityAnswer
@@ -90,7 +93,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @throws PortalException
      */
     public AMFUser addAMFUser(
-            long groupId,
+            ThemeDisplay themeDisplay,
             String userName,
             String firstName,
             String lastName,
@@ -101,18 +104,16 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             String confirmedPassword,
             String homePhone,
             String mobilePhone,
-            String address,
-            String address2,
+            String addressLineOne,
+            String addressLineTwo,
             String city,
-            String state,
+            String regionId,
             String zip,
             String securityQuestion,
             String securityAnswer,
             String acceptedTOU,
             ServiceContext serviceContext) throws PortalException {
 
-        setGroupID(groupId);
-        setInputUserName(userName);
         amfUserValidator.validate(this,
                 userName,
                 firstName,
@@ -124,10 +125,10 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                 confirmedPassword,
                 homePhone,
                 mobilePhone,
-                address,
-                address2,
+                addressLineOne,
+                addressLineTwo,
                 city,
-                state,
+                regionId,
                 zip,
                 securityQuestion,
                 securityAnswer,
@@ -137,38 +138,77 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(birthDate);
-            Group group = groupLocalService.getGroup(groupId);
-            long userId = serviceContext.getUserId();
-            User user = userLocalService.getUser(userId);
+            serviceContext.setCommand(ActionKeys.ADD_ENTRY);
+            serviceContext.setCommand(ActionKeys.UPDATE);
+
+            try {
+                User user = userService.addUser(
+                        themeDisplay.getCompanyId(),
+                        false,
+                        password,
+                        confirmedPassword,
+                        true,
+                        userName,
+                        emailAddress,
+                        LocaleUtil.fromLanguageId("en_US"),
+                        firstName,
+                        "",
+                        lastName,
+                        0L,
+                        0L,
+                        gender.equals("male"),
+                        (cal.get(Calendar.MONTH) + 1),
+                        cal.get(Calendar.DAY_OF_MONTH),
+                        cal.get(Calendar.YEAR),
+                        "",
+                        null,
+                        null,
+                        null,
+                        null,
+                        false,
+                        serviceContext
+                );
+
+            } catch (PortalException e) {
+                e.printStackTrace();
+            }
+
             long amfUserId = counterLocalService.increment(AMFUser.class.getName());
+            Country country = countryService.getCountryByName("united-states");
+            Address address = addressService.addAddress(
+                    AMFUser.class.getName(),
+                    amfUserId,
+                    addressLineOne,
+                    addressLineTwo,
+                    "",
+                    city,
+                    zip,
+                    Long.parseLong(regionId),
+                    country.getCountryId(),
+                    0l,
+                    true,
+                    true,
+                    serviceContext
+            );
 
             AMFUser amfUser = createAMFUser(amfUserId);
             amfUser.setAmfUserId(amfUserId);
-            amfUser.setCompanyId(group.getCompanyId());
-            amfUser.setGroupId(groupId);
+            amfUser.setUserCreatorID(0L);
+//            amfUser.setUserId(user.getUserId());
+            amfUser.setCompanyId(themeDisplay.getCompanyId());
+            amfUser.setAddressID(address.getAddressId());
+            amfUser.setGroupId(themeDisplay.getScopeGroupId());
             amfUser.setUserName(userName);
             amfUser.setCreateDate(new Date());
             amfUser.setModifiedDate(new Date());
-            amfUser.setFirstName(firstName);
-            amfUser.setLastName(lastName);
-            amfUser.setEmailAddress(emailAddress);
             amfUser.setGender(gender);
-            amfUser.setBirthDay(cal.get(Calendar.DAY_OF_MONTH));
-            amfUser.setBirthMonth(cal.get(Calendar.MONTH) + 1);
-            amfUser.setBirthYear(cal.get(Calendar.YEAR));
-            amfUser.setPassword(password);
-            amfUser.setConfirmedPassword(confirmedPassword);
             amfUser.setHomePhone(homePhone);
             amfUser.setMobilePhone(mobilePhone);
-            amfUser.setAddress(address);
-            amfUser.setAddress2(address2);
-            amfUser.setCity(city);
-            amfUser.setState(state);
-            amfUser.setZip(zip);
             amfUser.setSecurityQuestion(securityQuestion);
             amfUser.setSecurityAnswer(securityAnswer);
             amfUser.setAcceptedTOU(acceptedTOU);
             amfUser = super.addAMFUser(amfUser);
+
             return amfUser;
 
         } catch (PortalException e) {
@@ -235,8 +275,6 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         if (Validator.isNotNull(keywords)) {
             Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
             disjunctionQuery.add(RestrictionsFactoryUtil.like("userName", "%" + keywords + "%"));
-            disjunctionQuery.add(RestrictionsFactoryUtil.like("firstName", "%" + keywords + "%"));
-            disjunctionQuery.add(RestrictionsFactoryUtil.like("lastName", "%" + keywords + "%"));
             dynamicQuery.add(disjunctionQuery);
         }
         return dynamicQuery;
@@ -262,4 +300,17 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
 
     @Reference
     private AMFUserValidator amfUserValidator;
+
+    @Reference
+    private UserService userService;
+
+    @Reference
+    private AddressService addressService;
+
+    @Reference
+    private CountryService countryService;
+
+    @Reference
+    private RegionService regionService;
+
 }

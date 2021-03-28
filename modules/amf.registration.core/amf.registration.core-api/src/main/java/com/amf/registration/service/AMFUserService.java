@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -75,12 +76,13 @@ public interface AMFUserService extends BaseService {
 	 * @return
 	 */
 	public AMFUser addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
-			String emailAddress, String gender, Date birthDate, String password,
-			String confirmedPassword, String homePhone, String mobilePhone,
-			String address, String address2, String city, String state,
-			String zip, String securityQuestion, String securityAnswer,
-			String acceptedTOU, ServiceContext serviceContext)
+			ThemeDisplay themeDisplay, String userName, String firstName,
+			String lastName, String emailAddress, String gender, Date birthDate,
+			String password, String confirmedPassword, String homePhone,
+			String mobilePhone, String address, String address2, String city,
+			String state, String zip, String securityQuestion,
+			String securityAnswer, String acceptedTOU,
+			ServiceContext serviceContext)
 		throws PortalException;
 
 	/**

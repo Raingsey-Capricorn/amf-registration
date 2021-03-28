@@ -223,49 +223,18 @@ public interface AMFUserModel
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
-	 * Returns the first name of this amf user.
+	 * Returns the user creator ID of this amf user.
 	 *
-	 * @return the first name of this amf user
+	 * @return the user creator ID of this amf user
 	 */
-	@AutoEscape
-	public String getFirstName();
+	public long getUserCreatorID();
 
 	/**
-	 * Sets the first name of this amf user.
+	 * Sets the user creator ID of this amf user.
 	 *
-	 * @param firstName the first name of this amf user
+	 * @param userCreatorID the user creator ID of this amf user
 	 */
-	public void setFirstName(String firstName);
-
-	/**
-	 * Returns the last name of this amf user.
-	 *
-	 * @return the last name of this amf user
-	 */
-	@AutoEscape
-	public String getLastName();
-
-	/**
-	 * Sets the last name of this amf user.
-	 *
-	 * @param lastName the last name of this amf user
-	 */
-	public void setLastName(String lastName);
-
-	/**
-	 * Returns the email address of this amf user.
-	 *
-	 * @return the email address of this amf user
-	 */
-	@AutoEscape
-	public String getEmailAddress();
-
-	/**
-	 * Sets the email address of this amf user.
-	 *
-	 * @param emailAddress the email address of this amf user
-	 */
-	public void setEmailAddress(String emailAddress);
+	public void setUserCreatorID(long userCreatorID);
 
 	/**
 	 * Returns the gender of this amf user.
@@ -281,78 +250,6 @@ public interface AMFUserModel
 	 * @param gender the gender of this amf user
 	 */
 	public void setGender(String gender);
-
-	/**
-	 * Returns the birth day of this amf user.
-	 *
-	 * @return the birth day of this amf user
-	 */
-	public int getBirthDay();
-
-	/**
-	 * Sets the birth day of this amf user.
-	 *
-	 * @param birthDay the birth day of this amf user
-	 */
-	public void setBirthDay(int birthDay);
-
-	/**
-	 * Returns the birth month of this amf user.
-	 *
-	 * @return the birth month of this amf user
-	 */
-	public int getBirthMonth();
-
-	/**
-	 * Sets the birth month of this amf user.
-	 *
-	 * @param birthMonth the birth month of this amf user
-	 */
-	public void setBirthMonth(int birthMonth);
-
-	/**
-	 * Returns the birth year of this amf user.
-	 *
-	 * @return the birth year of this amf user
-	 */
-	public int getBirthYear();
-
-	/**
-	 * Sets the birth year of this amf user.
-	 *
-	 * @param birthYear the birth year of this amf user
-	 */
-	public void setBirthYear(int birthYear);
-
-	/**
-	 * Returns the password of this amf user.
-	 *
-	 * @return the password of this amf user
-	 */
-	@AutoEscape
-	public String getPassword();
-
-	/**
-	 * Sets the password of this amf user.
-	 *
-	 * @param password the password of this amf user
-	 */
-	public void setPassword(String password);
-
-	/**
-	 * Returns the confirmed password of this amf user.
-	 *
-	 * @return the confirmed password of this amf user
-	 */
-	@AutoEscape
-	public String getConfirmedPassword();
-
-	/**
-	 * Sets the confirmed password of this amf user.
-	 *
-	 * @param confirmedPassword the confirmed password of this amf user
-	 */
-	public void setConfirmedPassword(String confirmedPassword);
 
 	/**
 	 * Returns the home phone of this amf user.
@@ -385,79 +282,18 @@ public interface AMFUserModel
 	public void setMobilePhone(String mobilePhone);
 
 	/**
-	 * Returns the address of this amf user.
+	 * Returns the address ID of this amf user.
 	 *
-	 * @return the address of this amf user
+	 * @return the address ID of this amf user
 	 */
-	@AutoEscape
-	public String getAddress();
+	public long getAddressID();
 
 	/**
-	 * Sets the address of this amf user.
+	 * Sets the address ID of this amf user.
 	 *
-	 * @param address the address of this amf user
+	 * @param addressID the address ID of this amf user
 	 */
-	public void setAddress(String address);
-
-	/**
-	 * Returns the address2 of this amf user.
-	 *
-	 * @return the address2 of this amf user
-	 */
-	@AutoEscape
-	public String getAddress2();
-
-	/**
-	 * Sets the address2 of this amf user.
-	 *
-	 * @param address2 the address2 of this amf user
-	 */
-	public void setAddress2(String address2);
-
-	/**
-	 * Returns the city of this amf user.
-	 *
-	 * @return the city of this amf user
-	 */
-	@AutoEscape
-	public String getCity();
-
-	/**
-	 * Sets the city of this amf user.
-	 *
-	 * @param city the city of this amf user
-	 */
-	public void setCity(String city);
-
-	/**
-	 * Returns the state of this amf user.
-	 *
-	 * @return the state of this amf user
-	 */
-	@AutoEscape
-	public String getState();
-
-	/**
-	 * Sets the state of this amf user.
-	 *
-	 * @param state the state of this amf user
-	 */
-	public void setState(String state);
-
-	/**
-	 * Returns the zip of this amf user.
-	 *
-	 * @return the zip of this amf user
-	 */
-	@AutoEscape
-	public String getZip();
-
-	/**
-	 * Sets the zip of this amf user.
-	 *
-	 * @param zip the zip of this amf user
-	 */
-	public void setZip(String zip);
+	public void setAddressID(long addressID);
 
 	/**
 	 * Returns the security question of this amf user.
