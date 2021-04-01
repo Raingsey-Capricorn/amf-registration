@@ -47,18 +47,14 @@ public class AMFUserWrapper
 		attributes.put("amfUserId", getAmfUserId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("companyId", getCompanyId());
-		attributes.put("userId", getUserId());
-		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("userCreatorID", getUserCreatorID());
-		attributes.put("gender", getGender());
+		attributes.put("userName", getUserName());
+		attributes.put("userId", getUserId());
+		attributes.put("contractId", getContractId());
+		attributes.put("addressId", getAddressId());
 		attributes.put("homePhone", getHomePhone());
 		attributes.put("mobilePhone", getMobilePhone());
-		attributes.put("addressID", getAddressID());
-		attributes.put("securityQuestion", getSecurityQuestion());
-		attributes.put("securityAnswer", getSecurityAnswer());
-		attributes.put("acceptedTOU", getAcceptedTOU());
 
 		return attributes;
 	}
@@ -89,18 +85,6 @@ public class AMFUserWrapper
 			setCompanyId(companyId);
 		}
 
-		Long userId = (Long)attributes.get("userId");
-
-		if (userId != null) {
-			setUserId(userId);
-		}
-
-		String userName = (String)attributes.get("userName");
-
-		if (userName != null) {
-			setUserName(userName);
-		}
-
 		Date createDate = (Date)attributes.get("createDate");
 
 		if (createDate != null) {
@@ -113,16 +97,28 @@ public class AMFUserWrapper
 			setModifiedDate(modifiedDate);
 		}
 
-		Long userCreatorID = (Long)attributes.get("userCreatorID");
+		String userName = (String)attributes.get("userName");
 
-		if (userCreatorID != null) {
-			setUserCreatorID(userCreatorID);
+		if (userName != null) {
+			setUserName(userName);
 		}
 
-		String gender = (String)attributes.get("gender");
+		Long userId = (Long)attributes.get("userId");
 
-		if (gender != null) {
-			setGender(gender);
+		if (userId != null) {
+			setUserId(userId);
+		}
+
+		Long contractId = (Long)attributes.get("contractId");
+
+		if (contractId != null) {
+			setContractId(contractId);
+		}
+
+		Long addressId = (Long)attributes.get("addressId");
+
+		if (addressId != null) {
+			setAddressId(addressId);
 		}
 
 		String homePhone = (String)attributes.get("homePhone");
@@ -136,106 +132,6 @@ public class AMFUserWrapper
 		if (mobilePhone != null) {
 			setMobilePhone(mobilePhone);
 		}
-
-		Long addressID = (Long)attributes.get("addressID");
-
-		if (addressID != null) {
-			setAddressID(addressID);
-		}
-
-		String securityQuestion = (String)attributes.get("securityQuestion");
-
-		if (securityQuestion != null) {
-			setSecurityQuestion(securityQuestion);
-		}
-
-		String securityAnswer = (String)attributes.get("securityAnswer");
-
-		if (securityAnswer != null) {
-			setSecurityAnswer(securityAnswer);
-		}
-
-		String acceptedTOU = (String)attributes.get("acceptedTOU");
-
-		if (acceptedTOU != null) {
-			setAcceptedTOU(acceptedTOU);
-		}
-	}
-
-	/**
-	 * Returns the accepted tou of this amf user.
-	 *
-	 * @return the accepted tou of this amf user
-	 */
-	@Override
-	public String getAcceptedTOU() {
-		return model.getAcceptedTOU();
-	}
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the locale of the language
-	 * @return the localized accepted tou of this amf user
-	 */
-	@Override
-	public String getAcceptedTOU(java.util.Locale locale) {
-		return model.getAcceptedTOU(locale);
-	}
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the local of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized accepted tou of this amf user. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
-	 */
-	@Override
-	public String getAcceptedTOU(java.util.Locale locale, boolean useDefault) {
-		return model.getAcceptedTOU(locale, useDefault);
-	}
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @return the localized accepted tou of this amf user
-	 */
-	@Override
-	public String getAcceptedTOU(String languageId) {
-		return model.getAcceptedTOU(languageId);
-	}
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized accepted tou of this amf user
-	 */
-	@Override
-	public String getAcceptedTOU(String languageId, boolean useDefault) {
-		return model.getAcceptedTOU(languageId, useDefault);
-	}
-
-	@Override
-	public String getAcceptedTOUCurrentLanguageId() {
-		return model.getAcceptedTOUCurrentLanguageId();
-	}
-
-	@Override
-	public String getAcceptedTOUCurrentValue() {
-		return model.getAcceptedTOUCurrentValue();
-	}
-
-	/**
-	 * Returns a map of the locales and localized accepted tous of this amf user.
-	 *
-	 * @return the locales and localized accepted tous of this amf user
-	 */
-	@Override
-	public Map<java.util.Locale, String> getAcceptedTOUMap() {
-		return model.getAcceptedTOUMap();
 	}
 
 	/**
@@ -244,8 +140,8 @@ public class AMFUserWrapper
 	 * @return the address ID of this amf user
 	 */
 	@Override
-	public long getAddressID() {
-		return model.getAddressID();
+	public long getAddressId() {
+		return model.getAddressId();
 	}
 
 	/**
@@ -268,11 +164,6 @@ public class AMFUserWrapper
 		return model.getAmfUserUuid();
 	}
 
-	@Override
-	public String[] getAvailableLanguageIds() {
-		return model.getAvailableLanguageIds();
-	}
-
 	/**
 	 * Returns the company ID of this amf user.
 	 *
@@ -284,6 +175,16 @@ public class AMFUserWrapper
 	}
 
 	/**
+	 * Returns the contract ID of this amf user.
+	 *
+	 * @return the contract ID of this amf user
+	 */
+	@Override
+	public long getContractId() {
+		return model.getContractId();
+	}
+
+	/**
 	 * Returns the create date of this amf user.
 	 *
 	 * @return the create date of this amf user
@@ -291,21 +192,6 @@ public class AMFUserWrapper
 	@Override
 	public Date getCreateDate() {
 		return model.getCreateDate();
-	}
-
-	@Override
-	public String getDefaultLanguageId() {
-		return model.getDefaultLanguageId();
-	}
-
-	/**
-	 * Returns the gender of this amf user.
-	 *
-	 * @return the gender of this amf user
-	 */
-	@Override
-	public String getGender() {
-		return model.getGender();
 	}
 
 	/**
@@ -359,172 +245,6 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Returns the security answer of this amf user.
-	 *
-	 * @return the security answer of this amf user
-	 */
-	@Override
-	public String getSecurityAnswer() {
-		return model.getSecurityAnswer();
-	}
-
-	/**
-	 * Returns the localized security answer of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the locale of the language
-	 * @return the localized security answer of this amf user
-	 */
-	@Override
-	public String getSecurityAnswer(java.util.Locale locale) {
-		return model.getSecurityAnswer(locale);
-	}
-
-	/**
-	 * Returns the localized security answer of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the local of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security answer of this amf user. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
-	 */
-	@Override
-	public String getSecurityAnswer(
-		java.util.Locale locale, boolean useDefault) {
-
-		return model.getSecurityAnswer(locale, useDefault);
-	}
-
-	/**
-	 * Returns the localized security answer of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @return the localized security answer of this amf user
-	 */
-	@Override
-	public String getSecurityAnswer(String languageId) {
-		return model.getSecurityAnswer(languageId);
-	}
-
-	/**
-	 * Returns the localized security answer of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security answer of this amf user
-	 */
-	@Override
-	public String getSecurityAnswer(String languageId, boolean useDefault) {
-		return model.getSecurityAnswer(languageId, useDefault);
-	}
-
-	@Override
-	public String getSecurityAnswerCurrentLanguageId() {
-		return model.getSecurityAnswerCurrentLanguageId();
-	}
-
-	@Override
-	public String getSecurityAnswerCurrentValue() {
-		return model.getSecurityAnswerCurrentValue();
-	}
-
-	/**
-	 * Returns a map of the locales and localized security answers of this amf user.
-	 *
-	 * @return the locales and localized security answers of this amf user
-	 */
-	@Override
-	public Map<java.util.Locale, String> getSecurityAnswerMap() {
-		return model.getSecurityAnswerMap();
-	}
-
-	/**
-	 * Returns the security question of this amf user.
-	 *
-	 * @return the security question of this amf user
-	 */
-	@Override
-	public String getSecurityQuestion() {
-		return model.getSecurityQuestion();
-	}
-
-	/**
-	 * Returns the localized security question of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the locale of the language
-	 * @return the localized security question of this amf user
-	 */
-	@Override
-	public String getSecurityQuestion(java.util.Locale locale) {
-		return model.getSecurityQuestion(locale);
-	}
-
-	/**
-	 * Returns the localized security question of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the local of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security question of this amf user. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
-	 */
-	@Override
-	public String getSecurityQuestion(
-		java.util.Locale locale, boolean useDefault) {
-
-		return model.getSecurityQuestion(locale, useDefault);
-	}
-
-	/**
-	 * Returns the localized security question of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @return the localized security question of this amf user
-	 */
-	@Override
-	public String getSecurityQuestion(String languageId) {
-		return model.getSecurityQuestion(languageId);
-	}
-
-	/**
-	 * Returns the localized security question of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security question of this amf user
-	 */
-	@Override
-	public String getSecurityQuestion(String languageId, boolean useDefault) {
-		return model.getSecurityQuestion(languageId, useDefault);
-	}
-
-	@Override
-	public String getSecurityQuestionCurrentLanguageId() {
-		return model.getSecurityQuestionCurrentLanguageId();
-	}
-
-	@Override
-	public String getSecurityQuestionCurrentValue() {
-		return model.getSecurityQuestionCurrentValue();
-	}
-
-	/**
-	 * Returns a map of the locales and localized security questions of this amf user.
-	 *
-	 * @return the locales and localized security questions of this amf user
-	 */
-	@Override
-	public Map<java.util.Locale, String> getSecurityQuestionMap() {
-		return model.getSecurityQuestionMap();
-	}
-
-	/**
-	 * Returns the user creator ID of this amf user.
-	 *
-	 * @return the user creator ID of this amf user
-	 */
-	@Override
-	public long getUserCreatorID() {
-		return model.getUserCreatorID();
-	}
-
-	/**
 	 * Returns the user ID of this amf user.
 	 *
 	 * @return the user ID of this amf user
@@ -569,96 +289,14 @@ public class AMFUserWrapper
 		model.persist();
 	}
 
-	@Override
-	public void prepareLocalizedFieldsForImport()
-		throws com.liferay.portal.kernel.exception.LocaleException {
-
-		model.prepareLocalizedFieldsForImport();
-	}
-
-	@Override
-	public void prepareLocalizedFieldsForImport(
-			java.util.Locale defaultImportLocale)
-		throws com.liferay.portal.kernel.exception.LocaleException {
-
-		model.prepareLocalizedFieldsForImport(defaultImportLocale);
-	}
-
-	/**
-	 * Sets the accepted tou of this amf user.
-	 *
-	 * @param acceptedTOU the accepted tou of this amf user
-	 */
-	@Override
-	public void setAcceptedTOU(String acceptedTOU) {
-		model.setAcceptedTOU(acceptedTOU);
-	}
-
-	/**
-	 * Sets the localized accepted tou of this amf user in the language.
-	 *
-	 * @param acceptedTOU the localized accepted tou of this amf user
-	 * @param locale the locale of the language
-	 */
-	@Override
-	public void setAcceptedTOU(String acceptedTOU, java.util.Locale locale) {
-		model.setAcceptedTOU(acceptedTOU, locale);
-	}
-
-	/**
-	 * Sets the localized accepted tou of this amf user in the language, and sets the default locale.
-	 *
-	 * @param acceptedTOU the localized accepted tou of this amf user
-	 * @param locale the locale of the language
-	 * @param defaultLocale the default locale
-	 */
-	@Override
-	public void setAcceptedTOU(
-		String acceptedTOU, java.util.Locale locale,
-		java.util.Locale defaultLocale) {
-
-		model.setAcceptedTOU(acceptedTOU, locale, defaultLocale);
-	}
-
-	@Override
-	public void setAcceptedTOUCurrentLanguageId(String languageId) {
-		model.setAcceptedTOUCurrentLanguageId(languageId);
-	}
-
-	/**
-	 * Sets the localized accepted tous of this amf user from the map of locales and localized accepted tous.
-	 *
-	 * @param acceptedTOUMap the locales and localized accepted tous of this amf user
-	 */
-	@Override
-	public void setAcceptedTOUMap(
-		Map<java.util.Locale, String> acceptedTOUMap) {
-
-		model.setAcceptedTOUMap(acceptedTOUMap);
-	}
-
-	/**
-	 * Sets the localized accepted tous of this amf user from the map of locales and localized accepted tous, and sets the default locale.
-	 *
-	 * @param acceptedTOUMap the locales and localized accepted tous of this amf user
-	 * @param defaultLocale the default locale
-	 */
-	@Override
-	public void setAcceptedTOUMap(
-		Map<java.util.Locale, String> acceptedTOUMap,
-		java.util.Locale defaultLocale) {
-
-		model.setAcceptedTOUMap(acceptedTOUMap, defaultLocale);
-	}
-
 	/**
 	 * Sets the address ID of this amf user.
 	 *
-	 * @param addressID the address ID of this amf user
+	 * @param addressId the address ID of this amf user
 	 */
 	@Override
-	public void setAddressID(long addressID) {
-		model.setAddressID(addressID);
+	public void setAddressId(long addressId) {
+		model.setAddressId(addressId);
 	}
 
 	/**
@@ -692,6 +330,16 @@ public class AMFUserWrapper
 	}
 
 	/**
+	 * Sets the contract ID of this amf user.
+	 *
+	 * @param contractId the contract ID of this amf user
+	 */
+	@Override
+	public void setContractId(long contractId) {
+		model.setContractId(contractId);
+	}
+
+	/**
 	 * Sets the create date of this amf user.
 	 *
 	 * @param createDate the create date of this amf user
@@ -699,16 +347,6 @@ public class AMFUserWrapper
 	@Override
 	public void setCreateDate(Date createDate) {
 		model.setCreateDate(createDate);
-	}
-
-	/**
-	 * Sets the gender of this amf user.
-	 *
-	 * @param gender the gender of this amf user
-	 */
-	@Override
-	public void setGender(String gender) {
-		model.setGender(gender);
 	}
 
 	/**
@@ -759,154 +397,6 @@ public class AMFUserWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
-	}
-
-	/**
-	 * Sets the security answer of this amf user.
-	 *
-	 * @param securityAnswer the security answer of this amf user
-	 */
-	@Override
-	public void setSecurityAnswer(String securityAnswer) {
-		model.setSecurityAnswer(securityAnswer);
-	}
-
-	/**
-	 * Sets the localized security answer of this amf user in the language.
-	 *
-	 * @param securityAnswer the localized security answer of this amf user
-	 * @param locale the locale of the language
-	 */
-	@Override
-	public void setSecurityAnswer(
-		String securityAnswer, java.util.Locale locale) {
-
-		model.setSecurityAnswer(securityAnswer, locale);
-	}
-
-	/**
-	 * Sets the localized security answer of this amf user in the language, and sets the default locale.
-	 *
-	 * @param securityAnswer the localized security answer of this amf user
-	 * @param locale the locale of the language
-	 * @param defaultLocale the default locale
-	 */
-	@Override
-	public void setSecurityAnswer(
-		String securityAnswer, java.util.Locale locale,
-		java.util.Locale defaultLocale) {
-
-		model.setSecurityAnswer(securityAnswer, locale, defaultLocale);
-	}
-
-	@Override
-	public void setSecurityAnswerCurrentLanguageId(String languageId) {
-		model.setSecurityAnswerCurrentLanguageId(languageId);
-	}
-
-	/**
-	 * Sets the localized security answers of this amf user from the map of locales and localized security answers.
-	 *
-	 * @param securityAnswerMap the locales and localized security answers of this amf user
-	 */
-	@Override
-	public void setSecurityAnswerMap(
-		Map<java.util.Locale, String> securityAnswerMap) {
-
-		model.setSecurityAnswerMap(securityAnswerMap);
-	}
-
-	/**
-	 * Sets the localized security answers of this amf user from the map of locales and localized security answers, and sets the default locale.
-	 *
-	 * @param securityAnswerMap the locales and localized security answers of this amf user
-	 * @param defaultLocale the default locale
-	 */
-	@Override
-	public void setSecurityAnswerMap(
-		Map<java.util.Locale, String> securityAnswerMap,
-		java.util.Locale defaultLocale) {
-
-		model.setSecurityAnswerMap(securityAnswerMap, defaultLocale);
-	}
-
-	/**
-	 * Sets the security question of this amf user.
-	 *
-	 * @param securityQuestion the security question of this amf user
-	 */
-	@Override
-	public void setSecurityQuestion(String securityQuestion) {
-		model.setSecurityQuestion(securityQuestion);
-	}
-
-	/**
-	 * Sets the localized security question of this amf user in the language.
-	 *
-	 * @param securityQuestion the localized security question of this amf user
-	 * @param locale the locale of the language
-	 */
-	@Override
-	public void setSecurityQuestion(
-		String securityQuestion, java.util.Locale locale) {
-
-		model.setSecurityQuestion(securityQuestion, locale);
-	}
-
-	/**
-	 * Sets the localized security question of this amf user in the language, and sets the default locale.
-	 *
-	 * @param securityQuestion the localized security question of this amf user
-	 * @param locale the locale of the language
-	 * @param defaultLocale the default locale
-	 */
-	@Override
-	public void setSecurityQuestion(
-		String securityQuestion, java.util.Locale locale,
-		java.util.Locale defaultLocale) {
-
-		model.setSecurityQuestion(securityQuestion, locale, defaultLocale);
-	}
-
-	@Override
-	public void setSecurityQuestionCurrentLanguageId(String languageId) {
-		model.setSecurityQuestionCurrentLanguageId(languageId);
-	}
-
-	/**
-	 * Sets the localized security questions of this amf user from the map of locales and localized security questions.
-	 *
-	 * @param securityQuestionMap the locales and localized security questions of this amf user
-	 */
-	@Override
-	public void setSecurityQuestionMap(
-		Map<java.util.Locale, String> securityQuestionMap) {
-
-		model.setSecurityQuestionMap(securityQuestionMap);
-	}
-
-	/**
-	 * Sets the localized security questions of this amf user from the map of locales and localized security questions, and sets the default locale.
-	 *
-	 * @param securityQuestionMap the locales and localized security questions of this amf user
-	 * @param defaultLocale the default locale
-	 */
-	@Override
-	public void setSecurityQuestionMap(
-		Map<java.util.Locale, String> securityQuestionMap,
-		java.util.Locale defaultLocale) {
-
-		model.setSecurityQuestionMap(securityQuestionMap, defaultLocale);
-	}
-
-	/**
-	 * Sets the user creator ID of this amf user.
-	 *
-	 * @param userCreatorID the user creator ID of this amf user
-	 */
-	@Override
-	public void setUserCreatorID(long userCreatorID) {
-		model.setUserCreatorID(userCreatorID);
 	}
 
 	/**

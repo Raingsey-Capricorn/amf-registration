@@ -61,7 +61,7 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -71,30 +71,22 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		sb.append(groupId);
 		sb.append(", companyId=");
 		sb.append(companyId);
-		sb.append(", userId=");
-		sb.append(userId);
-		sb.append(", userName=");
-		sb.append(userName);
 		sb.append(", createDate=");
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", userCreatorID=");
-		sb.append(userCreatorID);
-		sb.append(", gender=");
-		sb.append(gender);
+		sb.append(", userName=");
+		sb.append(userName);
+		sb.append(", userId=");
+		sb.append(userId);
+		sb.append(", contractId=");
+		sb.append(contractId);
+		sb.append(", addressId=");
+		sb.append(addressId);
 		sb.append(", homePhone=");
 		sb.append(homePhone);
 		sb.append(", mobilePhone=");
 		sb.append(mobilePhone);
-		sb.append(", addressID=");
-		sb.append(addressID);
-		sb.append(", securityQuestion=");
-		sb.append(securityQuestion);
-		sb.append(", securityAnswer=");
-		sb.append(securityAnswer);
-		sb.append(", acceptedTOU=");
-		sb.append(acceptedTOU);
 		sb.append("}");
 
 		return sb.toString();
@@ -114,14 +106,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		amfUserImpl.setAmfUserId(amfUserId);
 		amfUserImpl.setGroupId(groupId);
 		amfUserImpl.setCompanyId(companyId);
-		amfUserImpl.setUserId(userId);
-
-		if (userName == null) {
-			amfUserImpl.setUserName("");
-		}
-		else {
-			amfUserImpl.setUserName(userName);
-		}
 
 		if (createDate == Long.MIN_VALUE) {
 			amfUserImpl.setCreateDate(null);
@@ -137,14 +121,16 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 			amfUserImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
-		amfUserImpl.setUserCreatorID(userCreatorID);
-
-		if (gender == null) {
-			amfUserImpl.setGender("");
+		if (userName == null) {
+			amfUserImpl.setUserName("");
 		}
 		else {
-			amfUserImpl.setGender(gender);
+			amfUserImpl.setUserName(userName);
 		}
+
+		amfUserImpl.setUserId(userId);
+		amfUserImpl.setContractId(contractId);
+		amfUserImpl.setAddressId(addressId);
 
 		if (homePhone == null) {
 			amfUserImpl.setHomePhone("");
@@ -158,29 +144,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		}
 		else {
 			amfUserImpl.setMobilePhone(mobilePhone);
-		}
-
-		amfUserImpl.setAddressID(addressID);
-
-		if (securityQuestion == null) {
-			amfUserImpl.setSecurityQuestion("");
-		}
-		else {
-			amfUserImpl.setSecurityQuestion(securityQuestion);
-		}
-
-		if (securityAnswer == null) {
-			amfUserImpl.setSecurityAnswer("");
-		}
-		else {
-			amfUserImpl.setSecurityAnswer(securityAnswer);
-		}
-
-		if (acceptedTOU == null) {
-			amfUserImpl.setAcceptedTOU("");
-		}
-		else {
-			amfUserImpl.setAcceptedTOU(acceptedTOU);
 		}
 
 		amfUserImpl.resetOriginalValues();
@@ -197,21 +160,17 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		groupId = objectInput.readLong();
 
 		companyId = objectInput.readLong();
-
-		userId = objectInput.readLong();
-		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+		userName = objectInput.readUTF();
 
-		userCreatorID = objectInput.readLong();
-		gender = objectInput.readUTF();
+		userId = objectInput.readLong();
+
+		contractId = objectInput.readLong();
+
+		addressId = objectInput.readLong();
 		homePhone = objectInput.readUTF();
 		mobilePhone = objectInput.readUTF();
-
-		addressID = objectInput.readLong();
-		securityQuestion = objectInput.readUTF();
-		securityAnswer = objectInput.readUTF();
-		acceptedTOU = objectInput.readUTF();
 	}
 
 	@Override
@@ -228,8 +187,8 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		objectOutput.writeLong(groupId);
 
 		objectOutput.writeLong(companyId);
-
-		objectOutput.writeLong(userId);
+		objectOutput.writeLong(createDate);
+		objectOutput.writeLong(modifiedDate);
 
 		if (userName == null) {
 			objectOutput.writeUTF("");
@@ -238,17 +197,11 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 			objectOutput.writeUTF(userName);
 		}
 
-		objectOutput.writeLong(createDate);
-		objectOutput.writeLong(modifiedDate);
+		objectOutput.writeLong(userId);
 
-		objectOutput.writeLong(userCreatorID);
+		objectOutput.writeLong(contractId);
 
-		if (gender == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(gender);
-		}
+		objectOutput.writeLong(addressId);
 
 		if (homePhone == null) {
 			objectOutput.writeUTF("");
@@ -263,46 +216,19 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		else {
 			objectOutput.writeUTF(mobilePhone);
 		}
-
-		objectOutput.writeLong(addressID);
-
-		if (securityQuestion == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(securityQuestion);
-		}
-
-		if (securityAnswer == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(securityAnswer);
-		}
-
-		if (acceptedTOU == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(acceptedTOU);
-		}
 	}
 
 	public String uuid;
 	public long amfUserId;
 	public long groupId;
 	public long companyId;
-	public long userId;
-	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public long userCreatorID;
-	public String gender;
+	public String userName;
+	public long userId;
+	public long contractId;
+	public long addressId;
 	public String homePhone;
 	public String mobilePhone;
-	public long addressID;
-	public String securityQuestion;
-	public String securityAnswer;
-	public String acceptedTOU;
 
 }

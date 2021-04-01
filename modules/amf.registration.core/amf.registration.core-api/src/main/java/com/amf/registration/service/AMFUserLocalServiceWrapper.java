@@ -49,7 +49,6 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	/**
-	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -68,7 +67,6 @@ public class AMFUserLocalServiceWrapper
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
-	 * @param serviceContext
 	 * @return
 	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */

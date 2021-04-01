@@ -69,11 +69,11 @@
                         <p class="costume-control-label-gender">Gender</p>
                         <aui:field-wrapper required="true">
                             <aui:input value="female" label="Female" name="gender" type="radio"/>
-                            <aui:input value="male" label="Male" name="gender" type="radio"/>
+                            <aui:input value="male" label="Male" name="gender" type="radio" checked="true"/>
                         </aui:field-wrapper>
                     </aui:col>
                     <aui:col width="50">
-                        <aui:input name="date_of_birth" required="true" type="date" pattern="\d*">
+                        <aui:input name="date_of_birth" label="Date of Birth" required="true" type="date" pattern="\d*">
                             <aui:validator name="date" errorMessage="error.field-birth-date"/>
                         </aui:input>
                     </aui:col>

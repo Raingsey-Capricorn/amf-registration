@@ -56,7 +56,6 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
-	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -75,7 +74,6 @@ public class AMFUserLocalServiceUtil {
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
-	 * @param serviceContext
 	 * @return
 	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
@@ -144,7 +142,7 @@ public class AMFUserLocalServiceUtil {
 	 *
 	 * @param amfUserId the primary key of the amf user
 	 * @return the amf user that was removed
-	 * @throws PortalException if a amf user with the primary key could not be found
+	 * @throws com.liferay.portal.kernel.exception.PortalException if a amf user with the primary key could not be found
 	 */
 	public static com.amf.registration.model.AMFUser deleteAMFUser(
 			long amfUserId)
@@ -279,7 +277,7 @@ public class AMFUserLocalServiceUtil {
 	 *
 	 * @param amfUserId the primary key of the amf user
 	 * @return the amf user
-	 * @throws PortalException if a amf user with the primary key could not be found
+	 * @throws com.liferay.portal.kernel.exception.PortalException if a amf user with the primary key could not be found
 	 */
 	public static com.amf.registration.model.AMFUser getAMFUser(long amfUserId)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -302,7 +300,7 @@ public class AMFUserLocalServiceUtil {
 	 * @param uuid the amf user's UUID
 	 * @param groupId the primary key of the group
 	 * @return the matching amf user
-	 * @throws PortalException if a matching amf user could not be found
+	 * @throws com.liferay.portal.kernel.exception.PortalException if a matching amf user could not be found
 	 */
 	public static com.amf.registration.model.AMFUser getAMFUserByUuidAndGroupId(
 			String uuid, long groupId)
@@ -424,7 +422,7 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
-	 * @throws PortalException
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	public static com.liferay.portal.kernel.model.PersistedModel
 			getPersistedModel(java.io.Serializable primaryKeyObj)

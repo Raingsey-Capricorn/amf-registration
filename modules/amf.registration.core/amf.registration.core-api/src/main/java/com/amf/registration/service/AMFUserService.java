@@ -58,7 +58,7 @@ public interface AMFUserService extends BaseService {
 	 */
 
 	/**
-	 * @param groupId
+	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -69,11 +69,17 @@ public interface AMFUserService extends BaseService {
 	 * @param confirmedPassword
 	 * @param homePhone
 	 * @param mobilePhone
+	 * @param address
+	 * @param address2
+	 * @param city
+	 * @param state
 	 * @param zip
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
+	 * @param serviceContext
 	 * @return
+	 * @throws PortalException
 	 */
 	public AMFUser addAMFUser(
 			ThemeDisplay themeDisplay, String userName, String firstName,

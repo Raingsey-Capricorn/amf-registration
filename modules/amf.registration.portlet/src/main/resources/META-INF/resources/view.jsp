@@ -39,12 +39,14 @@
             />
             <liferay-ui:search-container-column-text colspan="<%=3%>">
                 <h5 class="text-default">
-                    <liferay-ui:message arguments="<%=new String[] {entry.getUserName(), entry.getGender()}%>"
+                    <liferay-ui:message arguments="<%=new String[] {entry.getUserName()}%>"
                                         key="x-modified-x-ago"/>
                 </h5>
+                <%--
                 <h4><aui:a
                         href="${viewDetails}">${String.format("%s - %s", entry.getFirstName(), entry.getLastName())}</aui:a>
                 </h4>
+                --%>
             </liferay-ui:search-container-column-text>
         </liferay-ui:search-container-row>
         <liferay-ui:search-iterator

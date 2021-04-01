@@ -15,7 +15,6 @@
 package com.amf.registration.model;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,18 +36,14 @@ public class AMFUserSoap implements Serializable {
 		soapModel.setAmfUserId(model.getAmfUserId());
 		soapModel.setGroupId(model.getGroupId());
 		soapModel.setCompanyId(model.getCompanyId());
-		soapModel.setUserId(model.getUserId());
-		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
-		soapModel.setUserCreatorID(model.getUserCreatorID());
-		soapModel.setGender(model.getGender());
+		soapModel.setUserName(model.getUserName());
+		soapModel.setUserId(model.getUserId());
+		soapModel.setContractId(model.getContractId());
+		soapModel.setAddressId(model.getAddressId());
 		soapModel.setHomePhone(model.getHomePhone());
 		soapModel.setMobilePhone(model.getMobilePhone());
-		soapModel.setAddressID(model.getAddressID());
-		soapModel.setSecurityQuestion(model.getSecurityQuestion());
-		soapModel.setSecurityAnswer(model.getSecurityAnswer());
-		soapModel.setAcceptedTOU(model.getAcceptedTOU());
 
 		return soapModel;
 	}
@@ -134,22 +129,6 @@ public class AMFUserSoap implements Serializable {
 		_companyId = companyId;
 	}
 
-	public long getUserId() {
-		return _userId;
-	}
-
-	public void setUserId(long userId) {
-		_userId = userId;
-	}
-
-	public String getUserName() {
-		return _userName;
-	}
-
-	public void setUserName(String userName) {
-		_userName = userName;
-	}
-
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -166,20 +145,36 @@ public class AMFUserSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
-	public long getUserCreatorID() {
-		return _userCreatorID;
+	public String getUserName() {
+		return _userName;
 	}
 
-	public void setUserCreatorID(long userCreatorID) {
-		_userCreatorID = userCreatorID;
+	public void setUserName(String userName) {
+		_userName = userName;
 	}
 
-	public String getGender() {
-		return _gender;
+	public long getUserId() {
+		return _userId;
 	}
 
-	public void setGender(String gender) {
-		_gender = gender;
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public long getContractId() {
+		return _contractId;
+	}
+
+	public void setContractId(long contractId) {
+		_contractId = contractId;
+	}
+
+	public long getAddressId() {
+		return _addressId;
+	}
+
+	public void setAddressId(long addressId) {
+		_addressId = addressId;
 	}
 
 	public String getHomePhone() {
@@ -198,53 +193,17 @@ public class AMFUserSoap implements Serializable {
 		_mobilePhone = mobilePhone;
 	}
 
-	public long getAddressID() {
-		return _addressID;
-	}
-
-	public void setAddressID(long addressID) {
-		_addressID = addressID;
-	}
-
-	public String getSecurityQuestion() {
-		return _securityQuestion;
-	}
-
-	public void setSecurityQuestion(String securityQuestion) {
-		_securityQuestion = securityQuestion;
-	}
-
-	public String getSecurityAnswer() {
-		return _securityAnswer;
-	}
-
-	public void setSecurityAnswer(String securityAnswer) {
-		_securityAnswer = securityAnswer;
-	}
-
-	public String getAcceptedTOU() {
-		return _acceptedTOU;
-	}
-
-	public void setAcceptedTOU(String acceptedTOU) {
-		_acceptedTOU = acceptedTOU;
-	}
-
 	private String _uuid;
 	private long _amfUserId;
 	private long _groupId;
 	private long _companyId;
-	private long _userId;
-	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
-	private long _userCreatorID;
-	private String _gender;
+	private String _userName;
+	private long _userId;
+	private long _contractId;
+	private long _addressId;
 	private String _homePhone;
 	private String _mobilePhone;
-	private long _addressID;
-	private String _securityQuestion;
-	private String _securityAnswer;
-	private String _acceptedTOU;
 
 }

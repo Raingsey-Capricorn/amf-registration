@@ -31,7 +31,7 @@ public class AMFUserServiceWrapper
 	}
 
 	/**
-	 * @param groupId
+	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -42,11 +42,17 @@ public class AMFUserServiceWrapper
 	 * @param confirmedPassword
 	 * @param homePhone
 	 * @param mobilePhone
+	 * @param address
+	 * @param address2
+	 * @param city
+	 * @param state
 	 * @param zip
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
+	 * @param serviceContext
 	 * @return
+	 * @throws com.liferay.portal.kernel.exception.PortalException
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser addAMFUser(

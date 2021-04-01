@@ -6,17 +6,13 @@
 		<field name="amfUserId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="userCreatorID" type="long" />
-		<field name="gender" type="String" />
+		<field name="userName" type="String" />
+		<field name="userId" type="long" />
+		<field name="contractId" type="long" />
+		<field name="addressId" type="long" />
 		<field name="homePhone" type="String" />
 		<field name="mobilePhone" type="String" />
-		<field name="addressID" type="long" />
-		<field localized="true" name="securityQuestion" type="String" />
-		<field localized="true" name="securityAnswer" type="String" />
-		<field localized="true" name="acceptedTOU" type="String" />
 	</model>
 </model-hints>

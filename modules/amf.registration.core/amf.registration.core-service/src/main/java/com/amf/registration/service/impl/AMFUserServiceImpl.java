@@ -14,19 +14,14 @@
 
 package com.amf.registration.service.impl;
 
-import com.amf.registration.constant.AMFUserConstants;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.base.AMFUserServiceBaseImpl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import java.util.Date;
 import java.util.List;
@@ -105,28 +100,27 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
             String acceptedTOU,
             ServiceContext serviceContext) throws PortalException {
 
-
         return amfUserLocalService.addAMFUser(
-                themeDisplay
-                , userName
-                , firstName
-                , lastName
-                , emailAddress
-                , gender
-                , birthDate
-                , password
-                , confirmedPassword
-                , homePhone
-                , mobilePhone
-                , address
-                , address2
-                , city
-                , state
-                , zip
-                , securityQuestion
-                , securityAnswer
-                , acceptedTOU
-                , serviceContext);
+                themeDisplay,
+                userName,
+                firstName,
+                lastName,
+                emailAddress,
+                gender,
+                birthDate,
+                password,
+                confirmedPassword,
+                homePhone,
+                mobilePhone,
+                address,
+                address2,
+                city,
+                state,
+                zip,
+                securityQuestion,
+                securityAnswer,
+                acceptedTOU,
+                serviceContext);
     }
 
     public List<AMFUser> getAMFUsersByKeywords(

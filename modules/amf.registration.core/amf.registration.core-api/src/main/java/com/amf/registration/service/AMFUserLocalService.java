@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.model.*;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -82,7 +81,6 @@ public interface AMFUserLocalService
 	public AMFUser addAMFUser(AMFUser amfUser);
 
 	/**
-	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -101,7 +99,6 @@ public interface AMFUserLocalService
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
-	 * @param serviceContext
 	 * @return
 	 * @throws PortalException
 	 */

@@ -8,27 +8,25 @@
             name="AMFUser"
             remote-service="true"
             uuid="true"
-            table="amfuser">
+            table="amfuserdetails">
 
         <column name="amfUserId" primary="true" type="long"/>
         <!-- Group instance -->
         <column name="groupId" type="long"/>
         <!-- Audit fields -->
         <column name="companyId" type="long"/>
-        <column name="userId" type="long"/>
-        <column name="userName" type="String"/>
         <column name="createDate" type="Date"/>
         <column name="modifiedDate" type="Date"/>
-        <column name="userCreatorID" type="long"/>
+        <column name="userName" type="String"/>
+
+        <!-- foreign keys -->
+        <column name="userId" type="long"/>
+        <column name="contractId" type="long"/>
+        <column name="addressId" type="long"/>
 
         <!-- User info fields -->
-        <column name="gender" type="String"/>
         <column name="homePhone" type="String"/>
         <column name="mobilePhone" type="String"/>
-        <column name="addressID" type="long"/>
-        <column name="securityQuestion" type="String" localized="true"/>
-        <column name="securityAnswer" type="String" localized="true"/>
-        <column name="acceptedTOU" type="String" localized="true"/>
 
         <!-- Order -->
         <order by="asc">
@@ -39,13 +37,9 @@
         <finder name="GroupId" return-type="Collection">
             <finder-column name="groupId"/>
         </finder>
-
         <reference entity="Group" package-path="com.liferay.portal"/>
-        <!-- References -->
-        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
-        <reference entity="AssetLink" package-path="com.liferay.portlet.asset"/>
-        <reference entity="AssetTag" package-path="com.liferay.portlet.asset"/>
     </entity>
+
     <exceptions>
         <exception>AMFUserValidation</exception>
     </exceptions>
