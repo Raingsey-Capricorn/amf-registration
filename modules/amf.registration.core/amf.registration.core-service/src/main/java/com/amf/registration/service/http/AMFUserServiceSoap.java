@@ -110,7 +110,7 @@ public class AMFUserServiceSoap {
 	/**
 	 * @param amdUserId
 	 * @return
-	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 * @throws PortalException
 	 */
 	public static com.amf.registration.model.AMFUserSoap getAmfUser(
 			long amdUserId)

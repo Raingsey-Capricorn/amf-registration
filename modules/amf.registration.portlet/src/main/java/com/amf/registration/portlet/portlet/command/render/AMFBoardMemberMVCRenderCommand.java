@@ -4,7 +4,7 @@ import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.portlet.display.context.AMFToolbarDisplayContext;
-import com.amf.registration.service.AMFUserService;
+import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -59,15 +59,11 @@ public class AMFBoardMemberMVCRenderCommand implements MVCRenderCommand {
         OrderByComparator<AMFUser> comparator = OrderByComparatorFactoryUtil.create("AMFUser", orderByCol, !("asc").equals(orderByType));
         String keywords = ParamUtil.getString(renderRequest, "keywords");
 
-        List<AMFUser> amfUsers = amfUserService.getAMFUsersByKeywords(themeDisplay.getScopeGroupId(), keywords, start, end, comparator);
-
+        List<AMFUser> amfUsers = AMFUserLocalServiceUtil.getAMFUsersByKeywords(themeDisplay.getScopeGroupId(), keywords, start, end, comparator);
         renderRequest.setAttribute("amfUsers", amfUsers);
-        renderRequest.setAttribute("amfUserCount", amfUserService.getAMFUsersCountByKeywords(themeDisplay.getScopeGroupId(), keywords));
+        renderRequest.setAttribute("amfUserCount", AMFUserLocalServiceUtil.getAMFUsersCountByKeywords(themeDisplay.getScopeGroupId(), keywords));
     }
 
     @Reference
     private Portal portal;
-    @Reference
-    private AMFUserService amfUserService;
-
 }

@@ -3,23 +3,6 @@
 <%@ include file="/init.jsp" %>
 <%@ page import="com.amf.registration.portlet.constants.MVCCommandNames" %>
 
-<liferay-ui:error key="serviceErrorDetails">
-    <liferay-ui:message arguments='<%= SessionErrors.get(liferayPortletRequest, "serviceErrorDetails") %>'
-                        key="error.registration-service-error"/>
-</liferay-ui:error>
-<liferay-ui:error key="duplicatedUserName" message="error.field-duplicate-username"/>
-<liferay-ui:error key="zipCodeInvalid" message="error.field-zipcode"/>
-<liferay-ui:error key="stateInvalid" message="error.field-address"/>
-<liferay-ui:error key="cityInvalid" message="error.field-address"/>
-<liferay-ui:error key="addressInvalid" message="error.field-address"/>
-<liferay-ui:error key="confirmationPasswordMismatch" message="error.field-password-confirmation"/>
-<liferay-ui:error key="invalidPassword" message="error.field-password"/>
-<liferay-ui:error key="invalidAge" message="error.field-birth-date"/>
-<liferay-ui:error key="invalidEmail" message="error.field-email"/>
-<liferay-ui:error key="invalidUserNameMap" message="error.field-user-name"/>
-<liferay-ui:error key="invalidLastName" message="error.field-last-name"/>
-<liferay-ui:error key="invalidFirstName" message="error.field-first-name" focusField="firstName"/>
-
 <portlet:renderURL var="regionalListsURL">
     <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_REGIONS_INFO%>"/>
     <portlet:param name="redirect" value="${currentURL}"/>
@@ -31,6 +14,23 @@
 </portlet:actionURL>
 
 <div class="container-fluid-1280">
+    <liferay-ui:error key="serviceErrorDetails">
+        <liferay-ui:message arguments='<%= SessionErrors.get(liferayPortletRequest, "serviceErrorDetails") %>'
+                            key="error.registration-service-error"/>
+    </liferay-ui:error>
+    <liferay-ui:error key="duplicatedUserName" message="error.field-duplicate-username"/>
+    <liferay-ui:error key="zipCodeInvalid" message="error.field-zipcode"/>
+    <liferay-ui:error key="stateInvalid" message="error.field-address"/>
+    <liferay-ui:error key="cityInvalid" message="error.field-address"/>
+    <liferay-ui:error key="addressInvalid" message="error.field-address"/>
+    <liferay-ui:error key="confirmationPasswordMismatch" message="error.field-password-confirmation"/>
+    <liferay-ui:error key="invalidPassword" message="error.field-password"/>
+    <liferay-ui:error key="invalidAge" message="error.field-birth-date"/>
+    <liferay-ui:error key="invalidEmail" message="error.field-email"/>
+    <liferay-ui:error key="invalidUserNameMap" message="error.field-user-name"/>
+    <liferay-ui:error key="invalidLastName" message="error.field-last-name"/>
+    <liferay-ui:error key="invalidFirstName" message="error.field-first-name" focusField="firstName"/>
+
     <h2><liferay-ui:message key="amf-registration.caption"/></h2>
     <h4 style="text-decoration: underline"><liferay-ui:message key="eligibility-country"/></h4>
     <aui:model-context bean="${amfUser}" model="${userClass}"/>

@@ -8,7 +8,7 @@
             name="AMFUser"
             remote-service="true"
             uuid="true"
-            table="amfuserdetails">
+            table="amfuser">
 
         <column name="amfUserId" primary="true" type="long"/>
         <!-- Group instance -->

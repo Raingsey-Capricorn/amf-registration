@@ -72,6 +72,9 @@ public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
         } catch (PortalException e) {
             SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());
             actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
+        } catch (Exception e) {
+            SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());
+            actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
         }
 
     }

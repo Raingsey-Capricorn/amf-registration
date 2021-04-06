@@ -120,7 +120,8 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
                 securityQuestion,
                 securityAnswer,
                 acceptedTOU,
-                serviceContext);
+                serviceContext
+        );
     }
 
     public List<AMFUser> getAMFUsersByKeywords(

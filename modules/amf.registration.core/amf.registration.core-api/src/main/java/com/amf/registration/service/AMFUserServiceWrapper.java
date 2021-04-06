@@ -52,7 +52,7 @@ public class AMFUserServiceWrapper
 	 * @param acceptedTOU
 	 * @param serviceContext
 	 * @return
-	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 * @throws PortalException
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser addAMFUser(
@@ -76,7 +76,7 @@ public class AMFUserServiceWrapper
 	/**
 	 * @param amdUserId
 	 * @return
-	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 * @throws PortalException
 	 */
 	@Override
 	public com.amf.registration.model.AMFUser getAmfUser(long amdUserId)

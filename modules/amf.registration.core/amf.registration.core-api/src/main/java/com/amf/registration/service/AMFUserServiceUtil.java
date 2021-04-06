@@ -60,7 +60,7 @@ public class AMFUserServiceUtil {
 	 * @param acceptedTOU
 	 * @param serviceContext
 	 * @return
-	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 * @throws PortalException
 	 */
 	public static com.amf.registration.model.AMFUser addAMFUser(
 			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
@@ -83,7 +83,7 @@ public class AMFUserServiceUtil {
 	/**
 	 * @param amdUserId
 	 * @return
-	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 * @throws PortalException
 	 */
 	public static com.amf.registration.model.AMFUser getAmfUser(long amdUserId)
 		throws com.liferay.portal.kernel.exception.PortalException {

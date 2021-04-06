@@ -24,9 +24,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.PwdEncryptorException;
-import com.liferay.portal.kernel.model.Address;
-import com.liferay.portal.kernel.model.Contact;
-import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.*;
 import com.liferay.portal.kernel.security.pwd.PasswordEncryptorUtil;
 import com.liferay.portal.kernel.service.*;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -113,7 +111,8 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             String securityQuestion,
             String securityAnswer,
             String acceptedTOU,
-            ServiceContext serviceContext) throws PortalException {
+            ServiceContext serviceContext
+    ) throws PortalException {
 
         amfUserValidator.validate(
                 userName,
@@ -135,23 +134,44 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                 securityAnswer,
                 acceptedTOU
         );
-
-        User registerUser = setNewUserAttributes(userName, firstName, lastName, emailAddress, birthDate, password, securityQuestion, securityAnswer, acceptedTOU);
-        Contact registerContact = setNewContactAttributes(birthDate, registerUser);
-        Address registerAddress = setNewAddressAttributes(userName, addressLineOne, addressLineTwo, city, regionId, zip, registerUser);
-        AMFUser amfUser = setNewAMFUserAttributes(homePhone, mobilePhone, registerUser, registerContact, registerAddress);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(birthDate);
         try {
-            UserLocalServiceUtil.addUser(registerUser);
-            ContactLocalServiceUtil.addContact(registerContact);
-            AddressLocalServiceUtil.addAddress(registerAddress);
-            amfUser = AMFUserLocalServiceUtil.addAMFUser(amfUser);
-            return amfUser;
+            User registerUser = userService.addUserWithWorkflow(
+                    themeDisplay.getCompanyId(),
+                    false,
+                    password,
+                    confirmedPassword,
+                    false,
+                    userName,
+                    emailAddress,
+                    LocaleUtil.fromLanguageId("en_US"),
+                    firstName,
+                    null,
+                    lastName,
+                    0,
+                    0,
+                    gender.equals("male"),
+                    cal.get(Calendar.MONTH) + 1,
+                    cal.get(Calendar.DAY_OF_MONTH),
+                    cal.get(Calendar.YEAR),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    serviceContext
+            );
+            Contact registerContact = setNewContactAttributes(birthDate, registerUser);
+            Address registerAddress = setNewAddressAttributes(userName, addressLineOne, addressLineTwo, city, regionId, zip, registerUser);
+            AMFUser amfUser = setNewAMFUserAttributes(homePhone, mobilePhone, registerUser, registerContact, registerAddress);
+            return AMFUserLocalServiceUtil.addAMFUser(amfUser);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new PortalException(e);
         }
-
     }
+
 
     /**
      * @param homePhone
@@ -161,15 +181,16 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @param registerAddress
      * @return
      */
-    private AMFUser setNewAMFUserAttributes(String homePhone, String mobilePhone, User registerUser, Contact registerContact, Address registerAddress) {
+    private AMFUser setNewAMFUserAttributes(String homePhone, String mobilePhone, User registerUser, Contact
+            registerContact, Address registerAddress) {
         long amfUserID = counterLocalService.increment(AMFUser.class.getName());
         AMFUser amfUser = AMFUserLocalServiceUtil.createAMFUser(amfUserID);
         amfUser.setUserId(registerUser.getUserId());
+        amfUser.setUserName(registerUser.getScreenName());
         amfUser.setAddressId(registerAddress.getAddressId());
         amfUser.setContractId(registerContact.getContactId());
         amfUser.setHomePhone(homePhone);
         amfUser.setMobilePhone(mobilePhone);
-        amfUser.setUserName(registerUser.getScreenName());
         amfUser.setCreateDate(new Date());
         amfUser.setModifiedDate(new Date());
         return amfUser;
@@ -186,7 +207,8 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @return
      * @throws PortalException
      */
-    private Address setNewAddressAttributes(String userName, String addressLineOne, String addressLineTwo, String city, String regionId, String zip, User registerUser) throws PortalException {
+    private Address setNewAddressAttributes(String userName, String addressLineOne, String addressLineTwo, String
+            city, String regionId, String zip, User registerUser) throws PortalException {
         long addressId = counterLocalService.increment(Address.class.getName());
         Address registerAddress = AddressLocalServiceUtil.createAddress(addressId);
         registerAddress.setCreateDate(new Date());
@@ -216,44 +238,10 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         registerContact.setModifiedDate(new Date());
         registerContact.setBirthday(birthDate);
         registerContact.setMale(true);
+        registerContact.setEmailAddress(registerUser.getEmailAddress());
         registerContact.setUserName(registerUser.getScreenName());
         registerContact.setUserId(registerUser.getUserId());
         return registerContact;
-    }
-
-    /**
-     * @param userName
-     * @param firstName
-     * @param lastName
-     * @param emailAddress
-     * @param birthDate
-     * @param password
-     * @param securityQuestion
-     * @param securityAnswer
-     * @param acceptedTOU
-     * @return
-     */
-    private User setNewUserAttributes(String userName, String firstName, String lastName, String emailAddress, Date birthDate, String password, String securityQuestion, String securityAnswer, String acceptedTOU) throws PwdEncryptorException {
-        long userID = counterLocalService.increment(User.class.getName());
-        User registerUser = UserLocalServiceUtil.createUser(userID);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(birthDate);
-        registerUser.setScreenName(userName);
-        registerUser.setFirstName(firstName);
-        registerUser.setLastName(lastName);
-        registerUser.setPassword(PasswordEncryptorUtil.encrypt(password));
-        registerUser.setPasswordUnencrypted(password);
-        registerUser.setPasswordEncrypted(true);
-        registerUser.setEmailAddress(emailAddress);
-        registerUser.setEmailAddressVerified(false);
-        registerUser.setCreateDate(new Date());
-        registerUser.setModifiedDate(new Date());
-        registerUser.setGreeting("Hello " + userName);
-        registerUser.setLanguageId(LocaleUtil.fromLanguageId("en_US").getLanguage());
-        registerUser.setReminderQueryQuestion(securityQuestion);
-        registerUser.setReminderQueryAnswer(securityAnswer);
-        registerUser.setAgreedToTermsOfUse(Boolean.parseBoolean(acceptedTOU));
-        return registerUser;
     }
 
     /**
@@ -344,4 +332,6 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     @Reference
     private CountryService countryService;
 
+    @Reference
+    private UserService userService;
 }
