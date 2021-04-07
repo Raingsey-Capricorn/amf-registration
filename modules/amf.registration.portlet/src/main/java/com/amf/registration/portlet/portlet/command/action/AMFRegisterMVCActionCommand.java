@@ -1,9 +1,9 @@
 package com.amf.registration.portlet.portlet.command.action;
 
-import com.amf.registration.exception.AMFUserValidationException;
-import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
+import com.amf.registration.exception.AMFUserValidationException;
+import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.AMFUserService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
