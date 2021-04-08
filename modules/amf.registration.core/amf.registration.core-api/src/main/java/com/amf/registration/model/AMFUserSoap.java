@@ -45,6 +45,7 @@ public class AMFUserSoap implements Serializable {
 		soapModel.setAddressId(model.getAddressId());
 		soapModel.setHomePhone(model.getHomePhone());
 		soapModel.setMobilePhone(model.getMobilePhone());
+		soapModel.setEventLog(model.getEventLog());
 
 		return soapModel;
 	}
@@ -194,6 +195,14 @@ public class AMFUserSoap implements Serializable {
 		_mobilePhone = mobilePhone;
 	}
 
+	public long getEventLog() {
+		return _eventLog;
+	}
+
+	public void setEventLog(long eventLog) {
+		_eventLog = eventLog;
+	}
+
 	private String _uuid;
 	private long _amfUserId;
 	private long _groupId;
@@ -206,5 +215,6 @@ public class AMFUserSoap implements Serializable {
 	private long _addressId;
 	private String _homePhone;
 	private String _mobilePhone;
+	private long _eventLog;
 
 }

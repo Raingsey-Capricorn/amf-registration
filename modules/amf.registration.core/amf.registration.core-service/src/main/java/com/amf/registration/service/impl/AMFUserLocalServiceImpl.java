@@ -26,8 +26,13 @@ import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.*;
-import com.liferay.portal.kernel.service.*;
+import com.liferay.portal.kernel.model.Address;
+import com.liferay.portal.kernel.model.Contact;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.AddressLocalServiceUtil;
+import com.liferay.portal.kernel.service.ContactLocalServiceUtil;
+import com.liferay.portal.kernel.service.CountryService;
+import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -112,7 +117,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             String securityQuestion,
             String securityAnswer,
             String acceptedTOU,
-            ServiceContext serviceContext
+            com.liferay.portal.kernel.service.ServiceContext serviceContext
     ) throws PortalException {
 
         amfUserValidator.validate(
@@ -167,7 +172,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             Contact registerContact = setNewContactAttributes(birthDate, registerUser);
             Address registerAddress = setNewAddressAttributes(userName, addressLineOne, addressLineTwo, city, regionId, zip, registerUser);
             AMFUser amfUser = setNewAMFUserAttributes(homePhone, mobilePhone, registerUser, registerContact, registerAddress);
-            logAMFEventForUser(amfUser);
+            logAMFEventForUser(amfUser, registerUser.getGroupId());
             return AMFUserLocalServiceUtil.addAMFUser(amfUser);
         } catch (Exception e) {
             throw new PortalException(e);
@@ -177,10 +182,11 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     /**
      * @param amfUser
      */
-    private void logAMFEventForUser(AMFUser amfUser) {
+    private void logAMFEventForUser(AMFUser amfUser, long groupID) {
         long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
         AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
-        amfEventLog.setUserId(amfUser.getAmfUserId());
+        amfEventLog.setUserId(amfUser.getUserId());
+        amfEventLog.setGroupId(groupID);
         amfEventLog.setStatus(EventStatus.REGISTER);
         amfEventLog.setCreateDate(new Date());
         amfEventLog.setNew(true);
@@ -204,6 +210,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         amfUser.setUserName(registerUser.getScreenName());
         amfUser.setAddressId(registerAddress.getAddressId());
         amfUser.setContractId(registerContact.getContactId());
+        amfUser.setGroupId(registerUser.getGroupId());
         amfUser.setHomePhone(homePhone);
         amfUser.setMobilePhone(mobilePhone);
         amfUser.setCreateDate(new Date());
@@ -339,6 +346,34 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             dynamicQuery.add(disjunctionQuery);
         }
         return dynamicQuery;
+    }
+
+    /**
+     * @param groupId
+     * @param userId
+     * @return
+     */
+    public java.util.List<com.amf.registration.model.AMFEventLog> getAMFEventLogs(long groupId, long userId) {
+        return AMFEventLogLocalServiceUtil.getAMFEventLogs(groupId, userId);
+    }
+
+    /**
+     * @param groupId
+     * @param userId
+     * @param amfUserid
+     * @return
+     */
+    public java.util.List<com.amf.registration.model.AMFEventLog> getAMFEventLogs(long groupId, long userId, long amfUserid) {
+        return AMFEventLogLocalServiceUtil.getAMFEventLogs(groupId, userId, amfUserid);
+    }
+
+    /**
+     * @param groupId
+     * @param userId
+     * @return
+     */
+    public com.amf.registration.model.AMFEventLog getLastAMFEventLog(long groupId, long userId) {
+        return AMFEventLogLocalServiceUtil.getLastAMFEventLog(groupId, userId);
     }
 
     @Reference

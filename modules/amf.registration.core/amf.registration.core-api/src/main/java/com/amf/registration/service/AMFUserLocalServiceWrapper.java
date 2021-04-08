@@ -14,58 +14,21 @@
 
 package com.amf.registration.service;
 
-import com.amf.registration.model.AMFEventLog;
-import com.amf.registration.model.AMFUser;
-
-import com.liferay.exportimport.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Projection;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.model.PersistedModel;
-import com.liferay.portal.kernel.search.Indexable;
-import com.liferay.portal.kernel.search.IndexableType;
-import com.liferay.portal.kernel.service.BaseLocalService;
-import com.liferay.portal.kernel.service.PersistedModelLocalService;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.transaction.Isolation;
-import com.liferay.portal.kernel.transaction.Propagation;
-import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.kernel.util.OrderByComparator;
-
-import java.io.Serializable;
-
-import java.util.Date;
-import java.util.List;
-
-import org.osgi.annotation.versioning.ProviderType;
+import com.liferay.portal.kernel.service.ServiceWrapper;
 
 /**
- * Provides the local service interface for AMFUser. Methods of this
- * service will not have security checks based on the propagated JAAS
- * credentials because this service can only be accessed from within the same
- * VM.
+ * Provides a wrapper for {@link AMFUserLocalService}.
  *
  * @author Brian Wing Shun Chan
- * @see AMFUserLocalServiceUtil
+ * @see AMFUserLocalService
  * @generated
  */
-@ProviderType
-@Transactional(
-	isolation = Isolation.PORTAL,
-	rollbackFor = {PortalException.class, SystemException.class}
-)
-public interface AMFUserLocalService
-	extends BaseLocalService, PersistedModelLocalService {
+public class AMFUserLocalServiceWrapper
+	implements AMFUserLocalService, ServiceWrapper<AMFUserLocalService> {
 
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never modify this interface directly. Add custom service methods to <code>com.amf.registration.service.impl.AMFUserLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the amf user local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link AMFUserLocalServiceUtil} if injection and service tracking are not available.
-	 */
+	public AMFUserLocalServiceWrapper(AMFUserLocalService amfUserLocalService) {
+		_amfUserLocalService = amfUserLocalService;
+	}
 
 	/**
 	 * Adds the amf user to the database. Also notifies the appropriate model listeners.
@@ -77,8 +40,12 @@ public interface AMFUserLocalService
 	 * @param amfUser the amf user
 	 * @return the amf user that was added
 	 */
-	@Indexable(type = IndexableType.REINDEX)
-	public AMFUser addAMFUser(AMFUser amfUser);
+	@Override
+	public com.amf.registration.model.AMFUser addAMFUser(
+		com.amf.registration.model.AMFUser amfUser) {
+
+		return _amfUserLocalService.addAMFUser(amfUser);
+	}
 
 	/**
 	 * @param userName
@@ -102,15 +69,24 @@ public interface AMFUserLocalService
 	 * @return
 	 * @throws PortalException
 	 */
-	public AMFUser addAMFUser(
-			ThemeDisplay themeDisplay, String userName, String firstName,
-			String lastName, String emailAddress, String gender, Date birthDate,
+	@Override
+	public com.amf.registration.model.AMFUser addAMFUser(
+			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
+			String userName, String firstName, String lastName,
+			String emailAddress, String gender, java.util.Date birthDate,
 			String password, String confirmedPassword, String homePhone,
 			String mobilePhone, String addressLineOne, String addressLineTwo,
 			String city, String regionId, String zip, String securityQuestion,
 			String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws PortalException;
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _amfUserLocalService.addAMFUser(
+			themeDisplay, userName, firstName, lastName, emailAddress, gender,
+			birthDate, password, confirmedPassword, homePhone, mobilePhone,
+			addressLineOne, addressLineTwo, city, regionId, zip,
+			securityQuestion, securityAnswer, acceptedTOU, serviceContext);
+	}
 
 	/**
 	 * Creates a new amf user with the primary key. Does not add the amf user to the database.
@@ -118,14 +94,21 @@ public interface AMFUserLocalService
 	 * @param amfUserId the primary key for the new amf user
 	 * @return the new amf user
 	 */
-	@Transactional(enabled = false)
-	public AMFUser createAMFUser(long amfUserId);
+	@Override
+	public com.amf.registration.model.AMFUser createAMFUser(long amfUserId) {
+		return _amfUserLocalService.createAMFUser(amfUserId);
+	}
 
 	/**
 	 * @throws PortalException
 	 */
-	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
-		throws PortalException;
+	@Override
+	public com.liferay.portal.kernel.model.PersistedModel createPersistedModel(
+			java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _amfUserLocalService.createPersistedModel(primaryKeyObj);
+	}
 
 	/**
 	 * Deletes the amf user from the database. Also notifies the appropriate model listeners.
@@ -137,8 +120,12 @@ public interface AMFUserLocalService
 	 * @param amfUser the amf user
 	 * @return the amf user that was removed
 	 */
-	@Indexable(type = IndexableType.DELETE)
-	public AMFUser deleteAMFUser(AMFUser amfUser);
+	@Override
+	public com.amf.registration.model.AMFUser deleteAMFUser(
+		com.amf.registration.model.AMFUser amfUser) {
+
+		return _amfUserLocalService.deleteAMFUser(amfUser);
+	}
 
 	/**
 	 * Deletes the amf user with the primary key from the database. Also notifies the appropriate model listeners.
@@ -151,18 +138,28 @@ public interface AMFUserLocalService
 	 * @return the amf user that was removed
 	 * @throws PortalException if a amf user with the primary key could not be found
 	 */
-	@Indexable(type = IndexableType.DELETE)
-	public AMFUser deleteAMFUser(long amfUserId) throws PortalException;
+	@Override
+	public com.amf.registration.model.AMFUser deleteAMFUser(long amfUserId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _amfUserLocalService.deleteAMFUser(amfUserId);
+	}
 
 	/**
 	 * @throws PortalException
 	 */
 	@Override
-	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
-		throws PortalException;
+	public com.liferay.portal.kernel.model.PersistedModel deletePersistedModel(
+			com.liferay.portal.kernel.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public DynamicQuery dynamicQuery();
+		return _amfUserLocalService.deletePersistedModel(persistedModel);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
+		return _amfUserLocalService.dynamicQuery();
+	}
 
 	/**
 	 * Performs a dynamic query on the database and returns the matching rows.
@@ -170,8 +167,12 @@ public interface AMFUserLocalService
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery);
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
+
+		return _amfUserLocalService.dynamicQuery(dynamicQuery);
+	}
 
 	/**
 	 * Performs a dynamic query on the database and returns a range of the matching rows.
@@ -185,9 +186,13 @@ public interface AMFUserLocalService
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public <T> List<T> dynamicQuery(
-		DynamicQuery dynamicQuery, int start, int end);
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
+		int end) {
+
+		return _amfUserLocalService.dynamicQuery(dynamicQuery, start, end);
+	}
 
 	/**
 	 * Performs a dynamic query on the database and returns an ordered range of the matching rows.
@@ -202,10 +207,15 @@ public interface AMFUserLocalService
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public <T> List<T> dynamicQuery(
-		DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator<T> orderByComparator);
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
+
+		return _amfUserLocalService.dynamicQuery(
+			dynamicQuery, start, end, orderByComparator);
+	}
 
 	/**
 	 * Returns the number of rows matching the dynamic query.
@@ -213,8 +223,12 @@ public interface AMFUserLocalService
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows matching the dynamic query
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long dynamicQueryCount(DynamicQuery dynamicQuery);
+	@Override
+	public long dynamicQueryCount(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
+
+		return _amfUserLocalService.dynamicQueryCount(dynamicQuery);
+	}
 
 	/**
 	 * Returns the number of rows matching the dynamic query.
@@ -223,12 +237,18 @@ public interface AMFUserLocalService
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows matching the dynamic query
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	@Override
 	public long dynamicQueryCount(
-		DynamicQuery dynamicQuery, Projection projection);
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AMFUser fetchAMFUser(long amfUserId);
+		return _amfUserLocalService.dynamicQueryCount(dynamicQuery, projection);
+	}
+
+	@Override
+	public com.amf.registration.model.AMFUser fetchAMFUser(long amfUserId) {
+		return _amfUserLocalService.fetchAMFUser(amfUserId);
+	}
 
 	/**
 	 * Returns the amf user matching the UUID and group.
@@ -237,19 +257,31 @@ public interface AMFUserLocalService
 	 * @param groupId the primary key of the group
 	 * @return the matching amf user, or <code>null</code> if a matching amf user could not be found
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AMFUser fetchAMFUserByUuidAndGroupId(String uuid, long groupId);
+	@Override
+	public com.amf.registration.model.AMFUser fetchAMFUserByUuidAndGroupId(
+		String uuid, long groupId) {
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ActionableDynamicQuery getActionableDynamicQuery();
+		return _amfUserLocalService.fetchAMFUserByUuidAndGroupId(uuid, groupId);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
+		getActionableDynamicQuery() {
+
+		return _amfUserLocalService.getActionableDynamicQuery();
+	}
 
 	/**
 	 * @param groupId
 	 * @param userId
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFEventLog> getAMFEventLogs(long groupId, long userId);
+	@Override
+	public java.util.List<com.amf.registration.model.AMFEventLog>
+		getAMFEventLogs(long groupId, long userId) {
+
+		return _amfUserLocalService.getAMFEventLogs(groupId, userId);
+	}
 
 	/**
 	 * @param groupId
@@ -257,9 +289,12 @@ public interface AMFUserLocalService
 	 * @param amfUserid
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFEventLog> getAMFEventLogs(
-		long groupId, long userId, long amfUserid);
+	@Override
+	public java.util.List<com.amf.registration.model.AMFEventLog>
+		getAMFEventLogs(long groupId, long userId, long amfUserid) {
+
+		return _amfUserLocalService.getAMFEventLogs(groupId, userId, amfUserid);
+	}
 
 	/**
 	 * Returns the amf user with the primary key.
@@ -268,16 +303,22 @@ public interface AMFUserLocalService
 	 * @return the amf user
 	 * @throws PortalException if a amf user with the primary key could not be found
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AMFUser getAMFUser(long amfUserId) throws PortalException;
+	@Override
+	public com.amf.registration.model.AMFUser getAMFUser(long amfUserId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _amfUserLocalService.getAMFUser(amfUserId);
+	}
 
 	/**
 	 * @param groupId
 	 * @param userName
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getAMFUserByUserName(long groupId, String userName);
+	@Override
+	public long getAMFUserByUserName(long groupId, String userName) {
+		return _amfUserLocalService.getAMFUserByUserName(groupId, userName);
+	}
 
 	/**
 	 * Returns the amf user matching the UUID and group.
@@ -287,9 +328,13 @@ public interface AMFUserLocalService
 	 * @return the matching amf user
 	 * @throws PortalException if a matching amf user could not be found
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AMFUser getAMFUserByUuidAndGroupId(String uuid, long groupId)
-		throws PortalException;
+	@Override
+	public com.amf.registration.model.AMFUser getAMFUserByUuidAndGroupId(
+			String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _amfUserLocalService.getAMFUserByUuidAndGroupId(uuid, groupId);
+	}
 
 	/**
 	 * Returns a range of all the amf users.
@@ -302,8 +347,12 @@ public interface AMFUserLocalService
 	 * @param end the upper bound of the range of amf users (not inclusive)
 	 * @return the range of amf users
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFUser> getAMFUsers(int start, int end);
+	@Override
+	public java.util.List<com.amf.registration.model.AMFUser> getAMFUsers(
+		int start, int end) {
+
+		return _amfUserLocalService.getAMFUsers(start, end);
+	}
 
 	/**
 	 * @param groupId
@@ -313,10 +362,16 @@ public interface AMFUserLocalService
 	 * @param orderByComparator
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFUser> getAMFUsersByKeywords(
-		long groupId, String keywords, int start, int end,
-		OrderByComparator<AMFUser> orderByComparator);
+	@Override
+	public java.util.List<com.amf.registration.model.AMFUser>
+		getAMFUsersByKeywords(
+			long groupId, String keywords, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.amf.registration.model.AMFUser> orderByComparator) {
+
+		return _amfUserLocalService.getAMFUsersByKeywords(
+			groupId, keywords, start, end, orderByComparator);
+	}
 
 	/**
 	 * Returns all the amf users matching the UUID and company.
@@ -325,9 +380,13 @@ public interface AMFUserLocalService
 	 * @param companyId the primary key of the company
 	 * @return the matching amf users, or an empty list if no matches were found
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFUser> getAMFUsersByUuidAndCompanyId(
-		String uuid, long companyId);
+	@Override
+	public java.util.List<com.amf.registration.model.AMFUser>
+		getAMFUsersByUuidAndCompanyId(String uuid, long companyId) {
+
+		return _amfUserLocalService.getAMFUsersByUuidAndCompanyId(
+			uuid, companyId);
+	}
 
 	/**
 	 * Returns a range of amf users matching the UUID and company.
@@ -339,33 +398,54 @@ public interface AMFUserLocalService
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the range of matching amf users, or an empty list if no matches were found
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFUser> getAMFUsersByUuidAndCompanyId(
-		String uuid, long companyId, int start, int end,
-		OrderByComparator<AMFUser> orderByComparator);
+	@Override
+	public java.util.List<com.amf.registration.model.AMFUser>
+		getAMFUsersByUuidAndCompanyId(
+			String uuid, long companyId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.amf.registration.model.AMFUser> orderByComparator) {
+
+		return _amfUserLocalService.getAMFUsersByUuidAndCompanyId(
+			uuid, companyId, start, end, orderByComparator);
+	}
 
 	/**
 	 * Returns the number of amf users.
 	 *
 	 * @return the number of amf users
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getAMFUsersCount();
+	@Override
+	public int getAMFUsersCount() {
+		return _amfUserLocalService.getAMFUsersCount();
+	}
 
 	/**
 	 * @param groupId
 	 * @param userName
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getAMFUsersCountByKeywords(long groupId, String userName);
+	@Override
+	public long getAMFUsersCountByKeywords(long groupId, String userName) {
+		return _amfUserLocalService.getAMFUsersCountByKeywords(
+			groupId, userName);
+	}
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
-		PortletDataContext portletDataContext);
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
+		getExportActionableDynamicQuery(
+			com.liferay.exportimport.kernel.lar.PortletDataContext
+				portletDataContext) {
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
+		return _amfUserLocalService.getExportActionableDynamicQuery(
+			portletDataContext);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery
+		getIndexableActionableDynamicQuery() {
+
+		return _amfUserLocalService.getIndexableActionableDynamicQuery();
+	}
 
 	/**
 	 * @param groupId
@@ -373,26 +453,38 @@ public interface AMFUserLocalService
 	 * @param amfUserid
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AMFEventLog getLastAMFEventLog(long groupId, long userId);
+	@Override
+	public com.amf.registration.model.AMFEventLog getLastAMFEventLog(
+		long groupId, long userId) {
+
+		return _amfUserLocalService.getLastAMFEventLog(groupId, userId);
+	}
 
 	/**
 	 * Returns the OSGi service identifier.
 	 *
 	 * @return the OSGi service identifier
 	 */
-	public String getOSGiServiceIdentifier();
+	@Override
+	public String getOSGiServiceIdentifier() {
+		return _amfUserLocalService.getOSGiServiceIdentifier();
+	}
 
 	/**
 	 * @throws PortalException
 	 */
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException;
+	public com.liferay.portal.kernel.model.PersistedModel getPersistedModel(
+			java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean isUserNameUnique();
+		return _amfUserLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	@Override
+	public boolean isUserNameUnique() {
+		return _amfUserLocalService.isUserNameUnique();
+	}
 
 	/**
 	 * Updates the amf user in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
@@ -404,7 +496,23 @@ public interface AMFUserLocalService
 	 * @param amfUser the amf user
 	 * @return the amf user that was updated
 	 */
-	@Indexable(type = IndexableType.REINDEX)
-	public AMFUser updateAMFUser(AMFUser amfUser);
+	@Override
+	public com.amf.registration.model.AMFUser updateAMFUser(
+		com.amf.registration.model.AMFUser amfUser) {
+
+		return _amfUserLocalService.updateAMFUser(amfUser);
+	}
+
+	@Override
+	public AMFUserLocalService getWrappedService() {
+		return _amfUserLocalService;
+	}
+
+	@Override
+	public void setWrappedService(AMFUserLocalService amfUserLocalService) {
+		_amfUserLocalService = amfUserLocalService;
+	}
+
+	private AMFUserLocalService _amfUserLocalService;
 
 }

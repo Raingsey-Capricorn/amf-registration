@@ -27,7 +27,7 @@
         <!-- User info fields -->
         <column name="homePhone" type="String"/>
         <column name="mobilePhone" type="String"/>
-        <column name="amfEventLog" type="Collection" entity="AMFEventLog" mapping-table="eventlog"/>
+        <column name="eventLog" type="long" entity="AMFEventLog" mapping-table="eventlog"/>
         <!-- Order -->
         <order by="asc">
             <order-column name="userName"/>
@@ -47,9 +47,12 @@
             table="amfeventlog">
 
         <column name="amfEventLogId" primary="true" type="long"/>
+        <column name="companyId" type="long"/>
         <column name="createDate" type="Date"/>
         <column name="modifiedDate" type="Date"/>
-        <column name="userId" type="long" entity="AMFUser" mapping-table="eventlog"/>
+        <column name="groupId" type="long"/>
+        <column name="userId" type="long"/>
+        <column name="amfUserId" type="Collection" entity="AMFUser" mapping-table="eventlog"/>
         <column name="lastLoginDate" type="Date"/>
         <column name="lastLoginIP" type="String"/>
         <column name="status" type="String"/>

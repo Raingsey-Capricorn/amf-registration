@@ -55,6 +55,7 @@ public class AMFUserWrapper
 		attributes.put("addressId", getAddressId());
 		attributes.put("homePhone", getHomePhone());
 		attributes.put("mobilePhone", getMobilePhone());
+		attributes.put("eventLog", getEventLog());
 
 		return attributes;
 	}
@@ -132,6 +133,12 @@ public class AMFUserWrapper
 		if (mobilePhone != null) {
 			setMobilePhone(mobilePhone);
 		}
+
+		Long eventLog = (Long)attributes.get("eventLog");
+
+		if (eventLog != null) {
+			setEventLog(eventLog);
+		}
 	}
 
 	/**
@@ -192,6 +199,16 @@ public class AMFUserWrapper
 	@Override
 	public Date getCreateDate() {
 		return model.getCreateDate();
+	}
+
+	/**
+	 * Returns the event log of this amf user.
+	 *
+	 * @return the event log of this amf user
+	 */
+	@Override
+	public long getEventLog() {
+		return model.getEventLog();
 	}
 
 	/**
@@ -347,6 +364,16 @@ public class AMFUserWrapper
 	@Override
 	public void setCreateDate(Date createDate) {
 		model.setCreateDate(createDate);
+	}
+
+	/**
+	 * Sets the event log of this amf user.
+	 *
+	 * @param eventLog the event log of this amf user
+	 */
+	@Override
+	public void setEventLog(long eventLog) {
+		model.setEventLog(eventLog);
 	}
 
 	/**

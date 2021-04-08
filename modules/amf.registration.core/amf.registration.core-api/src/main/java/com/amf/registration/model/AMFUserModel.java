@@ -275,4 +275,18 @@ public interface AMFUserModel
 	 */
 	public void setMobilePhone(String mobilePhone);
 
+	/**
+	 * Returns the event log of this amf user.
+	 *
+	 * @return the event log of this amf user
+	 */
+	public long getEventLog();
+
+	/**
+	 * Sets the event log of this amf user.
+	 *
+	 * @param eventLog the event log of this amf user
+	 */
+	public void setEventLog(long eventLog);
+
 }

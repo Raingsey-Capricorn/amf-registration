@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
+ * <p>
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- *
+ * <p>
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
@@ -17,7 +17,6 @@ package com.amf.registration.model.impl;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.model.AMFUserModel;
 import com.amf.registration.model.AMFUserSoap;
-
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
@@ -36,19 +35,10 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
 import java.io.Serializable;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
-
 import java.sql.Types;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -60,990 +50,1007 @@ import java.util.function.Function;
  * </p>
  *
  * @author Brian Wing Shun Chan
- * @see AMFUserImpl
  * @generated
+ * @see AMFUserImpl
  */
 @JSON(strict = true)
 public class AMFUserModelImpl
-	extends BaseModelImpl<AMFUser> implements AMFUserModel {
-
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never modify or reference this class directly. All methods that expect a amf user model instance should use the <code>AMFUser</code> interface instead.
-	 */
-	public static final String TABLE_NAME = "amfuser";
-
-	public static final Object[][] TABLE_COLUMNS = {
-		{"uuid_", Types.VARCHAR}, {"amfUserId", Types.BIGINT},
-		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"userName", Types.VARCHAR}, {"userId", Types.BIGINT},
-		{"contractId", Types.BIGINT}, {"addressId", Types.BIGINT},
-		{"homePhone", Types.VARCHAR}, {"mobilePhone", Types.VARCHAR}
-	};
-
-	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
-		new HashMap<String, Integer>();
-
-	static {
-		TABLE_COLUMNS_MAP.put("uuid_", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("amfUserId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("contractId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("addressId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("homePhone", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("mobilePhone", Types.VARCHAR);
-	}
-
-	public static final String TABLE_SQL_CREATE =
-		"create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,userName VARCHAR(75) null,userId LONG,contractId LONG,addressId LONG,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null)";
-
-	public static final String TABLE_SQL_DROP = "drop table amfuser";
-
-	public static final String ORDER_BY_JPQL = " ORDER BY amfUser.userName ASC";
-
-	public static final String ORDER_BY_SQL = " ORDER BY amfuser.userName ASC";
-
-	public static final String DATA_SOURCE = "liferayDataSource";
-
-	public static final String SESSION_FACTORY = "liferaySessionFactory";
-
-	public static final String TX_MANAGER = "liferayTransactionManager";
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long COMPANYID_COLUMN_BITMASK = 1L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long GROUPID_COLUMN_BITMASK = 2L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long UUID_COLUMN_BITMASK = 4L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *		#getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long USERNAME_COLUMN_BITMASK = 8L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-	}
-
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static AMFUser toModel(AMFUserSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		AMFUser model = new AMFUserImpl();
-
-		model.setUuid(soapModel.getUuid());
-		model.setAmfUserId(soapModel.getAmfUserId());
-		model.setGroupId(soapModel.getGroupId());
-		model.setCompanyId(soapModel.getCompanyId());
-		model.setCreateDate(soapModel.getCreateDate());
-		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setUserName(soapModel.getUserName());
-		model.setUserId(soapModel.getUserId());
-		model.setContractId(soapModel.getContractId());
-		model.setAddressId(soapModel.getAddressId());
-		model.setHomePhone(soapModel.getHomePhone());
-		model.setMobilePhone(soapModel.getMobilePhone());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<AMFUser> toModels(AMFUserSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<AMFUser> models = new ArrayList<AMFUser>(soapModels.length);
-
-		for (AMFUserSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
-	public static final String MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_NAME =
-		"AMFRegistration_eventlog";
-
-	public static final Object[][]
-		MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_COLUMNS = {
-			{"companyId", Types.BIGINT}, {"amfEventLogId", Types.BIGINT},
-			{"amfUserId", Types.BIGINT}
-		};
-
-	public static final String
-		MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_SQL_CREATE =
-			"create table AMFRegistration_eventlog (companyId LONG not null,amfEventLogId LONG not null,amfUserId LONG not null,primary key (amfEventLogId, amfUserId))";
-
-	public AMFUserModelImpl() {
-	}
-
-	@Override
-	public long getPrimaryKey() {
-		return _amfUserId;
-	}
-
-	@Override
-	public void setPrimaryKey(long primaryKey) {
-		setAmfUserId(primaryKey);
-	}
-
-	@Override
-	public Serializable getPrimaryKeyObj() {
-		return _amfUserId;
-	}
-
-	@Override
-	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
-		setPrimaryKey(((Long)primaryKeyObj).longValue());
-	}
-
-	@Override
-	public Class<?> getModelClass() {
-		return AMFUser.class;
-	}
-
-	@Override
-	public String getModelClassName() {
-		return AMFUser.class.getName();
-	}
-
-	@Override
-	public Map<String, Object> getModelAttributes() {
-		Map<String, Object> attributes = new HashMap<String, Object>();
-
-		Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		for (Map.Entry<String, Function<AMFUser, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<AMFUser, Object> attributeGetterFunction =
-				entry.getValue();
-
-			attributes.put(
-				attributeName, attributeGetterFunction.apply((AMFUser)this));
-		}
-
-		return attributes;
-	}
-
-	@Override
-	public void setModelAttributes(Map<String, Object> attributes) {
-		Map<String, BiConsumer<AMFUser, Object>> attributeSetterBiConsumers =
-			getAttributeSetterBiConsumers();
-
-		for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-			String attributeName = entry.getKey();
-
-			BiConsumer<AMFUser, Object> attributeSetterBiConsumer =
-				attributeSetterBiConsumers.get(attributeName);
-
-			if (attributeSetterBiConsumer != null) {
-				attributeSetterBiConsumer.accept(
-					(AMFUser)this, entry.getValue());
-			}
-		}
-	}
-
-	public Map<String, Function<AMFUser, Object>>
-		getAttributeGetterFunctions() {
-
-		return _attributeGetterFunctions;
-	}
-
-	public Map<String, BiConsumer<AMFUser, Object>>
-		getAttributeSetterBiConsumers() {
-
-		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, AMFUser>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			AMFUser.class.getClassLoader(), AMFUser.class, ModelWrapper.class);
-
-		try {
-			Constructor<AMFUser> constructor =
-				(Constructor<AMFUser>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
-	}
-
-	private static final Map<String, Function<AMFUser, Object>>
-		_attributeGetterFunctions;
-	private static final Map<String, BiConsumer<AMFUser, Object>>
-		_attributeSetterBiConsumers;
-
-	static {
-		Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
-			new LinkedHashMap<String, Function<AMFUser, Object>>();
-		Map<String, BiConsumer<AMFUser, ?>> attributeSetterBiConsumers =
-			new LinkedHashMap<String, BiConsumer<AMFUser, ?>>();
-
-		attributeGetterFunctions.put("uuid", AMFUser::getUuid);
-		attributeSetterBiConsumers.put(
-			"uuid", (BiConsumer<AMFUser, String>)AMFUser::setUuid);
-		attributeGetterFunctions.put("amfUserId", AMFUser::getAmfUserId);
-		attributeSetterBiConsumers.put(
-			"amfUserId", (BiConsumer<AMFUser, Long>)AMFUser::setAmfUserId);
-		attributeGetterFunctions.put("groupId", AMFUser::getGroupId);
-		attributeSetterBiConsumers.put(
-			"groupId", (BiConsumer<AMFUser, Long>)AMFUser::setGroupId);
-		attributeGetterFunctions.put("companyId", AMFUser::getCompanyId);
-		attributeSetterBiConsumers.put(
-			"companyId", (BiConsumer<AMFUser, Long>)AMFUser::setCompanyId);
-		attributeGetterFunctions.put("createDate", AMFUser::getCreateDate);
-		attributeSetterBiConsumers.put(
-			"createDate", (BiConsumer<AMFUser, Date>)AMFUser::setCreateDate);
-		attributeGetterFunctions.put("modifiedDate", AMFUser::getModifiedDate);
-		attributeSetterBiConsumers.put(
-			"modifiedDate",
-			(BiConsumer<AMFUser, Date>)AMFUser::setModifiedDate);
-		attributeGetterFunctions.put("userName", AMFUser::getUserName);
-		attributeSetterBiConsumers.put(
-			"userName", (BiConsumer<AMFUser, String>)AMFUser::setUserName);
-		attributeGetterFunctions.put("userId", AMFUser::getUserId);
-		attributeSetterBiConsumers.put(
-			"userId", (BiConsumer<AMFUser, Long>)AMFUser::setUserId);
-		attributeGetterFunctions.put("contractId", AMFUser::getContractId);
-		attributeSetterBiConsumers.put(
-			"contractId", (BiConsumer<AMFUser, Long>)AMFUser::setContractId);
-		attributeGetterFunctions.put("addressId", AMFUser::getAddressId);
-		attributeSetterBiConsumers.put(
-			"addressId", (BiConsumer<AMFUser, Long>)AMFUser::setAddressId);
-		attributeGetterFunctions.put("homePhone", AMFUser::getHomePhone);
-		attributeSetterBiConsumers.put(
-			"homePhone", (BiConsumer<AMFUser, String>)AMFUser::setHomePhone);
-		attributeGetterFunctions.put("mobilePhone", AMFUser::getMobilePhone);
-		attributeSetterBiConsumers.put(
-			"mobilePhone",
-			(BiConsumer<AMFUser, String>)AMFUser::setMobilePhone);
-
-		_attributeGetterFunctions = Collections.unmodifiableMap(
-			attributeGetterFunctions);
-		_attributeSetterBiConsumers = Collections.unmodifiableMap(
-			(Map)attributeSetterBiConsumers);
-	}
-
-	@JSON
-	@Override
-	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
-	}
-
-	@Override
-	public void setUuid(String uuid) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_uuid = uuid;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public String getOriginalUuid() {
-		return getColumnOriginalValue("uuid_");
-	}
-
-	@JSON
-	@Override
-	public long getAmfUserId() {
-		return _amfUserId;
-	}
-
-	@Override
-	public void setAmfUserId(long amfUserId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_amfUserId = amfUserId;
-	}
-
-	@Override
-	public String getAmfUserUuid() {
-		try {
-			User user = UserLocalServiceUtil.getUserById(getAmfUserId());
-
-			return user.getUuid();
-		}
-		catch (PortalException portalException) {
-			return "";
-		}
-	}
-
-	@Override
-	public void setAmfUserUuid(String amfUserUuid) {
-	}
-
-	@JSON
-	@Override
-	public long getGroupId() {
-		return _groupId;
-	}
-
-	@Override
-	public void setGroupId(long groupId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_groupId = groupId;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalGroupId() {
-		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("groupId"));
-	}
-
-	@JSON
-	@Override
-	public long getCompanyId() {
-		return _companyId;
-	}
-
-	@Override
-	public void setCompanyId(long companyId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_companyId = companyId;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalCompanyId() {
-		return GetterUtil.getLong(
-			this.<Long>getColumnOriginalValue("companyId"));
-	}
-
-	@JSON
-	@Override
-	public Date getCreateDate() {
-		return _createDate;
-	}
-
-	@Override
-	public void setCreateDate(Date createDate) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_createDate = createDate;
-	}
-
-	@JSON
-	@Override
-	public Date getModifiedDate() {
-		return _modifiedDate;
-	}
-
-	public boolean hasSetModifiedDate() {
-		return _setModifiedDate;
-	}
-
-	@Override
-	public void setModifiedDate(Date modifiedDate) {
-		_setModifiedDate = true;
-
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_modifiedDate = modifiedDate;
-	}
-
-	@JSON
-	@Override
-	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
-	}
-
-	@Override
-	public void setUserName(String userName) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_userName = userName;
-	}
-
-	@JSON
-	@Override
-	public long getUserId() {
-		return _userId;
-	}
-
-	@Override
-	public void setUserId(long userId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_userId = userId;
-	}
-
-	@Override
-	public String getUserUuid() {
-		try {
-			User user = UserLocalServiceUtil.getUserById(getUserId());
-
-			return user.getUuid();
-		}
-		catch (PortalException portalException) {
-			return "";
-		}
-	}
-
-	@Override
-	public void setUserUuid(String userUuid) {
-	}
-
-	@JSON
-	@Override
-	public long getContractId() {
-		return _contractId;
-	}
-
-	@Override
-	public void setContractId(long contractId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_contractId = contractId;
-	}
-
-	@JSON
-	@Override
-	public long getAddressId() {
-		return _addressId;
-	}
-
-	@Override
-	public void setAddressId(long addressId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_addressId = addressId;
-	}
-
-	@JSON
-	@Override
-	public String getHomePhone() {
-		if (_homePhone == null) {
-			return "";
-		}
-		else {
-			return _homePhone;
-		}
-	}
-
-	@Override
-	public void setHomePhone(String homePhone) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_homePhone = homePhone;
-	}
-
-	@JSON
-	@Override
-	public String getMobilePhone() {
-		if (_mobilePhone == null) {
-			return "";
-		}
-		else {
-			return _mobilePhone;
-		}
-	}
-
-	@Override
-	public void setMobilePhone(String mobilePhone) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_mobilePhone = mobilePhone;
-	}
-
-	@Override
-	public StagedModelType getStagedModelType() {
-		return new StagedModelType(
-			PortalUtil.getClassNameId(AMFUser.class.getName()));
-	}
-
-	public long getColumnBitmask() {
-		if (_columnBitmask > 0) {
-			return _columnBitmask;
-		}
-
-		if ((_columnOriginalValues == null) ||
-			(_columnOriginalValues == Collections.EMPTY_MAP)) {
-
-			return 0;
-		}
-
-		for (Map.Entry<String, Object> entry :
-				_columnOriginalValues.entrySet()) {
-
-			if (entry.getValue() != getColumnValue(entry.getKey())) {
-				_columnBitmask |= _columnBitmasks.get(entry.getKey());
-			}
-		}
-
-		return _columnBitmask;
-	}
-
-	@Override
-	public ExpandoBridge getExpandoBridge() {
-		return ExpandoBridgeFactoryUtil.getExpandoBridge(
-			getCompanyId(), AMFUser.class.getName(), getPrimaryKey());
-	}
-
-	@Override
-	public void setExpandoBridgeAttributes(ServiceContext serviceContext) {
-		ExpandoBridge expandoBridge = getExpandoBridge();
-
-		expandoBridge.setAttributes(serviceContext);
-	}
-
-	@Override
-	public AMFUser toEscapedModel() {
-		if (_escapedModel == null) {
-			Function<InvocationHandler, AMFUser>
-				escapedModelProxyProviderFunction =
-					EscapedModelProxyProviderFunctionHolder.
-						_escapedModelProxyProviderFunction;
-
-			_escapedModel = escapedModelProxyProviderFunction.apply(
-				new AutoEscapeBeanHandler(this));
-		}
-
-		return _escapedModel;
-	}
-
-	@Override
-	public Object clone() {
-		AMFUserImpl amfUserImpl = new AMFUserImpl();
-
-		amfUserImpl.setUuid(getUuid());
-		amfUserImpl.setAmfUserId(getAmfUserId());
-		amfUserImpl.setGroupId(getGroupId());
-		amfUserImpl.setCompanyId(getCompanyId());
-		amfUserImpl.setCreateDate(getCreateDate());
-		amfUserImpl.setModifiedDate(getModifiedDate());
-		amfUserImpl.setUserName(getUserName());
-		amfUserImpl.setUserId(getUserId());
-		amfUserImpl.setContractId(getContractId());
-		amfUserImpl.setAddressId(getAddressId());
-		amfUserImpl.setHomePhone(getHomePhone());
-		amfUserImpl.setMobilePhone(getMobilePhone());
-
-		amfUserImpl.resetOriginalValues();
-
-		return amfUserImpl;
-	}
-
-	@Override
-	public int compareTo(AMFUser amfUser) {
-		int value = 0;
-
-		value = getUserName().compareTo(amfUser.getUserName());
-
-		if (value != 0) {
-			return value;
-		}
-
-		return 0;
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		if (this == object) {
-			return true;
-		}
-
-		if (!(object instanceof AMFUser)) {
-			return false;
-		}
-
-		AMFUser amfUser = (AMFUser)object;
-
-		long primaryKey = amfUser.getPrimaryKey();
-
-		if (getPrimaryKey() == primaryKey) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return (int)getPrimaryKey();
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public boolean isEntityCacheEnabled() {
-		return true;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public boolean isFinderCacheEnabled() {
-		return true;
-	}
-
-	@Override
-	public void resetOriginalValues() {
-		_columnOriginalValues = Collections.emptyMap();
-
-		_setModifiedDate = false;
-
-		_columnBitmask = 0;
-	}
-
-	@Override
-	public CacheModel<AMFUser> toCacheModel() {
-		AMFUserCacheModel amfUserCacheModel = new AMFUserCacheModel();
-
-		amfUserCacheModel.uuid = getUuid();
-
-		String uuid = amfUserCacheModel.uuid;
-
-		if ((uuid != null) && (uuid.length() == 0)) {
-			amfUserCacheModel.uuid = null;
-		}
-
-		amfUserCacheModel.amfUserId = getAmfUserId();
-
-		amfUserCacheModel.groupId = getGroupId();
-
-		amfUserCacheModel.companyId = getCompanyId();
-
-		Date createDate = getCreateDate();
-
-		if (createDate != null) {
-			amfUserCacheModel.createDate = createDate.getTime();
-		}
-		else {
-			amfUserCacheModel.createDate = Long.MIN_VALUE;
-		}
-
-		Date modifiedDate = getModifiedDate();
-
-		if (modifiedDate != null) {
-			amfUserCacheModel.modifiedDate = modifiedDate.getTime();
-		}
-		else {
-			amfUserCacheModel.modifiedDate = Long.MIN_VALUE;
-		}
-
-		amfUserCacheModel.userName = getUserName();
-
-		String userName = amfUserCacheModel.userName;
-
-		if ((userName != null) && (userName.length() == 0)) {
-			amfUserCacheModel.userName = null;
-		}
-
-		amfUserCacheModel.userId = getUserId();
-
-		amfUserCacheModel.contractId = getContractId();
-
-		amfUserCacheModel.addressId = getAddressId();
-
-		amfUserCacheModel.homePhone = getHomePhone();
-
-		String homePhone = amfUserCacheModel.homePhone;
-
-		if ((homePhone != null) && (homePhone.length() == 0)) {
-			amfUserCacheModel.homePhone = null;
-		}
-
-		amfUserCacheModel.mobilePhone = getMobilePhone();
-
-		String mobilePhone = amfUserCacheModel.mobilePhone;
-
-		if ((mobilePhone != null) && (mobilePhone.length() == 0)) {
-			amfUserCacheModel.mobilePhone = null;
-		}
-
-		return amfUserCacheModel;
-	}
-
-	@Override
-	public String toString() {
-		Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(4 * attributeGetterFunctions.size()) + 2);
-
-		sb.append("{");
-
-		for (Map.Entry<String, Function<AMFUser, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<AMFUser, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append(attributeName);
-			sb.append("=");
-			sb.append(attributeGetterFunction.apply((AMFUser)this));
-			sb.append(", ");
-		}
-
-		if (sb.index() > 1) {
-			sb.setIndex(sb.index() - 1);
-		}
-
-		sb.append("}");
-
-		return sb.toString();
-	}
-
-	@Override
-	public String toXmlString() {
-		Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
-			getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<AMFUser, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<AMFUser, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((AMFUser)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
-	private static class EscapedModelProxyProviderFunctionHolder {
-
-		private static final Function<InvocationHandler, AMFUser>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
-
-	}
-
-	private String _uuid;
-	private long _amfUserId;
-	private long _groupId;
-	private long _companyId;
-	private Date _createDate;
-	private Date _modifiedDate;
-	private boolean _setModifiedDate;
-	private String _userName;
-	private long _userId;
-	private long _contractId;
-	private long _addressId;
-	private String _homePhone;
-	private String _mobilePhone;
-
-	public <T> T getColumnValue(String columnName) {
-		columnName = _attributeNames.getOrDefault(columnName, columnName);
-
-		Function<AMFUser, Object> function = _attributeGetterFunctions.get(
-			columnName);
-
-		if (function == null) {
-			throw new IllegalArgumentException(
-				"No attribute getter function found for " + columnName);
-		}
-
-		return (T)function.apply((AMFUser)this);
-	}
-
-	public <T> T getColumnOriginalValue(String columnName) {
-		if (_columnOriginalValues == null) {
-			return null;
-		}
-
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		return (T)_columnOriginalValues.get(columnName);
-	}
-
-	private void _setColumnOriginalValues() {
-		_columnOriginalValues = new HashMap<String, Object>();
-
-		_columnOriginalValues.put("uuid_", _uuid);
-		_columnOriginalValues.put("amfUserId", _amfUserId);
-		_columnOriginalValues.put("groupId", _groupId);
-		_columnOriginalValues.put("companyId", _companyId);
-		_columnOriginalValues.put("createDate", _createDate);
-		_columnOriginalValues.put("modifiedDate", _modifiedDate);
-		_columnOriginalValues.put("userName", _userName);
-		_columnOriginalValues.put("userId", _userId);
-		_columnOriginalValues.put("contractId", _contractId);
-		_columnOriginalValues.put("addressId", _addressId);
-		_columnOriginalValues.put("homePhone", _homePhone);
-		_columnOriginalValues.put("mobilePhone", _mobilePhone);
-	}
-
-	private static final Map<String, String> _attributeNames;
-
-	static {
-		Map<String, String> attributeNames = new HashMap<>();
-
-		attributeNames.put("uuid_", "uuid");
-
-		_attributeNames = Collections.unmodifiableMap(attributeNames);
-	}
-
-	private transient Map<String, Object> _columnOriginalValues;
-
-	public static long getColumnBitmask(String columnName) {
-		return _columnBitmasks.get(columnName);
-	}
-
-	private static final Map<String, Long> _columnBitmasks;
-
-	static {
-		Map<String, Long> columnBitmasks = new HashMap<>();
-
-		columnBitmasks.put("uuid_", 1L);
-
-		columnBitmasks.put("amfUserId", 2L);
-
-		columnBitmasks.put("groupId", 4L);
-
-		columnBitmasks.put("companyId", 8L);
-
-		columnBitmasks.put("createDate", 16L);
-
-		columnBitmasks.put("modifiedDate", 32L);
-
-		columnBitmasks.put("userName", 64L);
-
-		columnBitmasks.put("userId", 128L);
-
-		columnBitmasks.put("contractId", 256L);
-
-		columnBitmasks.put("addressId", 512L);
-
-		columnBitmasks.put("homePhone", 1024L);
-
-		columnBitmasks.put("mobilePhone", 2048L);
-
-		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
-	}
-
-	private long _columnBitmask;
-	private AMFUser _escapedModel;
+        extends BaseModelImpl<AMFUser> implements AMFUserModel {
+
+    /*
+     * NOTE FOR DEVELOPERS:
+     *
+     * Never modify or reference this class directly. All methods that expect a amf user model instance should use the <code>AMFUser</code> interface instead.
+     */
+    public static final String TABLE_NAME = "amfuser";
+
+    public static final Object[][] TABLE_COLUMNS = {
+            {"uuid_", Types.VARCHAR}, {"amfUserId", Types.BIGINT},
+            {"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
+            {"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
+            {"userName", Types.VARCHAR}, {"userId", Types.BIGINT},
+            {"contractId", Types.BIGINT}, {"addressId", Types.BIGINT},
+            {"homePhone", Types.VARCHAR}, {"mobilePhone", Types.VARCHAR},
+            {"eventLog", Types.BIGINT}
+    };
+
+    public static final Map<String, Integer> TABLE_COLUMNS_MAP =
+            new HashMap<String, Integer>();
+
+    static {
+        TABLE_COLUMNS_MAP.put("uuid_", Types.VARCHAR);
+        TABLE_COLUMNS_MAP.put("amfUserId", Types.BIGINT);
+        TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
+        TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
+        TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
+        TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+        TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
+        TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
+        TABLE_COLUMNS_MAP.put("contractId", Types.BIGINT);
+        TABLE_COLUMNS_MAP.put("addressId", Types.BIGINT);
+        TABLE_COLUMNS_MAP.put("homePhone", Types.VARCHAR);
+        TABLE_COLUMNS_MAP.put("mobilePhone", Types.VARCHAR);
+        TABLE_COLUMNS_MAP.put("eventLog", Types.BIGINT);
+    }
+
+    public static final String TABLE_SQL_CREATE =
+            "create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,userName VARCHAR(75) null,userId LONG,contractId LONG,addressId LONG,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null,eventLog LONG)";
+
+    public static final String TABLE_SQL_DROP = "drop table amfuser";
+
+    public static final String ORDER_BY_JPQL = " ORDER BY amfUser.userName ASC";
+
+    public static final String ORDER_BY_SQL = " ORDER BY amfuser.userName ASC";
+
+    public static final String DATA_SOURCE = "liferayDataSource";
+
+    public static final String SESSION_FACTORY = "liferaySessionFactory";
+
+    public static final String TX_MANAGER = "liferayTransactionManager";
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
+     */
+    @Deprecated
+    public static final long COMPANYID_COLUMN_BITMASK = 1L;
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
+     */
+    @Deprecated
+    public static final long GROUPID_COLUMN_BITMASK = 2L;
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
+     */
+    @Deprecated
+    public static final long UUID_COLUMN_BITMASK = 4L;
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), replaced by {@link
+     * #getColumnBitmask(String)
+     */
+    @Deprecated
+    public static final long USERNAME_COLUMN_BITMASK = 8L;
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), with no direct replacement
+     */
+    @Deprecated
+    public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
+    }
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), with no direct replacement
+     */
+    @Deprecated
+    public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
+    }
+
+    /**
+     * Converts the soap model instance into a normal model instance.
+     *
+     * @param soapModel the soap model instance to convert
+     * @return the normal model instance
+     * @deprecated As of Athanasius (7.3.x), with no direct replacement
+     */
+    @Deprecated
+    public static AMFUser toModel(AMFUserSoap soapModel) {
+        if (soapModel == null) {
+            return null;
+        }
+
+        AMFUser model = new AMFUserImpl();
+
+        model.setUuid(soapModel.getUuid());
+        model.setAmfUserId(soapModel.getAmfUserId());
+        model.setGroupId(soapModel.getGroupId());
+        model.setCompanyId(soapModel.getCompanyId());
+        model.setCreateDate(soapModel.getCreateDate());
+        model.setModifiedDate(soapModel.getModifiedDate());
+        model.setUserName(soapModel.getUserName());
+        model.setUserId(soapModel.getUserId());
+        model.setContractId(soapModel.getContractId());
+        model.setAddressId(soapModel.getAddressId());
+        model.setHomePhone(soapModel.getHomePhone());
+        model.setMobilePhone(soapModel.getMobilePhone());
+        model.setEventLog(soapModel.getEventLog());
+
+        return model;
+    }
+
+    /**
+     * Converts the soap model instances into normal model instances.
+     *
+     * @param soapModels the soap model instances to convert
+     * @return the normal model instances
+     * @deprecated As of Athanasius (7.3.x), with no direct replacement
+     */
+    @Deprecated
+    public static List<AMFUser> toModels(AMFUserSoap[] soapModels) {
+        if (soapModels == null) {
+            return null;
+        }
+
+        List<AMFUser> models = new ArrayList<AMFUser>(soapModels.length);
+
+        for (AMFUserSoap soapModel : soapModels) {
+            models.add(toModel(soapModel));
+        }
+
+        return models;
+    }
+
+    public static final String MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_NAME =
+            "AMFRegistration_eventlog";
+
+    public static final Object[][]
+            MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_COLUMNS = {
+            {"companyId", Types.BIGINT}, {"amfEventLogId", Types.BIGINT},
+            {"amfUserId", Types.BIGINT}
+    };
+
+    public static final String
+            MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_SQL_CREATE =
+            "create table AMFRegistration_eventlog (companyId LONG not null,amfEventLogId LONG not null,amfUserId LONG not null,primary key (amfEventLogId, amfUserId))";
+
+    public AMFUserModelImpl() {
+    }
+
+    @Override
+    public long getPrimaryKey() {
+        return _amfUserId;
+    }
+
+    @Override
+    public void setPrimaryKey(long primaryKey) {
+        setAmfUserId(primaryKey);
+    }
+
+    @Override
+    public Serializable getPrimaryKeyObj() {
+        return _amfUserId;
+    }
+
+    @Override
+    public void setPrimaryKeyObj(Serializable primaryKeyObj) {
+        setPrimaryKey(((Long) primaryKeyObj).longValue());
+    }
+
+    @Override
+    public Class<?> getModelClass() {
+        return AMFUser.class;
+    }
+
+    @Override
+    public String getModelClassName() {
+        return AMFUser.class.getName();
+    }
+
+    @Override
+    public Map<String, Object> getModelAttributes() {
+        Map<String, Object> attributes = new HashMap<String, Object>();
+
+        Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
+                getAttributeGetterFunctions();
+
+        for (Map.Entry<String, Function<AMFUser, Object>> entry :
+                attributeGetterFunctions.entrySet()) {
+
+            String attributeName = entry.getKey();
+            Function<AMFUser, Object> attributeGetterFunction =
+                    entry.getValue();
+
+            attributes.put(
+                    attributeName, attributeGetterFunction.apply((AMFUser) this));
+        }
+
+        return attributes;
+    }
+
+    @Override
+    public void setModelAttributes(Map<String, Object> attributes) {
+        Map<String, BiConsumer<AMFUser, Object>> attributeSetterBiConsumers =
+                getAttributeSetterBiConsumers();
+
+        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+            String attributeName = entry.getKey();
+
+            BiConsumer<AMFUser, Object> attributeSetterBiConsumer =
+                    attributeSetterBiConsumers.get(attributeName);
+
+            if (attributeSetterBiConsumer != null) {
+                attributeSetterBiConsumer.accept(
+                        (AMFUser) this, entry.getValue());
+            }
+        }
+    }
+
+    public Map<String, Function<AMFUser, Object>>
+    getAttributeGetterFunctions() {
+
+        return _attributeGetterFunctions;
+    }
+
+    public Map<String, BiConsumer<AMFUser, Object>>
+    getAttributeSetterBiConsumers() {
+
+        return _attributeSetterBiConsumers;
+    }
+
+    private static Function<InvocationHandler, AMFUser>
+    _getProxyProviderFunction() {
+
+        Class<?> proxyClass = ProxyUtil.getProxyClass(
+                AMFUser.class.getClassLoader(), AMFUser.class, ModelWrapper.class);
+
+        try {
+            Constructor<AMFUser> constructor =
+                    (Constructor<AMFUser>) proxyClass.getConstructor(
+                            InvocationHandler.class);
+
+            return invocationHandler -> {
+                try {
+                    return constructor.newInstance(invocationHandler);
+                } catch (ReflectiveOperationException
+                        reflectiveOperationException) {
+
+                    throw new InternalError(reflectiveOperationException);
+                }
+            };
+        } catch (NoSuchMethodException noSuchMethodException) {
+            throw new InternalError(noSuchMethodException);
+        }
+    }
+
+    private static final Map<String, Function<AMFUser, Object>>
+            _attributeGetterFunctions;
+    private static final Map<String, BiConsumer<AMFUser, Object>>
+            _attributeSetterBiConsumers;
+
+    static {
+        Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
+                new LinkedHashMap<String, Function<AMFUser, Object>>();
+        Map<String, BiConsumer<AMFUser, ?>> attributeSetterBiConsumers =
+                new LinkedHashMap<String, BiConsumer<AMFUser, ?>>();
+
+        attributeGetterFunctions.put("uuid", AMFUser::getUuid);
+        attributeSetterBiConsumers.put(
+                "uuid", (BiConsumer<AMFUser, String>) AMFUser::setUuid);
+        attributeGetterFunctions.put("amfUserId", AMFUser::getAmfUserId);
+        attributeSetterBiConsumers.put(
+                "amfUserId", (BiConsumer<AMFUser, Long>) AMFUser::setAmfUserId);
+        attributeGetterFunctions.put("groupId", AMFUser::getGroupId);
+        attributeSetterBiConsumers.put(
+                "groupId", (BiConsumer<AMFUser, Long>) AMFUser::setGroupId);
+        attributeGetterFunctions.put("companyId", AMFUser::getCompanyId);
+        attributeSetterBiConsumers.put(
+                "companyId", (BiConsumer<AMFUser, Long>) AMFUser::setCompanyId);
+        attributeGetterFunctions.put("createDate", AMFUser::getCreateDate);
+        attributeSetterBiConsumers.put(
+                "createDate", (BiConsumer<AMFUser, Date>) AMFUser::setCreateDate);
+        attributeGetterFunctions.put("modifiedDate", AMFUser::getModifiedDate);
+        attributeSetterBiConsumers.put(
+                "modifiedDate",
+                (BiConsumer<AMFUser, Date>) AMFUser::setModifiedDate);
+        attributeGetterFunctions.put("userName", AMFUser::getUserName);
+        attributeSetterBiConsumers.put(
+                "userName", (BiConsumer<AMFUser, String>) AMFUser::setUserName);
+        attributeGetterFunctions.put("userId", AMFUser::getUserId);
+        attributeSetterBiConsumers.put(
+                "userId", (BiConsumer<AMFUser, Long>) AMFUser::setUserId);
+        attributeGetterFunctions.put("contractId", AMFUser::getContractId);
+        attributeSetterBiConsumers.put(
+                "contractId", (BiConsumer<AMFUser, Long>) AMFUser::setContractId);
+        attributeGetterFunctions.put("addressId", AMFUser::getAddressId);
+        attributeSetterBiConsumers.put(
+                "addressId", (BiConsumer<AMFUser, Long>) AMFUser::setAddressId);
+        attributeGetterFunctions.put("homePhone", AMFUser::getHomePhone);
+        attributeSetterBiConsumers.put(
+                "homePhone", (BiConsumer<AMFUser, String>) AMFUser::setHomePhone);
+        attributeGetterFunctions.put("mobilePhone", AMFUser::getMobilePhone);
+        attributeSetterBiConsumers.put(
+                "mobilePhone",
+                (BiConsumer<AMFUser, String>) AMFUser::setMobilePhone);
+        attributeGetterFunctions.put("eventLog", AMFUser::getEventLog);
+        attributeSetterBiConsumers.put(
+                "eventLog", (BiConsumer<AMFUser, Long>) AMFUser::setEventLog);
+
+        _attributeGetterFunctions = Collections.unmodifiableMap(
+                attributeGetterFunctions);
+        _attributeSetterBiConsumers = Collections.unmodifiableMap(
+                (Map) attributeSetterBiConsumers);
+    }
+
+    @JSON
+    @Override
+    public String getUuid() {
+        if (_uuid == null) {
+            return "";
+        } else {
+            return _uuid;
+        }
+    }
+
+    @Override
+    public void setUuid(String uuid) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _uuid = uuid;
+    }
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), replaced by {@link
+     * #getColumnOriginalValue(String)}
+     */
+    @Deprecated
+    public String getOriginalUuid() {
+        return getColumnOriginalValue("uuid_");
+    }
+
+    @JSON
+    @Override
+    public long getAmfUserId() {
+        return _amfUserId;
+    }
+
+    @Override
+    public void setAmfUserId(long amfUserId) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _amfUserId = amfUserId;
+    }
+
+    @Override
+    public String getAmfUserUuid() {
+        try {
+            User user = UserLocalServiceUtil.getUserById(getAmfUserId());
+
+            return user.getUuid();
+        } catch (PortalException portalException) {
+            return "";
+        }
+    }
+
+    @Override
+    public void setAmfUserUuid(String amfUserUuid) {
+    }
+
+    @JSON
+    @Override
+    public long getGroupId() {
+        return _groupId;
+    }
+
+    @Override
+    public void setGroupId(long groupId) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _groupId = groupId;
+    }
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), replaced by {@link
+     * #getColumnOriginalValue(String)}
+     */
+    @Deprecated
+    public long getOriginalGroupId() {
+        return GetterUtil.getLong(this.<Long>getColumnOriginalValue("groupId"));
+    }
+
+    @JSON
+    @Override
+    public long getCompanyId() {
+        return _companyId;
+    }
+
+    @Override
+    public void setCompanyId(long companyId) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _companyId = companyId;
+    }
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), replaced by {@link
+     * #getColumnOriginalValue(String)}
+     */
+    @Deprecated
+    public long getOriginalCompanyId() {
+        return GetterUtil.getLong(
+                this.<Long>getColumnOriginalValue("companyId"));
+    }
+
+    @JSON
+    @Override
+    public Date getCreateDate() {
+        return _createDate;
+    }
+
+    @Override
+    public void setCreateDate(Date createDate) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _createDate = createDate;
+    }
+
+    @JSON
+    @Override
+    public Date getModifiedDate() {
+        return _modifiedDate;
+    }
+
+    public boolean hasSetModifiedDate() {
+        return _setModifiedDate;
+    }
+
+    @Override
+    public void setModifiedDate(Date modifiedDate) {
+        _setModifiedDate = true;
+
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _modifiedDate = modifiedDate;
+    }
+
+    @JSON
+    @Override
+    public String getUserName() {
+        if (_userName == null) {
+            return "";
+        } else {
+            return _userName;
+        }
+    }
+
+    @Override
+    public void setUserName(String userName) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _userName = userName;
+    }
+
+    @JSON
+    @Override
+    public long getUserId() {
+        return _userId;
+    }
+
+    @Override
+    public void setUserId(long userId) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _userId = userId;
+    }
+
+    @Override
+    public String getUserUuid() {
+        try {
+            User user = UserLocalServiceUtil.getUserById(getUserId());
+
+            return user.getUuid();
+        } catch (PortalException portalException) {
+            return "";
+        }
+    }
+
+    @Override
+    public void setUserUuid(String userUuid) {
+    }
+
+    @JSON
+    @Override
+    public long getContractId() {
+        return _contractId;
+    }
+
+    @Override
+    public void setContractId(long contractId) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _contractId = contractId;
+    }
+
+    @JSON
+    @Override
+    public long getAddressId() {
+        return _addressId;
+    }
+
+    @Override
+    public void setAddressId(long addressId) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _addressId = addressId;
+    }
+
+    @JSON
+    @Override
+    public String getHomePhone() {
+        if (_homePhone == null) {
+            return "";
+        } else {
+            return _homePhone;
+        }
+    }
+
+    @Override
+    public void setHomePhone(String homePhone) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _homePhone = homePhone;
+    }
+
+    @JSON
+    @Override
+    public String getMobilePhone() {
+        if (_mobilePhone == null) {
+            return "";
+        } else {
+            return _mobilePhone;
+        }
+    }
+
+    @Override
+    public void setMobilePhone(String mobilePhone) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _mobilePhone = mobilePhone;
+    }
+
+    @JSON
+    @Override
+    public long getEventLog() {
+        return _eventLog;
+    }
+
+    @Override
+    public void setEventLog(long eventLog) {
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        _eventLog = eventLog;
+    }
+
+    @Override
+    public StagedModelType getStagedModelType() {
+        return new StagedModelType(
+                PortalUtil.getClassNameId(AMFUser.class.getName()));
+    }
+
+    public long getColumnBitmask() {
+        if (_columnBitmask > 0) {
+            return _columnBitmask;
+        }
+
+        if ((_columnOriginalValues == null) ||
+                (_columnOriginalValues == Collections.EMPTY_MAP)) {
+
+            return 0;
+        }
+
+        for (Map.Entry<String, Object> entry :
+                _columnOriginalValues.entrySet()) {
+
+            if (entry.getValue() != getColumnValue(entry.getKey())) {
+                _columnBitmask |= _columnBitmasks.get(entry.getKey());
+            }
+        }
+
+        return _columnBitmask;
+    }
+
+    @Override
+    public ExpandoBridge getExpandoBridge() {
+        return ExpandoBridgeFactoryUtil.getExpandoBridge(
+                getCompanyId(), AMFUser.class.getName(), getPrimaryKey());
+    }
+
+    @Override
+    public void setExpandoBridgeAttributes(ServiceContext serviceContext) {
+        ExpandoBridge expandoBridge = getExpandoBridge();
+
+        expandoBridge.setAttributes(serviceContext);
+    }
+
+    @Override
+    public AMFUser toEscapedModel() {
+        if (_escapedModel == null) {
+            Function<InvocationHandler, AMFUser>
+                    escapedModelProxyProviderFunction =
+                    EscapedModelProxyProviderFunctionHolder.
+                            _escapedModelProxyProviderFunction;
+
+            _escapedModel = escapedModelProxyProviderFunction.apply(
+                    new AutoEscapeBeanHandler(this));
+        }
+
+        return _escapedModel;
+    }
+
+    @Override
+    public Object clone() {
+        AMFUserImpl amfUserImpl = new AMFUserImpl();
+
+        amfUserImpl.setUuid(getUuid());
+        amfUserImpl.setAmfUserId(getAmfUserId());
+        amfUserImpl.setGroupId(getGroupId());
+        amfUserImpl.setCompanyId(getCompanyId());
+        amfUserImpl.setCreateDate(getCreateDate());
+        amfUserImpl.setModifiedDate(getModifiedDate());
+        amfUserImpl.setUserName(getUserName());
+        amfUserImpl.setUserId(getUserId());
+        amfUserImpl.setContractId(getContractId());
+        amfUserImpl.setAddressId(getAddressId());
+        amfUserImpl.setHomePhone(getHomePhone());
+        amfUserImpl.setMobilePhone(getMobilePhone());
+        amfUserImpl.setEventLog(getEventLog());
+
+        amfUserImpl.resetOriginalValues();
+
+        return amfUserImpl;
+    }
+
+    @Override
+    public int compareTo(AMFUser amfUser) {
+        int value = 0;
+
+        value = getUserName().compareTo(amfUser.getUserName());
+
+        if (value != 0) {
+            return value;
+        }
+
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (!(object instanceof AMFUser)) {
+            return false;
+        }
+
+        AMFUser amfUser = (AMFUser) object;
+
+        long primaryKey = amfUser.getPrimaryKey();
+
+        if (getPrimaryKey() == primaryKey) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) getPrimaryKey();
+    }
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), with no direct replacement
+     */
+    @Deprecated
+    @Override
+    public boolean isEntityCacheEnabled() {
+        return true;
+    }
+
+    /**
+     * @deprecated As of Athanasius (7.3.x), with no direct replacement
+     */
+    @Deprecated
+    @Override
+    public boolean isFinderCacheEnabled() {
+        return true;
+    }
+
+    @Override
+    public void resetOriginalValues() {
+        _columnOriginalValues = Collections.emptyMap();
+
+        _setModifiedDate = false;
+
+        _columnBitmask = 0;
+    }
+
+    @Override
+    public CacheModel<AMFUser> toCacheModel() {
+        AMFUserCacheModel amfUserCacheModel = new AMFUserCacheModel();
+
+        amfUserCacheModel.uuid = getUuid();
+
+        String uuid = amfUserCacheModel.uuid;
+
+        if ((uuid != null) && (uuid.length() == 0)) {
+            amfUserCacheModel.uuid = null;
+        }
+
+        amfUserCacheModel.amfUserId = getAmfUserId();
+
+        amfUserCacheModel.groupId = getGroupId();
+
+        amfUserCacheModel.companyId = getCompanyId();
+
+        Date createDate = getCreateDate();
+
+        if (createDate != null) {
+            amfUserCacheModel.createDate = createDate.getTime();
+        } else {
+            amfUserCacheModel.createDate = Long.MIN_VALUE;
+        }
+
+        Date modifiedDate = getModifiedDate();
+
+        if (modifiedDate != null) {
+            amfUserCacheModel.modifiedDate = modifiedDate.getTime();
+        } else {
+            amfUserCacheModel.modifiedDate = Long.MIN_VALUE;
+        }
+
+        amfUserCacheModel.userName = getUserName();
+
+        String userName = amfUserCacheModel.userName;
+
+        if ((userName != null) && (userName.length() == 0)) {
+            amfUserCacheModel.userName = null;
+        }
+
+        amfUserCacheModel.userId = getUserId();
+
+        amfUserCacheModel.contractId = getContractId();
+
+        amfUserCacheModel.addressId = getAddressId();
+
+        amfUserCacheModel.homePhone = getHomePhone();
+
+        String homePhone = amfUserCacheModel.homePhone;
+
+        if ((homePhone != null) && (homePhone.length() == 0)) {
+            amfUserCacheModel.homePhone = null;
+        }
+
+        amfUserCacheModel.mobilePhone = getMobilePhone();
+
+        String mobilePhone = amfUserCacheModel.mobilePhone;
+
+        if ((mobilePhone != null) && (mobilePhone.length() == 0)) {
+            amfUserCacheModel.mobilePhone = null;
+        }
+
+        amfUserCacheModel.eventLog = getEventLog();
+
+        return amfUserCacheModel;
+    }
+
+    @Override
+    public String toString() {
+        Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
+                getAttributeGetterFunctions();
+
+        StringBundler sb = new StringBundler(
+                (4 * attributeGetterFunctions.size()) + 2);
+
+        sb.append("{");
+
+        for (Map.Entry<String, Function<AMFUser, Object>> entry :
+                attributeGetterFunctions.entrySet()) {
+
+            String attributeName = entry.getKey();
+            Function<AMFUser, Object> attributeGetterFunction =
+                    entry.getValue();
+
+            sb.append(attributeName);
+            sb.append("=");
+            sb.append(attributeGetterFunction.apply((AMFUser) this));
+            sb.append(", ");
+        }
+
+        if (sb.index() > 1) {
+            sb.setIndex(sb.index() - 1);
+        }
+
+        sb.append("}");
+
+        return sb.toString();
+    }
+
+    @Override
+    public String toXmlString() {
+        Map<String, Function<AMFUser, Object>> attributeGetterFunctions =
+                getAttributeGetterFunctions();
+
+        StringBundler sb = new StringBundler(
+                (5 * attributeGetterFunctions.size()) + 4);
+
+        sb.append("<model><model-name>");
+        sb.append(getModelClassName());
+        sb.append("</model-name>");
+
+        for (Map.Entry<String, Function<AMFUser, Object>> entry :
+                attributeGetterFunctions.entrySet()) {
+
+            String attributeName = entry.getKey();
+            Function<AMFUser, Object> attributeGetterFunction =
+                    entry.getValue();
+
+            sb.append("<column><column-name>");
+            sb.append(attributeName);
+            sb.append("</column-name><column-value><![CDATA[");
+            sb.append(attributeGetterFunction.apply((AMFUser) this));
+            sb.append("]]></column-value></column>");
+        }
+
+        sb.append("</model>");
+
+        return sb.toString();
+    }
+
+    private static class EscapedModelProxyProviderFunctionHolder {
+
+        private static final Function<InvocationHandler, AMFUser>
+                _escapedModelProxyProviderFunction = _getProxyProviderFunction();
+
+    }
+
+    private String _uuid;
+    private long _amfUserId;
+    private long _groupId;
+    private long _companyId;
+    private Date _createDate;
+    private Date _modifiedDate;
+    private boolean _setModifiedDate;
+    private String _userName;
+    private long _userId;
+    private long _contractId;
+    private long _addressId;
+    private String _homePhone;
+    private String _mobilePhone;
+    private long _eventLog;
+
+    public <T> T getColumnValue(String columnName) {
+        columnName = _attributeNames.getOrDefault(columnName, columnName);
+
+        Function<AMFUser, Object> function = _attributeGetterFunctions.get(
+                columnName);
+
+        if (function == null) {
+            throw new IllegalArgumentException(
+                    "No attribute getter function found for " + columnName);
+        }
+
+        return (T) function.apply((AMFUser) this);
+    }
+
+    public <T> T getColumnOriginalValue(String columnName) {
+        if (_columnOriginalValues == null) {
+            return null;
+        }
+
+        if (_columnOriginalValues == Collections.EMPTY_MAP) {
+            _setColumnOriginalValues();
+        }
+
+        return (T) _columnOriginalValues.get(columnName);
+    }
+
+    private void _setColumnOriginalValues() {
+        _columnOriginalValues = new HashMap<String, Object>();
+
+        _columnOriginalValues.put("uuid_", _uuid);
+        _columnOriginalValues.put("amfUserId", _amfUserId);
+        _columnOriginalValues.put("groupId", _groupId);
+        _columnOriginalValues.put("companyId", _companyId);
+        _columnOriginalValues.put("createDate", _createDate);
+        _columnOriginalValues.put("modifiedDate", _modifiedDate);
+        _columnOriginalValues.put("userName", _userName);
+        _columnOriginalValues.put("userId", _userId);
+        _columnOriginalValues.put("contractId", _contractId);
+        _columnOriginalValues.put("addressId", _addressId);
+        _columnOriginalValues.put("homePhone", _homePhone);
+        _columnOriginalValues.put("mobilePhone", _mobilePhone);
+        _columnOriginalValues.put("eventLog", _eventLog);
+    }
+
+    private static final Map<String, String> _attributeNames;
+
+    static {
+        Map<String, String> attributeNames = new HashMap<>();
+
+        attributeNames.put("uuid_", "uuid");
+
+        _attributeNames = Collections.unmodifiableMap(attributeNames);
+    }
+
+    private transient Map<String, Object> _columnOriginalValues;
+
+    public static long getColumnBitmask(String columnName) {
+        return _columnBitmasks.get(columnName);
+    }
+
+    private static final Map<String, Long> _columnBitmasks;
+
+    static {
+        Map<String, Long> columnBitmasks = new HashMap<>();
+
+        columnBitmasks.put("uuid_", 1L);
+
+        columnBitmasks.put("amfUserId", 2L);
+
+        columnBitmasks.put("groupId", 4L);
+
+        columnBitmasks.put("companyId", 8L);
+
+        columnBitmasks.put("createDate", 16L);
+
+        columnBitmasks.put("modifiedDate", 32L);
+
+        columnBitmasks.put("userName", 64L);
+
+        columnBitmasks.put("userId", 128L);
+
+        columnBitmasks.put("contractId", 256L);
+
+        columnBitmasks.put("addressId", 512L);
+
+        columnBitmasks.put("homePhone", 1024L);
+
+        columnBitmasks.put("mobilePhone", 2048L);
+
+        columnBitmasks.put("eventLog", 4096L);
+
+        _columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
+    }
+
+    private long _columnBitmask;
+    private AMFUser _escapedModel;
 
 }
