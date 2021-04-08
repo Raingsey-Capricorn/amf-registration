@@ -15,6 +15,7 @@
 package com.amf.registration.service.persistence.impl;
 
 import com.amf.registration.exception.NoSuchAMFUserException;
+import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.model.impl.AMFUserImpl;
 import com.amf.registration.model.impl.AMFUserModelImpl;
@@ -39,6 +40,10 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
+import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
+import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
@@ -2117,6 +2122,9 @@ public class AMFUserPersistenceImpl
 
 	@Override
 	protected AMFUser removeImpl(AMFUser amfUser) {
+		amfUserToAMFEventLogTableMapper.deleteLeftPrimaryKeyTableMappings(
+			amfUser.getPrimaryKey());
+
 		Session session = null;
 
 		try {
@@ -2457,6 +2465,308 @@ public class AMFUserPersistenceImpl
 		return count.intValue();
 	}
 
+	/**
+	 * Returns the primaryKeys of amf event logs associated with the amf user.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @return long[] of the primaryKeys of amf event logs associated with the amf user
+	 */
+	@Override
+	public long[] getAMFEventLogPrimaryKeys(long pk) {
+		long[] pks = amfUserToAMFEventLogTableMapper.getRightPrimaryKeys(pk);
+
+		return pks.clone();
+	}
+
+	/**
+	 * Returns all the amf user associated with the amf event log.
+	 *
+	 * @param pk the primary key of the amf event log
+	 * @return the amf users associated with the amf event log
+	 */
+	@Override
+	public List<AMFUser> getAMFEventLogAMFUsers(long pk) {
+		return getAMFEventLogAMFUsers(pk, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	/**
+	 * Returns all the amf user associated with the amf event log.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFUserModelImpl</code>.
+	 * </p>
+	 *
+	 * @param pk the primary key of the amf event log
+	 * @param start the lower bound of the range of amf event logs
+	 * @param end the upper bound of the range of amf event logs (not inclusive)
+	 * @return the range of amf users associated with the amf event log
+	 */
+	@Override
+	public List<AMFUser> getAMFEventLogAMFUsers(long pk, int start, int end) {
+		return getAMFEventLogAMFUsers(pk, start, end, null);
+	}
+
+	/**
+	 * Returns all the amf user associated with the amf event log.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFUserModelImpl</code>.
+	 * </p>
+	 *
+	 * @param pk the primary key of the amf event log
+	 * @param start the lower bound of the range of amf event logs
+	 * @param end the upper bound of the range of amf event logs (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of amf users associated with the amf event log
+	 */
+	@Override
+	public List<AMFUser> getAMFEventLogAMFUsers(
+		long pk, int start, int end,
+		OrderByComparator<AMFUser> orderByComparator) {
+
+		return amfUserToAMFEventLogTableMapper.getLeftBaseModels(
+			pk, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the number of amf event logs associated with the amf user.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @return the number of amf event logs associated with the amf user
+	 */
+	@Override
+	public int getAMFEventLogsSize(long pk) {
+		long[] pks = amfUserToAMFEventLogTableMapper.getRightPrimaryKeys(pk);
+
+		return pks.length;
+	}
+
+	/**
+	 * Returns <code>true</code> if the amf event log is associated with the amf user.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogPK the primary key of the amf event log
+	 * @return <code>true</code> if the amf event log is associated with the amf user; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean containsAMFEventLog(long pk, long amfEventLogPK) {
+		return amfUserToAMFEventLogTableMapper.containsTableMapping(
+			pk, amfEventLogPK);
+	}
+
+	/**
+	 * Returns <code>true</code> if the amf user has any amf event logs associated with it.
+	 *
+	 * @param pk the primary key of the amf user to check for associations with amf event logs
+	 * @return <code>true</code> if the amf user has any amf event logs associated with it; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean containsAMFEventLogs(long pk) {
+		if (getAMFEventLogsSize(pk) > 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
+	 * Adds an association between the amf user and the amf event log. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogPK the primary key of the amf event log
+	 */
+	@Override
+	public void addAMFEventLog(long pk, long amfEventLogPK) {
+		AMFUser amfUser = fetchByPrimaryKey(pk);
+
+		if (amfUser == null) {
+			amfUserToAMFEventLogTableMapper.addTableMapping(
+				CompanyThreadLocal.getCompanyId(), pk, amfEventLogPK);
+		}
+		else {
+			amfUserToAMFEventLogTableMapper.addTableMapping(
+				amfUser.getCompanyId(), pk, amfEventLogPK);
+		}
+	}
+
+	/**
+	 * Adds an association between the amf user and the amf event log. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLog the amf event log
+	 */
+	@Override
+	public void addAMFEventLog(long pk, AMFEventLog amfEventLog) {
+		AMFUser amfUser = fetchByPrimaryKey(pk);
+
+		if (amfUser == null) {
+			amfUserToAMFEventLogTableMapper.addTableMapping(
+				CompanyThreadLocal.getCompanyId(), pk,
+				amfEventLog.getPrimaryKey());
+		}
+		else {
+			amfUserToAMFEventLogTableMapper.addTableMapping(
+				amfUser.getCompanyId(), pk, amfEventLog.getPrimaryKey());
+		}
+	}
+
+	/**
+	 * Adds an association between the amf user and the amf event logs. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogPKs the primary keys of the amf event logs
+	 */
+	@Override
+	public void addAMFEventLogs(long pk, long[] amfEventLogPKs) {
+		long companyId = 0;
+
+		AMFUser amfUser = fetchByPrimaryKey(pk);
+
+		if (amfUser == null) {
+			companyId = CompanyThreadLocal.getCompanyId();
+		}
+		else {
+			companyId = amfUser.getCompanyId();
+		}
+
+		amfUserToAMFEventLogTableMapper.addTableMappings(
+			companyId, pk, amfEventLogPKs);
+	}
+
+	/**
+	 * Adds an association between the amf user and the amf event logs. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogs the amf event logs
+	 */
+	@Override
+	public void addAMFEventLogs(long pk, List<AMFEventLog> amfEventLogs) {
+		addAMFEventLogs(
+			pk,
+			ListUtil.toLongArray(
+				amfEventLogs, AMFEventLog.AMF_EVENT_LOG_ID_ACCESSOR));
+	}
+
+	/**
+	 * Clears all associations between the amf user and its amf event logs. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user to clear the associated amf event logs from
+	 */
+	@Override
+	public void clearAMFEventLogs(long pk) {
+		amfUserToAMFEventLogTableMapper.deleteLeftPrimaryKeyTableMappings(pk);
+	}
+
+	/**
+	 * Removes the association between the amf user and the amf event log. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogPK the primary key of the amf event log
+	 */
+	@Override
+	public void removeAMFEventLog(long pk, long amfEventLogPK) {
+		amfUserToAMFEventLogTableMapper.deleteTableMapping(pk, amfEventLogPK);
+	}
+
+	/**
+	 * Removes the association between the amf user and the amf event log. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLog the amf event log
+	 */
+	@Override
+	public void removeAMFEventLog(long pk, AMFEventLog amfEventLog) {
+		amfUserToAMFEventLogTableMapper.deleteTableMapping(
+			pk, amfEventLog.getPrimaryKey());
+	}
+
+	/**
+	 * Removes the association between the amf user and the amf event logs. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogPKs the primary keys of the amf event logs
+	 */
+	@Override
+	public void removeAMFEventLogs(long pk, long[] amfEventLogPKs) {
+		amfUserToAMFEventLogTableMapper.deleteTableMappings(pk, amfEventLogPKs);
+	}
+
+	/**
+	 * Removes the association between the amf user and the amf event logs. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogs the amf event logs
+	 */
+	@Override
+	public void removeAMFEventLogs(long pk, List<AMFEventLog> amfEventLogs) {
+		removeAMFEventLogs(
+			pk,
+			ListUtil.toLongArray(
+				amfEventLogs, AMFEventLog.AMF_EVENT_LOG_ID_ACCESSOR));
+	}
+
+	/**
+	 * Sets the amf event logs associated with the amf user, removing and adding associations as necessary. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogPKs the primary keys of the amf event logs to be associated with the amf user
+	 */
+	@Override
+	public void setAMFEventLogs(long pk, long[] amfEventLogPKs) {
+		Set<Long> newAMFEventLogPKsSet = SetUtil.fromArray(amfEventLogPKs);
+		Set<Long> oldAMFEventLogPKsSet = SetUtil.fromArray(
+			amfUserToAMFEventLogTableMapper.getRightPrimaryKeys(pk));
+
+		Set<Long> removeAMFEventLogPKsSet = new HashSet<Long>(
+			oldAMFEventLogPKsSet);
+
+		removeAMFEventLogPKsSet.removeAll(newAMFEventLogPKsSet);
+
+		amfUserToAMFEventLogTableMapper.deleteTableMappings(
+			pk, ArrayUtil.toLongArray(removeAMFEventLogPKsSet));
+
+		newAMFEventLogPKsSet.removeAll(oldAMFEventLogPKsSet);
+
+		long companyId = 0;
+
+		AMFUser amfUser = fetchByPrimaryKey(pk);
+
+		if (amfUser == null) {
+			companyId = CompanyThreadLocal.getCompanyId();
+		}
+		else {
+			companyId = amfUser.getCompanyId();
+		}
+
+		amfUserToAMFEventLogTableMapper.addTableMappings(
+			companyId, pk, ArrayUtil.toLongArray(newAMFEventLogPKsSet));
+	}
+
+	/**
+	 * Sets the amf event logs associated with the amf user, removing and adding associations as necessary. Also notifies the appropriate model listeners and clears the mapping table finder cache.
+	 *
+	 * @param pk the primary key of the amf user
+	 * @param amfEventLogs the amf event logs to be associated with the amf user
+	 */
+	@Override
+	public void setAMFEventLogs(long pk, List<AMFEventLog> amfEventLogs) {
+		try {
+			long[] amfEventLogPKs = new long[amfEventLogs.size()];
+
+			for (int i = 0; i < amfEventLogs.size(); i++) {
+				AMFEventLog amfEventLog = amfEventLogs.get(i);
+
+				amfEventLogPKs[i] = amfEventLog.getPrimaryKey();
+			}
+
+			setAMFEventLogs(pk, amfEventLogPKs);
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+	}
+
 	@Override
 	public Set<String> getBadColumnNames() {
 		return _badColumnNames;
@@ -2493,6 +2803,10 @@ public class AMFUserPersistenceImpl
 			ArgumentsResolver.class, new AMFUserModelArgumentsResolver(),
 			MapUtil.singletonDictionary(
 				"model.class.name", AMFUser.class.getName()));
+
+		amfUserToAMFEventLogTableMapper = TableMapperFactory.getTableMapper(
+			"AMFRegistration_eventlog#amfUserId", "AMFRegistration_eventlog",
+			"companyId", "amfUserId", "amfEventLogId", this, AMFEventLog.class);
 
 		_finderPathWithPaginationFindAll = _createFinderPath(
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findAll", new String[0],
@@ -2583,6 +2897,9 @@ public class AMFUserPersistenceImpl
 
 			serviceRegistration.unregister();
 		}
+
+		TableMapperFactory.removeTableMapper(
+			"AMFRegistration_eventlog#amfUserId");
 	}
 
 	@Override
@@ -2618,6 +2935,8 @@ public class AMFUserPersistenceImpl
 
 	@Reference
 	protected FinderCache finderCache;
+
+	protected TableMapper<AMFUser, AMFEventLog> amfUserToAMFEventLogTableMapper;
 
 	private static final String _SQL_SELECT_AMFUSER =
 		"SELECT amfUser FROM AMFUser amfUser";

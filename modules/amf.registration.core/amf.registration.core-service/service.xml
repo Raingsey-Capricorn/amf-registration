@@ -27,7 +27,7 @@
         <!-- User info fields -->
         <column name="homePhone" type="String"/>
         <column name="mobilePhone" type="String"/>
-
+        <column name="amfEventLog" type="Collection" entity="AMFEventLog" mapping-table="eventlog"/>
         <!-- Order -->
         <order by="asc">
             <order-column name="userName"/>
@@ -38,6 +38,31 @@
             <finder-column name="groupId"/>
         </finder>
         <reference entity="Group" package-path="com.liferay.portal"/>
+    </entity>
+
+    <entity local-service="true"
+            name="AMFEventLog"
+            remote-service="true"
+            uuid="true"
+            table="amfeventlog">
+
+        <column name="amfEventLogId" primary="true" type="long"/>
+        <column name="createDate" type="Date"/>
+        <column name="modifiedDate" type="Date"/>
+        <column name="userId" type="long" entity="AMFUser" mapping-table="eventlog"/>
+        <column name="lastLoginDate" type="Date"/>
+        <column name="lastLoginIP" type="String"/>
+        <column name="status" type="String"/>
+
+        <!-- Order -->
+        <order by="asc">
+            <order-column name="lastLoginDate"/>
+        </order>
+
+        <!-- Finder methods -->
+        <finder name="UserID" return-type="Collection">
+            <finder-column name="userId"/>
+        </finder>
     </entity>
 
     <exceptions>

@@ -16,6 +16,7 @@ package com.amf.registration.service.base;
 
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.AMFUserService;
+import com.amf.registration.service.persistence.AMFEventLogPersistence;
 import com.amf.registration.service.persistence.AMFUserPersistence;
 
 import com.liferay.portal.aop.AopService;
@@ -105,6 +106,9 @@ public abstract class AMFUserServiceBaseImpl
 			throw new SystemException(exception);
 		}
 	}
+
+	@Reference
+	protected AMFEventLogPersistence amfEventLogPersistence;
 
 	@Reference
 	protected com.amf.registration.service.AMFUserLocalService

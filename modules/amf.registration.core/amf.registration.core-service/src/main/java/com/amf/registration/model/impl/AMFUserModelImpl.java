@@ -208,6 +208,19 @@ public class AMFUserModelImpl
 		return models;
 	}
 
+	public static final String MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_NAME =
+		"AMFRegistration_eventlog";
+
+	public static final Object[][]
+		MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_COLUMNS = {
+			{"companyId", Types.BIGINT}, {"amfEventLogId", Types.BIGINT},
+			{"amfUserId", Types.BIGINT}
+		};
+
+	public static final String
+		MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_SQL_CREATE =
+			"create table AMFRegistration_eventlog (companyId LONG not null,amfEventLogId LONG not null,amfUserId LONG not null,primary key (amfEventLogId, amfUserId))";
+
 	public AMFUserModelImpl() {
 	}
 

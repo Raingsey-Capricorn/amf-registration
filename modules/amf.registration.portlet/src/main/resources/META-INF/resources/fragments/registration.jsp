@@ -1,6 +1,5 @@
-<%@ taglib prefix="form" uri="http://liferay.com/tld/aui" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="/init.jsp" %>
+<%@ include file="../init.jsp" %>
+<%@ page import="com.liferay.portal.kernel.servlet.SessionErrors" %>
 <%@ page import="com.amf.registration.portlet.constants.MVCCommandNames" %>
 
 <portlet:renderURL var="regionalListsURL">

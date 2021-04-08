@@ -24,6 +24,7 @@ import javax.portlet.PortletException;
 import java.text.SimpleDateFormat;
 
 @Component(
+        immediate = true,
         property = {
                 "javax.portlet.name=" + AMFRegistrationPortletKeys.AMF_REGISTRATION,
                 "mvc.command.name=" + MVCCommandNames.AMF_ADD
@@ -68,9 +69,6 @@ public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
             sendRedirect(actionRequest, actionResponse);
         } catch (AMFUserValidationException validationException) {
             validationException.getErrors().forEach(error -> SessionErrors.add(actionRequest, error));
-            actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
-        } catch (PortalException e) {
-            SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());
             actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
         } catch (Exception e) {
             SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());

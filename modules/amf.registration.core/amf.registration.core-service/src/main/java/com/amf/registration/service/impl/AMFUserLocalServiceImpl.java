@@ -14,18 +14,19 @@
 
 package com.amf.registration.service.impl;
 
+import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFUser;
+import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.amf.registration.service.base.AMFUserLocalServiceBaseImpl;
+import com.amf.registration.utilities.EventStatus;
 import com.amf.registration.validator.AMFUserValidator;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.PwdEncryptorException;
 import com.liferay.portal.kernel.model.*;
-import com.liferay.portal.kernel.security.pwd.PasswordEncryptorUtil;
 import com.liferay.portal.kernel.service.*;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -166,10 +167,24 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             Contact registerContact = setNewContactAttributes(birthDate, registerUser);
             Address registerAddress = setNewAddressAttributes(userName, addressLineOne, addressLineTwo, city, regionId, zip, registerUser);
             AMFUser amfUser = setNewAMFUserAttributes(homePhone, mobilePhone, registerUser, registerContact, registerAddress);
+            logAMFEventForUser(amfUser);
             return AMFUserLocalServiceUtil.addAMFUser(amfUser);
         } catch (Exception e) {
             throw new PortalException(e);
         }
+    }
+
+    /**
+     * @param amfUser
+     */
+    private void logAMFEventForUser(AMFUser amfUser) {
+        long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
+        AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
+        amfEventLog.setUserId(amfUser.getAmfUserId());
+        amfEventLog.setStatus(EventStatus.REGISTER);
+        amfEventLog.setCreateDate(new Date());
+        amfEventLog.setNew(true);
+        AMFEventLogLocalServiceUtil.addAMFEventLog(amfEventLog);
     }
 
 
