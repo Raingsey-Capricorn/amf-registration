@@ -26,6 +26,5 @@
 		<field name="addressId" type="long" />
 		<field name="homePhone" type="String" />
 		<field name="mobilePhone" type="String" />
-		<field name="eventLog" type="long" />
 	</model>
 </model-hints>

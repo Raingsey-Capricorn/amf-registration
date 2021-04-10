@@ -1,10 +1,3 @@
-create table AMFRegistration_eventlog (
-	companyId LONG not null,
-	amfEventLogId LONG not null,
-	amfUserId LONG not null,
-	primary key (amfEventLogId, amfUserId)
-);
-
 create table amfeventlog (
 	uuid_ VARCHAR(75) null,
 	amfEventLogId LONG not null primary key,
@@ -30,6 +23,12 @@ create table amfuser (
 	contractId LONG,
 	addressId LONG,
 	homePhone VARCHAR(75) null,
-	mobilePhone VARCHAR(75) null,
-	eventLog LONG
+	mobilePhone VARCHAR(75) null
+);
+
+create table eventlog (
+	companyId LONG not null,
+	amfEventLogId LONG not null,
+	amfUserId LONG not null,
+	primary key (amfEventLogId, amfUserId)
 );

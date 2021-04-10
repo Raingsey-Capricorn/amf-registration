@@ -269,13 +269,6 @@ public interface AMFEventLogLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AMFEventLog> getAMFEventLogs(int start, int end);
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFEventLog> getAMFEventLogs(long groupId, long userId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFEventLog> getAMFEventLogs(
-		long groupId, long userId, long amfUserid);
-
 	/**
 	 * Returns all the amf event logs matching the UUID and company.
 	 *
@@ -340,14 +333,6 @@ public interface AMFEventLogLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
-
-	/**
-	 * @param groupId
-	 * @param userId
-	 * @return
-	 */
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AMFEventLog getLastAMFEventLog(long groupId, long userId);
 
 	/**
 	 * Returns the OSGi service identifier.

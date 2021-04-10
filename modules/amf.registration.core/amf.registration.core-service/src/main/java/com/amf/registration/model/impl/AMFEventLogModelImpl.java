@@ -16,7 +16,6 @@ package com.amf.registration.model.impl;
 
 import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFEventLogModel;
-import com.amf.registration.model.AMFEventLogSoap;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
@@ -24,7 +23,6 @@ import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
@@ -43,12 +41,10 @@ import java.lang.reflect.InvocationHandler;
 
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -64,7 +60,6 @@ import java.util.function.Function;
  * @see AMFEventLogImpl
  * @generated
  */
-@JSON(strict = true)
 public class AMFEventLogModelImpl
 	extends BaseModelImpl<AMFEventLog> implements AMFEventLogModel {
 
@@ -132,20 +127,14 @@ public class AMFEventLogModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long USERID_COLUMN_BITMASK = 4L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long UUID_COLUMN_BITMASK = 8L;
+	public static final long UUID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long LASTLOGINDATE_COLUMN_BITMASK = 16L;
+	public static final long LASTLOGINDATE_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -161,70 +150,15 @@ public class AMFEventLogModelImpl
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
 	}
 
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static AMFEventLog toModel(AMFEventLogSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
+	public static final String MAPPING_TABLE_EVENTLOG_NAME = "eventlog";
 
-		AMFEventLog model = new AMFEventLogImpl();
+	public static final Object[][] MAPPING_TABLE_EVENTLOG_COLUMNS = {
+		{"companyId", Types.BIGINT}, {"amfEventLogId", Types.BIGINT},
+		{"amfUserId", Types.BIGINT}
+	};
 
-		model.setUuid(soapModel.getUuid());
-		model.setAmfEventLogId(soapModel.getAmfEventLogId());
-		model.setCompanyId(soapModel.getCompanyId());
-		model.setCreateDate(soapModel.getCreateDate());
-		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setGroupId(soapModel.getGroupId());
-		model.setUserId(soapModel.getUserId());
-		model.setLastLoginDate(soapModel.getLastLoginDate());
-		model.setLastLoginIP(soapModel.getLastLoginIP());
-		model.setStatus(soapModel.getStatus());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<AMFEventLog> toModels(AMFEventLogSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<AMFEventLog> models = new ArrayList<AMFEventLog>(
-			soapModels.length);
-
-		for (AMFEventLogSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
-	public static final String MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_NAME =
-		"AMFRegistration_eventlog";
-
-	public static final Object[][]
-		MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_COLUMNS = {
-			{"companyId", Types.BIGINT}, {"amfEventLogId", Types.BIGINT},
-			{"amfUserId", Types.BIGINT}
-		};
-
-	public static final String
-		MAPPING_TABLE_AMFREGISTRATION_EVENTLOG_SQL_CREATE =
-			"create table AMFRegistration_eventlog (companyId LONG not null,amfEventLogId LONG not null,amfUserId LONG not null,primary key (amfEventLogId, amfUserId))";
+	public static final String MAPPING_TABLE_EVENTLOG_SQL_CREATE =
+		"create table eventlog (companyId LONG not null,amfEventLogId LONG not null,amfUserId LONG not null,primary key (amfEventLogId, amfUserId))";
 
 	public AMFEventLogModelImpl() {
 	}
@@ -397,7 +331,6 @@ public class AMFEventLogModelImpl
 			(Map)attributeSetterBiConsumers);
 	}
 
-	@JSON
 	@Override
 	public String getUuid() {
 		if (_uuid == null) {
@@ -426,7 +359,6 @@ public class AMFEventLogModelImpl
 		return getColumnOriginalValue("uuid_");
 	}
 
-	@JSON
 	@Override
 	public long getAmfEventLogId() {
 		return _amfEventLogId;
@@ -441,7 +373,6 @@ public class AMFEventLogModelImpl
 		_amfEventLogId = amfEventLogId;
 	}
 
-	@JSON
 	@Override
 	public long getCompanyId() {
 		return _companyId;
@@ -466,7 +397,6 @@ public class AMFEventLogModelImpl
 			this.<Long>getColumnOriginalValue("companyId"));
 	}
 
-	@JSON
 	@Override
 	public Date getCreateDate() {
 		return _createDate;
@@ -481,7 +411,6 @@ public class AMFEventLogModelImpl
 		_createDate = createDate;
 	}
 
-	@JSON
 	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
@@ -502,7 +431,6 @@ public class AMFEventLogModelImpl
 		_modifiedDate = modifiedDate;
 	}
 
-	@JSON
 	@Override
 	public long getGroupId() {
 		return _groupId;
@@ -526,7 +454,6 @@ public class AMFEventLogModelImpl
 		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("groupId"));
 	}
 
-	@JSON
 	@Override
 	public long getUserId() {
 		return _userId;
@@ -557,16 +484,6 @@ public class AMFEventLogModelImpl
 	public void setUserUuid(String userUuid) {
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public long getOriginalUserId() {
-		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("userId"));
-	}
-
-	@JSON
 	@Override
 	public Date getLastLoginDate() {
 		return _lastLoginDate;
@@ -581,7 +498,6 @@ public class AMFEventLogModelImpl
 		_lastLoginDate = lastLoginDate;
 	}
 
-	@JSON
 	@Override
 	public String getLastLoginIP() {
 		if (_lastLoginIP == null) {
@@ -601,7 +517,6 @@ public class AMFEventLogModelImpl
 		_lastLoginIP = lastLoginIP;
 	}
 
-	@JSON
 	@Override
 	public String getStatus() {
 		if (_status == null) {

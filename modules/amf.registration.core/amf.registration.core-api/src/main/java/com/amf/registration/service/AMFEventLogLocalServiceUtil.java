@@ -331,18 +331,6 @@ public class AMFEventLogLocalServiceUtil {
 		return getService().getAMFEventLogs(start, end);
 	}
 
-	public static java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogs(long groupId, long userId) {
-
-		return getService().getAMFEventLogs(groupId, userId);
-	}
-
-	public static java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogs(long groupId, long userId, long amfUserid) {
-
-		return getService().getAMFEventLogs(groupId, userId, amfUserid);
-	}
-
 	/**
 	 * Returns all the amf event logs matching the UUID and company.
 	 *
@@ -434,17 +422,6 @@ public class AMFEventLogLocalServiceUtil {
 			getIndexableActionableDynamicQuery() {
 
 		return getService().getIndexableActionableDynamicQuery();
-	}
-
-	/**
-	 * @param groupId
-	 * @param userId
-	 * @return
-	 */
-	public static com.amf.registration.model.AMFEventLog getLastAMFEventLog(
-		long groupId, long userId) {
-
-		return getService().getLastAMFEventLog(groupId, userId);
 	}
 
 	/**

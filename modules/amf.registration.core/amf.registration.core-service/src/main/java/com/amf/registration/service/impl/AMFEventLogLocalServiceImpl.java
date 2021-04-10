@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- * <p>
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * <p>
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
@@ -14,16 +14,11 @@
 
 package com.amf.registration.service.impl;
 
-import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.service.base.AMFEventLogLocalServiceBaseImpl;
-import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.dao.orm.Disjunction;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
-import com.liferay.portal.kernel.util.Validator;
-import org.osgi.service.component.annotations.Component;
 
-import java.util.List;
+import com.liferay.portal.aop.AopService;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * The implementation of the amf event log local service.
@@ -39,97 +34,15 @@ import java.util.List;
  * @see AMFEventLogLocalServiceBaseImpl
  */
 @Component(
-        property = "model.class.name=com.amf.registration.model.AMFEventLog",
-        service = AopService.class
+	property = "model.class.name=com.amf.registration.model.AMFEventLog",
+	service = AopService.class
 )
 public class AMFEventLogLocalServiceImpl
-        extends AMFEventLogLocalServiceBaseImpl {
+	extends AMFEventLogLocalServiceBaseImpl {
 
-    /*
-     * NOTE FOR DEVELOPERS:
-     *
-     * Never reference this class directly. Use <code>com.amf.registration.service.AMFEventLogLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>com.amf.registration.service.AMFEventLogLocalServiceUtil</code>.
-     */
-
-    /**
-     * @param groupId
-     * @param userId
-     * @return
-     */
-    public AMFEventLog getLastAMFEventLog(final long groupId,
-                                          final long userId) {
-        return (AMFEventLog) amfEventLogLocalService.dynamicQuery(getLastAMFEventLogByGroupUserAndAMFUser(groupId, userId)).get(0);
-    }
-
-    public List<AMFEventLog> getAMFEventLogs(final long groupId,
-                                             final long userId,
-                                             final long amfUserid) {
-        return amfEventLogLocalService.dynamicQuery(getAMFEventLogByGroupUserAndAMFUser(groupId, userId, amfUserid));
-    }
-
-    public List<AMFEventLog> getAMFEventLogs(final long groupId,
-                                             final long userId) {
-        return amfEventLogLocalService.dynamicQuery(getAMFEventLogByGroupAndUser(groupId, userId));
-    }
-
-
-    /**
-     * @param groupId
-     * @param userId
-     * @param amfUserid
-     * @return
-     */
-    private DynamicQuery getAMFEventLogByGroupUserAndAMFUser(
-            final long groupId,
-            final long userId,
-            final long amfUserid) {
-
-        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
-        if (Validator.isNotNull(userId) && Validator.isNotNull(amfUserid)) {
-            Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
-            disjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId))
-                    .add(RestrictionsFactoryUtil.eq("amfUserId", amfUserid));
-            dynamicQuery.add(disjunctionQuery);
-        }
-        return dynamicQuery;
-    }
-
-    /**
-     * @param groupId
-     * @param userId
-     * @return
-     */
-    private DynamicQuery getAMFEventLogByGroupAndUser(
-            final long groupId,
-            final long userId) {
-
-        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
-        if (Validator.isNotNull(userId)) {
-            Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
-            disjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId));
-            dynamicQuery.add(disjunctionQuery);
-        }
-        return dynamicQuery;
-    }
-
-    /**
-     * @param groupId
-     * @param userId
-     * @return
-     */
-    private DynamicQuery getLastAMFEventLogByGroupUserAndAMFUser(
-            final long groupId,
-            final long userId) {
-
-        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
-        if (Validator.isNotNull(userId)) {
-            Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
-            disjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId))
-            /*.add(RestrictionsFactoryUtil.eq("amfUserId", amfUserid))*/;
-            dynamicQuery.add(disjunctionQuery);
-        }
-        return dynamicQuery;
-    }
-
-
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never reference this class directly. Use <code>com.amf.registration.service.AMFEventLogLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>com.amf.registration.service.AMFEventLogLocalServiceUtil</code>.
+	 */
 }

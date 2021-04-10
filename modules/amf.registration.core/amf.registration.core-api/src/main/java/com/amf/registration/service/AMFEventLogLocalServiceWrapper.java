@@ -354,21 +354,6 @@ public class AMFEventLogLocalServiceWrapper
 		return _amfEventLogLocalService.getAMFEventLogs(start, end);
 	}
 
-	@Override
-	public java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogs(long groupId, long userId) {
-
-		return _amfEventLogLocalService.getAMFEventLogs(groupId, userId);
-	}
-
-	@Override
-	public java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogs(long groupId, long userId, long amfUserid) {
-
-		return _amfEventLogLocalService.getAMFEventLogs(
-			groupId, userId, amfUserid);
-	}
-
 	/**
 	 * Returns all the amf event logs matching the UUID and company.
 	 *
@@ -472,18 +457,6 @@ public class AMFEventLogLocalServiceWrapper
 		getIndexableActionableDynamicQuery() {
 
 		return _amfEventLogLocalService.getIndexableActionableDynamicQuery();
-	}
-
-	/**
-	 * @param groupId
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public com.amf.registration.model.AMFEventLog getLastAMFEventLog(
-		long groupId, long userId) {
-
-		return _amfEventLogLocalService.getLastAMFEventLog(groupId, userId);
 	}
 
 	/**
