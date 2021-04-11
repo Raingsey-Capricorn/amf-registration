@@ -300,6 +300,17 @@ public class AMFEventLogLocalServiceUtil {
 	}
 
 	/**
+	 * @param groupId
+	 * @param userId
+	 * @return
+	 */
+	public static com.amf.registration.model.AMFEventLog
+		getAmfEventLogByGroupAndUser(long groupId, long userId) {
+
+		return getService().getAmfEventLogByGroupAndUser(groupId, userId);
+	}
+
+	/**
 	 * Returns the amf event log matching the UUID and group.
 	 *
 	 * @param uuid the amf event log's UUID

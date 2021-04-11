@@ -15,6 +15,7 @@
 package com.amf.registration.service.impl;
 
 import com.amf.registration.model.AMFEventLog;
+import com.amf.registration.service.AMFEventLogLocalService;
 import com.amf.registration.service.base.AMFEventLogLocalServiceBaseImpl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
@@ -22,6 +23,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * The implementation of the amf event log local service.
@@ -48,4 +50,34 @@ public class AMFEventLogLocalServiceImpl
      *
      * Never reference this class directly. Use <code>com.amf.registration.service.AMFEventLogLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>com.amf.registration.service.AMFEventLogLocalServiceUtil</code>.
      */
+
+    /**
+     * @param groupId
+     * @param userId
+     * @return
+     */
+    public AMFEventLog getAmfEventLogByGroupAndUser(long groupId, long userId) {
+        return (AMFEventLog) amfEventLogLocalService.dynamicQuery(
+                getUserNameSearchDynamicQuery(groupId, userId)).stream().findFirst().get();
+    }
+
+    /**
+     * @param groupId
+     * @param userId
+     * @return
+     */
+    private DynamicQuery getUserNameSearchDynamicQuery(
+            final long groupId,
+            final long userId) {
+
+        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+        if (Validator.isNotNull(userId)) {
+            Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
+            disjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId));
+            dynamicQuery.add(disjunctionQuery);
+        }
+        return dynamicQuery;
+    }
+
+
 }

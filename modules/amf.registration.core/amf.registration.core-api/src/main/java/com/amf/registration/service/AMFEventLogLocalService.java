@@ -244,6 +244,14 @@ public interface AMFEventLogLocalService
 		throws PortalException;
 
 	/**
+	 * @param groupId
+	 * @param userId
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AMFEventLog getAmfEventLogByGroupAndUser(long groupId, long userId);
+
+	/**
 	 * Returns the amf event log matching the UUID and group.
 	 *
 	 * @param uuid the amf event log's UUID
