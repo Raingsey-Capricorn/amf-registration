@@ -55,7 +55,6 @@ public class AMFUserWrapper
 		attributes.put("addressId", getAddressId());
 		attributes.put("homePhone", getHomePhone());
 		attributes.put("mobilePhone", getMobilePhone());
-		attributes.put("eventLog", getEventLog());
 
 		return attributes;
 	}
@@ -133,12 +132,6 @@ public class AMFUserWrapper
 		if (mobilePhone != null) {
 			setMobilePhone(mobilePhone);
 		}
-
-		Long eventLog = (Long)attributes.get("eventLog");
-
-		if (eventLog != null) {
-			setEventLog(eventLog);
-		}
 	}
 
 	/**
@@ -149,6 +142,24 @@ public class AMFUserWrapper
 	@Override
 	public long getAddressId() {
 		return model.getAddressId();
+	}
+
+	/**
+	 * @return
+	 */
+	@Override
+	public AMFEventLog getAMFEventLog() {
+		return model.getAMFEventLog();
+	}
+
+	/**
+	 * This method return a list of AMFEventLog which retrieve all the AMFEventLog which contain the AMFUserID
+	 *
+	 * @return
+	 */
+	@Override
+	public java.util.List<AMFEventLog> getAMFEventLogs() {
+		return model.getAMFEventLogs();
 	}
 
 	/**
@@ -169,6 +180,15 @@ public class AMFUserWrapper
 	@Override
 	public String getAmfUserUuid() {
 		return model.getAmfUserUuid();
+	}
+
+	/**
+	 * @return String value of screen-name and user-ID in one String formatted value
+	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 */
+	@Override
+	public String getCombinedUserInfo() {
+		return model.getCombinedUserInfo();
 	}
 
 	/**
@@ -202,13 +222,11 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Returns the event log of this amf user.
-	 *
-	 * @return the event log of this amf user
+	 * @return
 	 */
 	@Override
-	public long getEventLog() {
-		return model.getEventLog();
+	public String getEventStatus() {
+		return model.getEventStatus();
 	}
 
 	/**
@@ -229,6 +247,20 @@ public class AMFUserWrapper
 	@Override
 	public String getHomePhone() {
 		return model.getHomePhone();
+	}
+
+	@Override
+	public String getLastLoginDate() {
+		return model.getLastLoginDate();
+	}
+
+	/**
+	 * @return
+	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 */
+	@Override
+	public String getLastLoginIP() {
+		return model.getLastLoginIP();
 	}
 
 	/**
@@ -364,16 +396,6 @@ public class AMFUserWrapper
 	@Override
 	public void setCreateDate(Date createDate) {
 		model.setCreateDate(createDate);
-	}
-
-	/**
-	 * Sets the event log of this amf user.
-	 *
-	 * @param eventLog the event log of this amf user
-	 */
-	@Override
-	public void setEventLog(long eventLog) {
-		model.setEventLog(eventLog);
 	}
 
 	/**

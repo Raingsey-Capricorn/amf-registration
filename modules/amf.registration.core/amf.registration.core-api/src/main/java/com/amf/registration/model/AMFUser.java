@@ -56,4 +56,35 @@ public interface AMFUser extends AMFUserModel, PersistedModel {
 
 		};
 
+	/**
+	 * This method return a list of AMFEventLog which retrieve all the AMFEventLog which contain the AMFUserID
+	 *
+	 * @return
+	 */
+	public java.util.List<AMFEventLog> getAMFEventLogs();
+
+	/**
+	 * @return
+	 */
+	public AMFEventLog getAMFEventLog();
+
+	public String getLastLoginDate();
+
+	/**
+	 * @return
+	 */
+	public String getEventStatus();
+
+	/**
+	 * @return String value of screen-name and user-ID in one String formatted value
+	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 */
+	public String getCombinedUserInfo();
+
+	/**
+	 * @return
+	 * @throws com.liferay.portal.kernel.exception.PortalException
+	 */
+	public String getLastLoginIP();
+
 }

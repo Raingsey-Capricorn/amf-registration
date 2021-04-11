@@ -1,12 +1,12 @@
 package com.amf.registration.portlet.portlet.command.render;
 
+import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.service.AMFUserLocalService;
+import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.service.RegionService;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -56,9 +56,9 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
         int end = start + delta;
 
-        List<User> users = UserLocalServiceUtil.getUsers(start, end);
-        renderRequest.setAttribute("users", users);
-        renderRequest.setAttribute("userCount", users.size());
+        List<AMFUser> users = AMFUserLocalServiceUtil.getAMFUsers(start, end);
+        renderRequest.setAttribute("amfUsers", users);
+        renderRequest.setAttribute("amfUserCount", users.size());
 
         return "/fragments/events-board.jsp";
     }

@@ -108,9 +108,6 @@ public abstract class AMFUserServiceBaseImpl
 	}
 
 	@Reference
-	protected AMFEventLogPersistence amfEventLogPersistence;
-
-	@Reference
 	protected com.amf.registration.service.AMFUserLocalService
 		amfUserLocalService;
 
@@ -120,16 +117,11 @@ public abstract class AMFUserServiceBaseImpl
 	protected AMFUserPersistence amfUserPersistence;
 
 	@Reference
+	protected AMFEventLogPersistence amfEventLogPersistence;
+
+	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService
 		counterLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.ClassNameLocalService
-		classNameLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.ClassNameService
-		classNameService;
 
 	@Reference
 	protected com.liferay.portal.kernel.service.GroupLocalService
@@ -137,16 +129,5 @@ public abstract class AMFUserServiceBaseImpl
 
 	@Reference
 	protected com.liferay.portal.kernel.service.GroupService groupService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.ResourceLocalService
-		resourceLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.UserLocalService
-		userLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.UserService userService;
 
 }

@@ -487,6 +487,142 @@ public abstract class AMFUserLocalServiceBaseImpl
 		return amfUserPersistence.update(amfUser);
 	}
 
+	/**
+	 */
+	@Override
+	public void addAMFEventLogAMFUser(long amfEventLogId, long amfUserId) {
+		amfEventLogPersistence.addAMFUser(amfEventLogId, amfUserId);
+	}
+
+	/**
+	 */
+	@Override
+	public void addAMFEventLogAMFUser(long amfEventLogId, AMFUser amfUser) {
+		amfEventLogPersistence.addAMFUser(amfEventLogId, amfUser);
+	}
+
+	/**
+	 */
+	@Override
+	public void addAMFEventLogAMFUsers(long amfEventLogId, long[] amfUserIds) {
+		amfEventLogPersistence.addAMFUsers(amfEventLogId, amfUserIds);
+	}
+
+	/**
+	 */
+	@Override
+	public void addAMFEventLogAMFUsers(
+		long amfEventLogId, List<AMFUser> amfUsers) {
+
+		amfEventLogPersistence.addAMFUsers(amfEventLogId, amfUsers);
+	}
+
+	/**
+	 */
+	@Override
+	public void clearAMFEventLogAMFUsers(long amfEventLogId) {
+		amfEventLogPersistence.clearAMFUsers(amfEventLogId);
+	}
+
+	/**
+	 */
+	@Override
+	public void deleteAMFEventLogAMFUser(long amfEventLogId, long amfUserId) {
+		amfEventLogPersistence.removeAMFUser(amfEventLogId, amfUserId);
+	}
+
+	/**
+	 */
+	@Override
+	public void deleteAMFEventLogAMFUser(long amfEventLogId, AMFUser amfUser) {
+		amfEventLogPersistence.removeAMFUser(amfEventLogId, amfUser);
+	}
+
+	/**
+	 */
+	@Override
+	public void deleteAMFEventLogAMFUsers(
+		long amfEventLogId, long[] amfUserIds) {
+
+		amfEventLogPersistence.removeAMFUsers(amfEventLogId, amfUserIds);
+	}
+
+	/**
+	 */
+	@Override
+	public void deleteAMFEventLogAMFUsers(
+		long amfEventLogId, List<AMFUser> amfUsers) {
+
+		amfEventLogPersistence.removeAMFUsers(amfEventLogId, amfUsers);
+	}
+
+	/**
+	 * Returns the amfEventLogIds of the amf event logs associated with the amf user.
+	 *
+	 * @param amfUserId the amfUserId of the amf user
+	 * @return long[] the amfEventLogIds of amf event logs associated with the amf user
+	 */
+	@Override
+	public long[] getAMFEventLogPrimaryKeys(long amfUserId) {
+		return amfUserPersistence.getAMFEventLogPrimaryKeys(amfUserId);
+	}
+
+	/**
+	 */
+	@Override
+	public List<AMFUser> getAMFEventLogAMFUsers(long amfEventLogId) {
+		return amfUserPersistence.getAMFEventLogAMFUsers(amfEventLogId);
+	}
+
+	/**
+	 */
+	@Override
+	public List<AMFUser> getAMFEventLogAMFUsers(
+		long amfEventLogId, int start, int end) {
+
+		return amfUserPersistence.getAMFEventLogAMFUsers(
+			amfEventLogId, start, end);
+	}
+
+	/**
+	 */
+	@Override
+	public List<AMFUser> getAMFEventLogAMFUsers(
+		long amfEventLogId, int start, int end,
+		OrderByComparator<AMFUser> orderByComparator) {
+
+		return amfUserPersistence.getAMFEventLogAMFUsers(
+			amfEventLogId, start, end, orderByComparator);
+	}
+
+	/**
+	 */
+	@Override
+	public int getAMFEventLogAMFUsersCount(long amfEventLogId) {
+		return amfEventLogPersistence.getAMFUsersSize(amfEventLogId);
+	}
+
+	/**
+	 */
+	@Override
+	public boolean hasAMFEventLogAMFUser(long amfEventLogId, long amfUserId) {
+		return amfEventLogPersistence.containsAMFUser(amfEventLogId, amfUserId);
+	}
+
+	/**
+	 */
+	@Override
+	public boolean hasAMFEventLogAMFUsers(long amfEventLogId) {
+		return amfEventLogPersistence.containsAMFUsers(amfEventLogId);
+	}
+
+	/**
+	 */
+	@Override
+	public void setAMFEventLogAMFUsers(long amfEventLogId, long[] amfUserIds) {
+		amfEventLogPersistence.setAMFUsers(amfEventLogId, amfUserIds);
+	}
+
 	@Override
 	public Class<?>[] getAopInterfaces() {
 		return new Class<?>[] {
@@ -542,32 +678,20 @@ public abstract class AMFUserLocalServiceBaseImpl
 		}
 	}
 
-	@Reference
-	protected AMFEventLogPersistence amfEventLogPersistence;
-
 	protected AMFUserLocalService amfUserLocalService;
 
 	@Reference
 	protected AMFUserPersistence amfUserPersistence;
 
 	@Reference
+	protected AMFEventLogPersistence amfEventLogPersistence;
+
+	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService
 		counterLocalService;
 
 	@Reference
-	protected com.liferay.portal.kernel.service.ClassNameLocalService
-		classNameLocalService;
-
-	@Reference
 	protected com.liferay.portal.kernel.service.GroupLocalService
 		groupLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.ResourceLocalService
-		resourceLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.UserLocalService
-		userLocalService;
 
 }

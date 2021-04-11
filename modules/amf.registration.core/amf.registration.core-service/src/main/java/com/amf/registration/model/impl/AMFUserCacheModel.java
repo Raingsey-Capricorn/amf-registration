@@ -61,7 +61,7 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -87,8 +87,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		sb.append(homePhone);
 		sb.append(", mobilePhone=");
 		sb.append(mobilePhone);
-		sb.append(", eventLog=");
-		sb.append(eventLog);
 		sb.append("}");
 
 		return sb.toString();
@@ -148,8 +146,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 			amfUserImpl.setMobilePhone(mobilePhone);
 		}
 
-		amfUserImpl.setEventLog(eventLog);
-
 		amfUserImpl.resetOriginalValues();
 
 		return amfUserImpl;
@@ -175,8 +171,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		addressId = objectInput.readLong();
 		homePhone = objectInput.readUTF();
 		mobilePhone = objectInput.readUTF();
-
-		eventLog = objectInput.readLong();
 	}
 
 	@Override
@@ -222,8 +216,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		else {
 			objectOutput.writeUTF(mobilePhone);
 		}
-
-		objectOutput.writeLong(eventLog);
 	}
 
 	public String uuid;
@@ -238,6 +230,5 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 	public long addressId;
 	public String homePhone;
 	public String mobilePhone;
-	public long eventLog;
 
 }

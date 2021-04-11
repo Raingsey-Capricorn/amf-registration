@@ -1,11 +1,10 @@
 package com.amf.registration.portlet.portlet.command.action;
 
-import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
-import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.exception.AMFUserValidationException;
 import com.amf.registration.model.AMFUser;
-import com.amf.registration.service.AMFUserService;
-import com.liferay.portal.kernel.exception.PortalException;
+import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
+import com.amf.registration.portlet.constants.MVCCommandNames;
+import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -16,7 +15,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -43,7 +41,7 @@ public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
         ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
         ServiceContext serviceContext = ServiceContextFactory.getInstance(AMFUser.class.getName(), actionRequest);
         try {
-            amfUserService.addAMFUser(
+            AMFUserLocalServiceUtil.addAMFUser(
                     themeDisplay,
                     ParamUtil.getString(actionRequest, "userName"),
                     ParamUtil.getString(actionRequest, "firstName"),
@@ -77,6 +75,4 @@ public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
 
     }
 
-    @Reference
-    private AMFUserService amfUserService;
 }

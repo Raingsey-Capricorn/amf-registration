@@ -30,6 +30,31 @@ public class AMFUserLocalServiceWrapper
 		_amfUserLocalService = amfUserLocalService;
 	}
 
+	@Override
+	public void addAMFEventLogAMFUser(
+		long amfEventLogId, com.amf.registration.model.AMFUser amfUser) {
+
+		_amfUserLocalService.addAMFEventLogAMFUser(amfEventLogId, amfUser);
+	}
+
+	@Override
+	public void addAMFEventLogAMFUser(long amfEventLogId, long amfUserId) {
+		_amfUserLocalService.addAMFEventLogAMFUser(amfEventLogId, amfUserId);
+	}
+
+	@Override
+	public void addAMFEventLogAMFUsers(
+		long amfEventLogId,
+		java.util.List<com.amf.registration.model.AMFUser> amfUsers) {
+
+		_amfUserLocalService.addAMFEventLogAMFUsers(amfEventLogId, amfUsers);
+	}
+
+	@Override
+	public void addAMFEventLogAMFUsers(long amfEventLogId, long[] amfUserIds) {
+		_amfUserLocalService.addAMFEventLogAMFUsers(amfEventLogId, amfUserIds);
+	}
+
 	/**
 	 * Adds the amf user to the database. Also notifies the appropriate model listeners.
 	 *
@@ -88,6 +113,11 @@ public class AMFUserLocalServiceWrapper
 			securityQuestion, securityAnswer, acceptedTOU, serviceContext);
 	}
 
+	@Override
+	public void clearAMFEventLogAMFUsers(long amfEventLogId) {
+		_amfUserLocalService.clearAMFEventLogAMFUsers(amfEventLogId);
+	}
+
 	/**
 	 * Creates a new amf user with the primary key. Does not add the amf user to the database.
 	 *
@@ -108,6 +138,34 @@ public class AMFUserLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _amfUserLocalService.createPersistedModel(primaryKeyObj);
+	}
+
+	@Override
+	public void deleteAMFEventLogAMFUser(
+		long amfEventLogId, com.amf.registration.model.AMFUser amfUser) {
+
+		_amfUserLocalService.deleteAMFEventLogAMFUser(amfEventLogId, amfUser);
+	}
+
+	@Override
+	public void deleteAMFEventLogAMFUser(long amfEventLogId, long amfUserId) {
+		_amfUserLocalService.deleteAMFEventLogAMFUser(amfEventLogId, amfUserId);
+	}
+
+	@Override
+	public void deleteAMFEventLogAMFUsers(
+		long amfEventLogId,
+		java.util.List<com.amf.registration.model.AMFUser> amfUsers) {
+
+		_amfUserLocalService.deleteAMFEventLogAMFUsers(amfEventLogId, amfUsers);
+	}
+
+	@Override
+	public void deleteAMFEventLogAMFUsers(
+		long amfEventLogId, long[] amfUserIds) {
+
+		_amfUserLocalService.deleteAMFEventLogAMFUsers(
+			amfEventLogId, amfUserIds);
 	}
 
 	/**
@@ -271,29 +329,46 @@ public class AMFUserLocalServiceWrapper
 		return _amfUserLocalService.getActionableDynamicQuery();
 	}
 
-	/**
-	 * @param groupId
-	 * @param userId
-	 * @return
-	 */
 	@Override
-	public java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogs(long groupId, long userId) {
+	public java.util.List<com.amf.registration.model.AMFUser>
+		getAMFEventLogAMFUsers(long amfEventLogId) {
 
-		return _amfUserLocalService.getAMFEventLogs(groupId, userId);
+		return _amfUserLocalService.getAMFEventLogAMFUsers(amfEventLogId);
+	}
+
+	@Override
+	public java.util.List<com.amf.registration.model.AMFUser>
+		getAMFEventLogAMFUsers(long amfEventLogId, int start, int end) {
+
+		return _amfUserLocalService.getAMFEventLogAMFUsers(
+			amfEventLogId, start, end);
+	}
+
+	@Override
+	public java.util.List<com.amf.registration.model.AMFUser>
+		getAMFEventLogAMFUsers(
+			long amfEventLogId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.amf.registration.model.AMFUser> orderByComparator) {
+
+		return _amfUserLocalService.getAMFEventLogAMFUsers(
+			amfEventLogId, start, end, orderByComparator);
+	}
+
+	@Override
+	public int getAMFEventLogAMFUsersCount(long amfEventLogId) {
+		return _amfUserLocalService.getAMFEventLogAMFUsersCount(amfEventLogId);
 	}
 
 	/**
-	 * @param groupId
-	 * @param userId
-	 * @param amfUserid
-	 * @return
+	 * Returns the amfEventLogIds of the amf event logs associated with the amf user.
+	 *
+	 * @param amfUserId the amfUserId of the amf user
+	 * @return long[] the amfEventLogIds of amf event logs associated with the amf user
 	 */
 	@Override
-	public java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogs(long groupId, long userId, long amfUserid) {
-
-		return _amfUserLocalService.getAMFEventLogs(groupId, userId, amfUserid);
+	public long[] getAMFEventLogPrimaryKeys(long amfUserId) {
+		return _amfUserLocalService.getAMFEventLogPrimaryKeys(amfUserId);
 	}
 
 	/**
@@ -448,19 +523,6 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	/**
-	 * @param groupId
-	 * @param userId
-	 * @param amfUserid
-	 * @return
-	 */
-	@Override
-	public com.amf.registration.model.AMFEventLog getLastAMFEventLog(
-		long groupId, long userId) {
-
-		return _amfUserLocalService.getLastAMFEventLog(groupId, userId);
-	}
-
-	/**
 	 * Returns the OSGi service identifier.
 	 *
 	 * @return the OSGi service identifier
@@ -482,8 +544,24 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	@Override
+	public boolean hasAMFEventLogAMFUser(long amfEventLogId, long amfUserId) {
+		return _amfUserLocalService.hasAMFEventLogAMFUser(
+			amfEventLogId, amfUserId);
+	}
+
+	@Override
+	public boolean hasAMFEventLogAMFUsers(long amfEventLogId) {
+		return _amfUserLocalService.hasAMFEventLogAMFUsers(amfEventLogId);
+	}
+
+	@Override
 	public boolean isUserNameUnique() {
 		return _amfUserLocalService.isUserNameUnique();
+	}
+
+	@Override
+	public void setAMFEventLogAMFUsers(long amfEventLogId, long[] amfUserIds) {
+		_amfUserLocalService.setAMFEventLogAMFUsers(amfEventLogId, amfUserIds);
 	}
 
 	/**

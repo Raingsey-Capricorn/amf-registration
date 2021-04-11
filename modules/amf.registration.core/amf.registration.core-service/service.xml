@@ -2,7 +2,11 @@
 <!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN"
         "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
 
-<service-builder dependency-injector="ds" package-path="com.amf.registration">
+<service-builder dependency-injector="ds"
+                 package-path="com.amf.registration"
+                 auto-import-default-references="false"
+                 auto-namespace-tables="false"
+>
     <namespace>AMFRegistration</namespace>
     <entity local-service="true"
             name="AMFUser"
@@ -11,15 +15,13 @@
             table="amfuser">
 
         <column name="amfUserId" primary="true" type="long"/>
-        <!-- Group instance -->
         <column name="groupId" type="long"/>
-        <!-- Audit fields -->
+
         <column name="companyId" type="long"/>
         <column name="createDate" type="Date"/>
         <column name="modifiedDate" type="Date"/>
         <column name="userName" type="String"/>
 
-        <!-- foreign keys -->
         <column name="userId" type="long"/>
         <column name="contractId" type="long"/>
         <column name="addressId" type="long"/>
@@ -27,8 +29,9 @@
         <!-- User info fields -->
         <column name="homePhone" type="String"/>
         <column name="mobilePhone" type="String"/>
-        <column name="eventLog" type="long" entity="AMFEventLog" mapping-table="eventlog"/>
-        <!-- Order -->
+
+        <!-- relationship -->
+        <column name="eventLogs" type="Collection" entity="AMFEventLog" mapping-table="eventlog"/>
         <order by="asc">
             <order-column name="userName"/>
         </order>
@@ -37,12 +40,13 @@
         <finder name="GroupId" return-type="Collection">
             <finder-column name="groupId"/>
         </finder>
+        <reference entity="AMFEventLog" package-path="com.amf.registration"/>
         <reference entity="Group" package-path="com.liferay.portal"/>
     </entity>
 
     <entity local-service="true"
             name="AMFEventLog"
-            remote-service="true"
+            remote-service="false"
             uuid="true"
             table="amfeventlog">
 
@@ -52,23 +56,23 @@
         <column name="modifiedDate" type="Date"/>
         <column name="groupId" type="long"/>
         <column name="userId" type="long"/>
-        <column name="amfUserId" type="Collection" entity="AMFUser" mapping-table="eventlog"/>
         <column name="lastLoginDate" type="Date"/>
         <column name="lastLoginIP" type="String"/>
         <column name="status" type="String"/>
+        <!-- relationship -->
+        <column name="amfUsers" type="Collection" entity="AMFUser" mapping-table="eventlog"/>
 
         <!-- Order -->
         <order by="asc">
             <order-column name="lastLoginDate"/>
         </order>
 
-        <!-- Finder methods -->
-        <finder name="UserID" return-type="Collection">
-            <finder-column name="userId"/>
-        </finder>
+        <reference entity="AMFUser" package-path="com.amf.registration"/>
+        <reference entity="Group" package-path="com.liferay.portal"/>
     </entity>
 
     <exceptions>
+        <exception>AMFEventLogValidation</exception>
         <exception>AMFUserValidation</exception>
     </exceptions>
 
