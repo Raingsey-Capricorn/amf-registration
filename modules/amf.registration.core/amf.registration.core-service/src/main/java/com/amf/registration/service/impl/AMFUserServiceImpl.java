@@ -14,14 +14,21 @@
 
 package com.amf.registration.service.impl;
 
+import com.amf.registration.constant.AMFRegistrationConstants;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.base.AMFUserServiceBaseImpl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import java.util.Date;
 import java.util.List;
@@ -100,6 +107,12 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
             String acceptedTOU,
             ServiceContext serviceContext) throws PortalException {
 
+        portletResourcePermission.check(
+                getPermissionChecker(),
+                serviceContext.getScopeGroupId(),
+                ActionKeys.ADD_ENTRY
+        );
+
         return amfUserLocalService.addAMFUser(
                 themeDisplay,
                 userName,
@@ -150,7 +163,29 @@ public class AMFUserServiceImpl extends AMFUserServiceBaseImpl {
      * @throws PortalException
      */
     public AMFUser getAmfUser(long amdUserId) throws PortalException {
-        return amfUserLocalService.getAMFUser(amdUserId);
+
+        AMFUser amfUser = amfUserLocalService.getAMFUser(amdUserId);
+
+        amfUserModelResourcePermission.check(
+                getPermissionChecker(),
+                amfUser,
+                ActionKeys.VIEW
+        );
+        return amfUser;
     }
 
+
+    @Reference(
+            policy = ReferencePolicy.DYNAMIC,
+            policyOption = ReferencePolicyOption.GREEDY,
+            target = "(model.class.name=com.amf.registration.model.AMFUser)"
+    )
+    private volatile ModelResourcePermission<AMFUser> amfUserModelResourcePermission;
+
+    @Reference(
+            policy = ReferencePolicy.DYNAMIC,
+            policyOption = ReferencePolicyOption.GREEDY,
+            target = "(model.class.name=" + AMFRegistrationConstants.RESOURCE_NAME + ")"
+    )
+    private volatile PortletResourcePermission portletResourcePermission;
 }

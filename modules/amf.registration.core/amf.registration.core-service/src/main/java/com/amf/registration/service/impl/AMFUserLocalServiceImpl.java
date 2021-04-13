@@ -29,10 +29,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.service.AddressLocalServiceUtil;
-import com.liferay.portal.kernel.service.ContactLocalServiceUtil;
-import com.liferay.portal.kernel.service.CountryService;
-import com.liferay.portal.kernel.service.UserService;
+import com.liferay.portal.kernel.service.*;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -175,6 +172,20 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             AMFUser registerAMFUser = createAMFUserEntity(homePhone, mobilePhone, registerUser, registerContact, registerAddress);
             AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser.getGroupId());
             AMFEventLogLocalServiceUtil.addAMFUserAMFEventLogs(registerAMFUser.getAmfUserId(), Collections.singletonList(amfEventLog));
+
+            final boolean portletActions = false;
+            final boolean addGroupPermissions = true;
+            final boolean addGuestPermissions = true;
+            getResourceLocalService().addResources(
+                    registerUser.getCompanyId(),
+                    registerAMFUser.getGroupId(),
+                    registerUser.getUserId(),
+                    User.class.getName(),
+                    registerUser.getUserId(),
+                    portletActions,
+                    addGroupPermissions,
+                    addGuestPermissions
+            );
             return AMFUserLocalServiceUtil.addAMFUser(registerAMFUser);
         } catch (Exception e) {
             throw new PortalException(e);
@@ -358,4 +369,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
 
     @Reference
     private UserService userService;
+
+    @Reference
+    private ResourceLocalService resourceLocalService;
 }

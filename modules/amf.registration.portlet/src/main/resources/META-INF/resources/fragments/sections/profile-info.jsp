@@ -3,7 +3,7 @@
 
 <div class="container-fluid-1280">
     <aui:container cssClass="tbar-item">
-        <h1>${user.userName}</h1>
+        <h1>${user.screenName}</h1>
         <h2><liferay-ui:message key="mafUser-information"/></h2>
         <div class="user-metadata">
             <dl>
