@@ -135,6 +135,15 @@ public class AMFUserWrapper
 	}
 
 	/**
+	 * @param addressId
+	 * @return
+	 */
+	@Override
+	public String getAddress(long addressId) {
+		return model.getAddress(addressId);
+	}
+
+	/**
 	 * Returns the address ID of this amf user.
 	 *
 	 * @return the address ID of this amf user
@@ -219,6 +228,15 @@ public class AMFUserWrapper
 	@Override
 	public Date getCreateDate() {
 		return model.getCreateDate();
+	}
+
+	/**
+	 * @param contactId
+	 * @return
+	 */
+	@Override
+	public String getEmailAddress(long contactId) {
+		return model.getEmailAddress(contactId);
 	}
 
 	/**

@@ -15,13 +15,22 @@
 package com.amf.registration.model.impl;
 
 import com.amf.registration.model.AMFEventLog;
+import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
+import com.amf.registration.service.AMFUserLocalService;
+import com.liferay.portal.kernel.dao.orm.Disjunction;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.AddressLocalServiceUtil;
+import com.liferay.portal.kernel.service.ContactLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.Validator;
+import org.osgi.service.component.annotations.Reference;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,5 +121,39 @@ public class AMFUserImpl extends AMFUserBaseImpl {
             return null;
         }
     }
+
+    /**
+     * @param contactId
+     * @return
+     */
+    @Override
+    public String getEmailAddress(long contactId) {
+        try {
+            return ContactLocalServiceUtil.getContact(contactId).getEmailAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "No-Data";
+        }
+    }
+
+    /**
+     * @param addressId
+     * @return
+     */
+    @Override
+    public String getAddress(long addressId) {
+        try {
+            Address address = AddressLocalServiceUtil.getAddress(addressId);
+            return String.format("%s - %s -%s",
+                    new StringBuilder().append(address.getStreet1()).append(address.getStreet2()).append(address.getStreet3()),
+                    address.getCity(),
+                    address.getRegion().getName()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

@@ -320,6 +320,17 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                 getUserNameSearchDynamicQuery(groupId, userName));
     }
 
+    /**
+     * @param groupId
+     * @param userId
+     * @param userName
+     * @return
+     */
+    @Override
+    public AMFUser getAMFUserByGroupUserAndUserName(long groupId, long userId, String userName) {
+        return (AMFUser) amfUserLocalService.dynamicQuery(getDynamicQueryForGroupUserandUsername(groupId, userId, userName)).stream().findFirst().get();
+    }
+
     @Override
     public boolean isUserNameUnique() {
         return getAMFUserByUserName(getGroupID(), getInputUserName()) == 0;
@@ -360,6 +371,29 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         }
         return dynamicQuery;
     }
+
+    /**
+     * @param groupId
+     * @param userId
+     * @param userName
+     * @return
+     */
+    private DynamicQuery getDynamicQueryForGroupUserandUsername(long groupId, long userId, String userName) {
+        try {
+
+            DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+            if (Validator.isNotNull(userId)) {
+                Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
+                disjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId));
+                disjunctionQuery.add(RestrictionsFactoryUtil.eq("userName", userName));
+                dynamicQuery.add(disjunctionQuery);
+            }
+            return dynamicQuery;
+        } catch (NullPointerException npe) {
+            return null;
+        }
+    }
+
 
     @Reference
     private AMFUserValidator amfUserValidator;

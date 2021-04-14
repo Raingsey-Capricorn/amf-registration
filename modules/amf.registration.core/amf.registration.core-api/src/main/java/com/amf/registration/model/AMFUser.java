@@ -87,4 +87,16 @@ public interface AMFUser extends AMFUserModel, PersistedModel {
 	 */
 	public String getLastLoginIP();
 
+	/**
+	 * @param contactId
+	 * @return
+	 */
+	public String getEmailAddress(long contactId);
+
+	/**
+	 * @param addressId
+	 * @return
+	 */
+	public String getAddress(long addressId);
+
 }

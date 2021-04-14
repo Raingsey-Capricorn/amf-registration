@@ -4,9 +4,9 @@
 
 <div class="container-fluid-1280">
     <b><liferay-ui:message key="amf-registration.caption"/></b>
-    <liferay-ui:tabs names="All,Registration,Login"
+    <liferay-ui:tabs names="Profile,All,Registration,Login"
+                     tabsValues="Profile,All,Registration,Login"
                      refresh="false"
-                     tabsValues="All,Registration,Login"
                      type="pills">
 
         <liferay-ui:section>

@@ -1,16 +1,18 @@
 package com.amf.registration.portlet.portlet.command.render;
 
+import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
+import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.theme.PortletDisplay;
+import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -20,32 +22,24 @@ import javax.portlet.RenderResponse;
         immediate = true,
         property = {
                 "javax.portlet.name=" + AMFRegistrationPortletKeys.AMF_REGISTRATION,
-                "mvc.command.name=" + MVCCommandNames.AMF_VIEW_MEMBER_INFO
+                "mvc.command.name=" + MVCCommandNames.AMF_EDIT
         },
         service = MVCRenderCommand.class
 )
 public class AMFUserProfileInfoMVCRenderCommand implements MVCRenderCommand {
     @Override
     public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
-
-        ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-        long amfUserId = ParamUtil.getLong(renderRequest, "amfUserId", 0);
         try {
-            User user = UserLocalServiceUtil.getUser(amfUserId);
-/*            DateFormat dateFormat = DateFormatFactoryUtil.getSimpleDateFormat("EEEEE, MMMMM dd, yyyy", renderRequest.getLocale());
+            User loggedInUser = userService.getCurrentUser();
+            AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
             renderRequest.setAttribute("amfUser", amfUser);
-            renderRequest.setAttribute("eventTime", dateFormat.format(amfUser.getCreateDate()));
-            renderRequest.setAttribute("screenName", amfUser.getCompanyId());
-            renderRequest.setAttribute("ipAddress", dateFormat.format(amfUser.getModifiedDate()));
-            renderRequest.setAttribute("eventType", dateFormat.format(amfUser.getModifiedDate()));*/
-            PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-            String redirect = renderRequest.getParameter("redirect");
-            portletDisplay.setShowBackIcon(true);
-            portletDisplay.setURLBack(redirect);
-            return "/fragments/view-details.jsp";
+            return "/fragments/registration.jsp";
         } catch (PortalException pe) {
             throw new PortletException(pe);
         }
     }
+
+    @Reference
+    private UserService userService;
 
 }

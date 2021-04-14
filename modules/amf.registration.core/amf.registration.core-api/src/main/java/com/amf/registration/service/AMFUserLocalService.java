@@ -299,6 +299,16 @@ public interface AMFUserLocalService
 
 	/**
 	 * @param groupId
+	 * @param userId
+	 * @param userName
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AMFUser getAMFUserByGroupUserAndUserName(
+		long groupId, long userId, String userName);
+
+	/**
+	 * @param groupId
 	 * @param userName
 	 * @return
 	 */

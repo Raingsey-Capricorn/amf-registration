@@ -375,6 +375,20 @@ public class AMFUserLocalServiceUtil {
 
 	/**
 	 * @param groupId
+	 * @param userId
+	 * @param userName
+	 * @return
+	 */
+	public static com.amf.registration.model.AMFUser
+		getAMFUserByGroupUserAndUserName(
+			long groupId, long userId, String userName) {
+
+		return getService().getAMFUserByGroupUserAndUserName(
+			groupId, userId, userName);
+	}
+
+	/**
+	 * @param groupId
 	 * @param userName
 	 * @return
 	 */
