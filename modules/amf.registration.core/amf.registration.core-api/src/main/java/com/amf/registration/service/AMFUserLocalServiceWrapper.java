@@ -425,6 +425,14 @@ public class AMFUserLocalServiceWrapper
 		return _amfUserLocalService.getAMFUserByUuidAndGroupId(uuid, groupId);
 	}
 
+	@Override
+	public java.util.List<com.amf.registration.model.AMFUser>
+		getAMFUserEventLogByStatus(long groupId, String eventStatus) {
+
+		return _amfUserLocalService.getAMFUserEventLogByStatus(
+			groupId, eventStatus);
+	}
+
 	/**
 	 * Returns a range of all the amf users.
 	 *
@@ -568,6 +576,9 @@ public class AMFUserLocalServiceWrapper
 		return _amfUserLocalService.hasAMFEventLogAMFUsers(amfEventLogId);
 	}
 
+	/**
+	 * @return
+	 */
 	@Override
 	public boolean isUserNameUnique() {
 		return _amfUserLocalService.isUserNameUnique();

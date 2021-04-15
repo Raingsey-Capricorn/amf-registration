@@ -34,7 +34,7 @@
     <h4 style="text-decoration: underline"><liferay-ui:message key="eligibility-country"/></h4>
     <aui:model-context bean="${amfUser}" model="${userClass}"/>
     <aui:form action="${registerMembershipURL}" name="fm" method="post">
-        <aui:input name="amfUserId" field="amfUserId" type="hidden"/>
+<%--        <aui:input name="amfUserId" field="amfUserId" type="hidden"/>--%>
 
         <aui:fieldset-group markupView="lexicon">
             <aui:fieldset label="Basic Info">

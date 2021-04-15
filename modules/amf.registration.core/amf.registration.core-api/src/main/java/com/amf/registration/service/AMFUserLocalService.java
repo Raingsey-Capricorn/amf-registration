@@ -327,6 +327,10 @@ public interface AMFUserLocalService
 	public AMFUser getAMFUserByUuidAndGroupId(String uuid, long groupId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFUser> getAMFUserEventLogByStatus(
+		long groupId, String eventStatus);
+
 	/**
 	 * Returns a range of all the amf users.
 	 *
@@ -424,6 +428,9 @@ public interface AMFUserLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasAMFEventLogAMFUsers(long amfEventLogId);
 
+	/**
+	 * @return
+	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isUserNameUnique();
 

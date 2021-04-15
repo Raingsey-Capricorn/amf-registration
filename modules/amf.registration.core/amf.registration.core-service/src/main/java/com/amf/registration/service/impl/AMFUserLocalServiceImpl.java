@@ -16,6 +16,7 @@ package com.amf.registration.service.impl;
 
 import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFUser;
+import com.amf.registration.service.AMFEventLogLocalService;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.amf.registration.service.base.AMFUserLocalServiceBaseImpl;
@@ -206,7 +207,6 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         return AMFEventLogLocalServiceUtil.addAMFEventLog(amfEventLog);
     }
 
-
     /**
      * @param homePhone
      * @param mobilePhone
@@ -328,12 +328,20 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      */
     @Override
     public AMFUser getAMFUserByGroupUserAndUserName(long groupId, long userId, String userName) {
-        return (AMFUser) amfUserLocalService.dynamicQuery(getDynamicQueryForGroupUserandUsername(groupId, userId, userName)).stream().findFirst().get();
+        return (AMFUser) amfUserLocalService.dynamicQuery(getDynamicQueryForGroupUserAndUsername(groupId, userId, userName)).stream().findFirst().get();
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean isUserNameUnique() {
         return getAMFUserByUserName(getGroupID(), getInputUserName()) == 0;
+    }
+
+    @Override
+    public List<AMFUser> getAMFUserEventLogByStatus(long groupId, String eventStatus) {
+        return amfEventLogLocalService.dynamicQuery(getEventLogStatusSearchDynamicQuery(groupId, eventStatus));
     }
 
     /**
@@ -349,6 +357,24 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         if (Validator.isNotNull(keywords)) {
             Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
             disjunctionQuery.add(RestrictionsFactoryUtil.like("userName", "%" + keywords + "%"));
+            dynamicQuery.add(disjunctionQuery);
+        }
+        return dynamicQuery;
+    }
+
+    /**
+     * @param groupId
+     * @param status
+     * @return
+     */
+    private DynamicQuery getEventLogStatusSearchDynamicQuery(
+            final long groupId,
+            final String status) {
+
+        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+        if (Validator.isNotNull(status)) {
+            Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
+            disjunctionQuery.add(RestrictionsFactoryUtil.eq("status", status));
             dynamicQuery.add(disjunctionQuery);
         }
         return dynamicQuery;
@@ -378,7 +404,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @param userName
      * @return
      */
-    private DynamicQuery getDynamicQueryForGroupUserandUsername(long groupId, long userId, String userName) {
+    private DynamicQuery getDynamicQueryForGroupUserAndUsername(long groupId, long userId, String userName) {
         try {
 
             DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
@@ -406,4 +432,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
 
     @Reference
     private ResourceLocalService resourceLocalService;
+
+    @Reference
+    private AMFEventLogLocalService amfEventLogLocalService;
 }

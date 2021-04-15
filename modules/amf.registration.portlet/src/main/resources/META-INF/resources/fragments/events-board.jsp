@@ -2,12 +2,19 @@
 <%@ taglib prefix="liferay" uri="http://liferay.com/tld/ui" %>
 <%@ taglib prefix="liferay-ui" uri="http://liferay.com/tld/ui" %>
 
+<portlet:renderURL var="viewDetails">
+    <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_DISPLAY_EVENTS%>"/>
+    <portlet:param name="redirect" value="${currentURL}"/>
+</portlet:renderURL>
+
 <div class="container-fluid-1280">
     <b><liferay-ui:message key="amf-registration.caption"/></b>
     <liferay-ui:tabs names="Profile,All,Registration,Login"
                      tabsValues="Profile,All,Registration,Login"
-                     refresh="false"
-                     type="pills">
+                     refresh="true"
+                     url="${viewDetails}"
+                     param="tabIndex"
+                     type="tabs nav-tabs-default">
 
         <liferay-ui:section>
             <%@ include file="sections/profile-info.jsp" %>

@@ -2,11 +2,17 @@ package com.amf.registration.portlet.portlet.command.render;
 
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
+import com.amf.registration.portlet.constants.MVCCommandNames;
+import com.amf.registration.portlet.constants.PageConstants;
 import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
+import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.service.RegionService;
+import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -17,14 +23,21 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
- * This render command will switch the view for user and admin
+ * project-name : amf-registration
+ * package-name : com.amf.registration.portlet.portlet.command.action
+ * author       : Pisethraingsey SUON
+ * email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
+ * crated-date  : 4/09/2021
  */
 @Component(
         property = {
                 "javax.portlet.name=" + AMFRegistrationPortletKeys.AMF_REGISTRATION,
-                "mvc.command.name=/"
+                "mvc.command.name=/",
+                "mvc.command.name=" + MVCCommandNames.AMF_DISPLAY_EVENTS,
         },
         service = MVCRenderCommand.class
 )
@@ -56,12 +69,45 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
         int end = start + delta;
 
-        List<AMFUser> users = AMFUserLocalServiceUtil.getAMFUsers(start, end);
-        renderRequest.setAttribute("amfUsers", users);
-        renderRequest.setAttribute("amfUserCount", users.size());
+        try {
+            User loggedInUser = userService.getCurrentUser();
+            List<AMFUser> amfUsers = AMFUserLocalServiceUtil.getAMFUsers(start, end);
 
-        return "/fragments/events-board.jsp";
+            String tabIndex = ParamUtil.getString(renderRequest, "tabIndex").toLowerCase(Locale.ROOT);
+            switch (tabIndex) {
+                case PageConstants.TAB_PROFILE:
+                    AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
+                    renderRequest.setAttribute("amfUser", amfUser);
+                    break;
+
+                case PageConstants.TAB_ALL:
+                    renderRequest.setAttribute("amfUsers", amfUsers);
+                    renderRequest.setAttribute("amfUserCount", amfUsers.size());
+                    break;
+
+                case PageConstants.TAB_REGISTRATION:
+                    renderRequest.setAttribute("amfUsers",
+                            amfUsers.stream().filter(user -> user.getEventStatus().equalsIgnoreCase(EventStatus.REGISTER)).collect(Collectors.toList()));
+                    renderRequest.setAttribute("amfUserCount", amfUsers.size());
+                    break;
+
+                case PageConstants.TAB_LOGIN:
+                    renderRequest.setAttribute("amfUsers",
+                            amfUsers.stream().filter(user -> user.getEventStatus().equalsIgnoreCase(EventStatus.LOGIN)).collect(Collectors.toList()));
+                    renderRequest.setAttribute("amfUserCount", amfUsers.size());
+                    break;
+            }
+
+            return "/fragments/events-board.jsp";
+        } catch (PortalException pe) {
+            return "";
+        }
+
+
     }
+
+    @Reference
+    private UserService userService;
 
     @Reference
     AMFUserLocalService service;

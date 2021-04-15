@@ -1,12 +1,6 @@
 <%@ page language="java" pageEncoding="UTF-8" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
-<%@ page import="com.amf.registration.portlet.constants.MVCCommandNames" %>
 
-<portlet:renderURL var="viewDetails">
-    <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_DISPLAY_EVENTS%>"/>
-    <portlet:param name="redirect" value="${currentURL}"/>
-    <portlet:param name="amfUserId" value="${amfUser.amfUserId}"/>
-</portlet:renderURL>
 <div class="container-fluid-1280">
     <b><liferay-ui:message key="amf-registration.caption"/></b>
     <liferay-ui:search-container total="<%=0%>"

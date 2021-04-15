@@ -18,6 +18,7 @@ import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.AMFUserLocalService;
+import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -86,12 +87,12 @@ public class AMFUserImpl extends AMFUserBaseImpl {
     public String getEventStatus() {
         try {
             if (UserLocalServiceUtil.getUserById(getUserId()).getLastLoginDate() != null) {
-                return "Login";
+                return EventStatus.LOGIN;
             }
         } catch (PortalException e) {
-            return "Register";
+            return EventStatus.REGISTER;
         }
-        return "Register";
+        return EventStatus.REGISTER;
     }
 
     /**
