@@ -56,4 +56,7 @@ public interface AMFEventLog extends AMFEventLogModel, PersistedModel {
 
 		};
 
+	public String getCombinedUserInfo()
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 }

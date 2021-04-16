@@ -15,15 +15,18 @@
 package com.amf.registration.service.impl;
 
 import com.amf.registration.model.AMFEventLog;
-import com.amf.registration.service.AMFEventLogLocalService;
+import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.base.AMFEventLogLocalServiceBaseImpl;
+import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.dao.orm.Disjunction;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.*;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.util.Validator;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The implementation of the amf event log local service.
@@ -79,5 +82,112 @@ public class AMFEventLogLocalServiceImpl
         return dynamicQuery;
     }
 
+    /**
+     * @param userId
+     * @param status
+     * @return
+     */
+    @Override
+    public List<AMFEventLog> getAMFEventLogBy(long groupId, long userId, String status, int start, int end) {
+        return amfEventLogLocalService.dynamicQuery(getUserBaseOnGroupUserIdAndStatusSearchDynamicQuery(groupId, userId, status, start, end));
+    }
+
+    /**
+     * @param groupId
+     * @param status
+     * @param start
+     * @param end
+     * @return
+     */
+    @Override
+    public List<AMFEventLog> getAMFEventLogBy(long groupId, String status, int start, int end) {
+        List<Long> allUserIds = amfEventLogLocalService.dynamicQuery(getDistinctEventLogByStatusSearchDynamicQuery(groupId, status, start, end));
+        return allUserIds.stream().map(this::getLatestAMFEventLogByUserId).collect(Collectors.toList());
+    }
+
+    /**
+     * @param groupId
+     * @param userId
+     * @param eventStatus
+     * @param start
+     * @param end
+     * @return
+     */
+    private DynamicQuery getUserBaseOnGroupUserIdAndStatusSearchDynamicQuery(
+            final long groupId,
+            final long userId,
+            final String eventStatus,
+            final int start,
+            final int end
+    ) {
+
+        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+        if (Validator.isNotNull(eventStatus) && userId > 0) {
+            Conjunction conjunctionQuery = RestrictionsFactoryUtil.conjunction();
+            conjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId));
+            conjunctionQuery.add(RestrictionsFactoryUtil.eq("status", eventStatus));
+            dynamicQuery.add(conjunctionQuery);
+        }
+        dynamicQuery.setLimit(start, end);
+        return dynamicQuery;
+    }
+
+    /**
+     * @param groupId
+     * @param eventStatus
+     * @param start
+     * @param end
+     * @return
+     */
+    private DynamicQuery getDistinctEventLogByStatusSearchDynamicQuery(
+            final long groupId,
+            final String eventStatus,
+            int start,
+            int end
+    ) {
+
+        DynamicQuery dynamicQuery = dynamicQuery();
+        if (eventStatus.equals(EventStatus.ALL)) {
+            dynamicQuery.setProjection(ProjectionFactoryUtil.groupProperty("userId"));
+        } else if (Validator.isNotNull(eventStatus)) {
+            Conjunction conjunctionQuery = RestrictionsFactoryUtil.conjunction();
+            conjunctionQuery.add(RestrictionsFactoryUtil.eq("status", eventStatus));
+            dynamicQuery.add(conjunctionQuery);
+            dynamicQuery.setProjection(ProjectionFactoryUtil.groupProperty("userId"));
+        }
+        dynamicQuery.setLimit(start, end);
+        return dynamicQuery;
+    }
+
+    /**
+     * @return
+     */
+    private AMFEventLog getLatestAMFEventLogByUserId(long userId) {
+
+        DynamicQuery query = dynamicQuery();
+        query.add(
+                RestrictionsFactoryUtil.conjunction()
+                        .add(RestrictionsFactoryUtil.eq("userId", userId)))
+                .addOrder(OrderFactoryUtil.desc("lastLoginDate")).setLimit(0, 1);
+        return (AMFEventLog) amfEventLogLocalService.dynamicQuery(query).stream().findFirst().get();
+    }
+
+    /**
+     * @param loggedInUser
+     * @return
+     */
+    @Override
+    public AMFEventLog addAMFEventLog(User loggedInUser) {
+        long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
+        AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
+        amfEventLog.setUserId(loggedInUser.getUserId());
+        amfEventLog.setGroupId(loggedInUser.getGroupId());
+        amfEventLog.setStatus(EventStatus.LOGIN);
+        amfEventLog.setCreateDate(new Date());
+        amfEventLog.setLastLoginDate(loggedInUser.getLastLoginDate());
+        amfEventLog.setLastLoginIP(loggedInUser.getLastLoginIP());
+        amfEventLog.setNew(false);
+        return AMFEventLogLocalServiceUtil.addAMFEventLog(amfEventLog);
+    }
 
 }

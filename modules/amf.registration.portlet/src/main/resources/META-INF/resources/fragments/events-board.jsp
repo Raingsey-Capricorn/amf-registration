@@ -14,7 +14,7 @@
                      refresh="true"
                      url="${viewDetails}"
                      param="tabIndex"
-                     type="tabs nav-tabs-default">
+                     type="pills">
 
         <liferay-ui:section>
             <%@ include file="sections/profile-info.jsp" %>

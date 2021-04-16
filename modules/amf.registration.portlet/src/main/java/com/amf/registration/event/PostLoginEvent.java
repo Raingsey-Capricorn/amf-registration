@@ -1,8 +1,6 @@
 package com.amf.registration.event;
 
-import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
-import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;
 import com.liferay.portal.kernel.events.LifecycleEvent;
@@ -28,11 +26,9 @@ public class PostLoginEvent implements LifecycleAction {
     public void processLifecycleEvent(LifecycleEvent lifecycleEvent) throws ActionException {
         try {
             User loggedInUser = userService.getCurrentUser();
-            AMFEventLog eventLogForCurrentUser = AMFEventLogLocalServiceUtil.getAmfEventLogByGroupAndUser(loggedInUser.getGroupId(), loggedInUser.getUserId());
-            eventLogForCurrentUser.setLastLoginDate(loggedInUser.getLastLoginDate());
-            eventLogForCurrentUser.setStatus(EventStatus.LOGIN);
-            eventLogForCurrentUser.setLastLoginIP(loggedInUser.getLastLoginIP());
-            AMFEventLogLocalServiceUtil.updateAMFEventLog(eventLogForCurrentUser);
+            if (loggedInUser.getRoles().get(0).getDescriptiveName().equals("User")) {
+                AMFEventLogLocalServiceUtil.addAMFEventLog(userService.getCurrentUser());
+            }
         } catch (PortalException e) {
 
         }

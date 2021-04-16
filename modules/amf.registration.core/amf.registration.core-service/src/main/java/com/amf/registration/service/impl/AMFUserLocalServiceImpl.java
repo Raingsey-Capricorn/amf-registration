@@ -171,7 +171,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             Contact registerContact = createContactEntity(birthDate, registerUser);
             Address registerAddress = createAddressEntity(userName, addressLineOne, addressLineTwo, city, regionId, zip, registerUser);
             AMFUser registerAMFUser = createAMFUserEntity(homePhone, mobilePhone, registerUser, registerContact, registerAddress);
-            AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser.getGroupId());
+            AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser.getGroupId(), EventStatus.REGISTER);
             AMFEventLogLocalServiceUtil.addAMFUserAMFEventLogs(registerAMFUser.getAmfUserId(), Collections.singletonList(amfEventLog));
 
             final boolean portletActions = false;
@@ -196,12 +196,12 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     /**
      * @param amfUser
      */
-    private AMFEventLog createEventLogEntity(AMFUser amfUser, long groupID) {
+    private AMFEventLog createEventLogEntity(AMFUser amfUser, long groupID, String eventStatus) {
         long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
         AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
         amfEventLog.setUserId(amfUser.getUserId());
         amfEventLog.setGroupId(groupID);
-        amfEventLog.setStatus(EventStatus.REGISTER);
+        amfEventLog.setStatus(eventStatus);
         amfEventLog.setCreateDate(new Date());
         amfEventLog.setNew(true);
         return AMFEventLogLocalServiceUtil.addAMFEventLog(amfEventLog);

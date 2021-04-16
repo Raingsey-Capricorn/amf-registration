@@ -50,6 +50,17 @@ public class AMFEventLogLocalServiceWrapper
 		return _amfEventLogLocalService.addAMFEventLog(amfEventLog);
 	}
 
+	/**
+	 * @param loggedInUser
+	 * @return
+	 */
+	@Override
+	public com.amf.registration.model.AMFEventLog addAMFEventLog(
+		com.liferay.portal.kernel.model.User loggedInUser) {
+
+		return _amfEventLogLocalService.addAMFEventLog(loggedInUser);
+	}
+
 	@Override
 	public void addAMFUserAMFEventLog(
 		long amfUserId, com.amf.registration.model.AMFEventLog amfEventLog) {
@@ -317,6 +328,35 @@ public class AMFEventLogLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _amfEventLogLocalService.getAMFEventLog(amfEventLogId);
+	}
+
+	/**
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	@Override
+	public java.util.List<com.amf.registration.model.AMFEventLog>
+		getAMFEventLogBy(
+			long groupId, long userId, String status, int start, int end) {
+
+		return _amfEventLogLocalService.getAMFEventLogBy(
+			groupId, userId, status, start, end);
+	}
+
+	/**
+	 * @param groupId
+	 * @param status
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	@Override
+	public java.util.List<com.amf.registration.model.AMFEventLog>
+		getAMFEventLogBy(long groupId, String status, int start, int end) {
+
+		return _amfEventLogLocalService.getAMFEventLogBy(
+			groupId, status, start, end);
 	}
 
 	/**

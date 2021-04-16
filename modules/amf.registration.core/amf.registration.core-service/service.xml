@@ -60,7 +60,7 @@
         <column name="lastLoginIP" type="String"/>
         <column name="status" type="String"/>
         <!-- relationship -->
-        <column name="amfUsers" type="Collection" entity="AMFUser" mapping-table="eventlog"/>
+        <column name="amfUsers"  type="Collection" entity="AMFUser" mapping-table="eventlog"/>
 
         <!-- Order -->
         <order by="asc">

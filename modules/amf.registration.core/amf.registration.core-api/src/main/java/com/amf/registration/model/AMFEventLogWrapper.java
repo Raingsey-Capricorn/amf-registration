@@ -130,6 +130,13 @@ public class AMFEventLogWrapper
 		return model.getAmfEventLogId();
 	}
 
+	@Override
+	public String getCombinedUserInfo()
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return model.getCombinedUserInfo();
+	}
+
 	/**
 	 * Returns the company ID of this amf event log.
 	 *

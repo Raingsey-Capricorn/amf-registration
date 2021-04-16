@@ -1,4 +1,3 @@
-<%@ page import="com.amf.registration.portlet.constants.MVCCommandNames" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
 <%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %>
 

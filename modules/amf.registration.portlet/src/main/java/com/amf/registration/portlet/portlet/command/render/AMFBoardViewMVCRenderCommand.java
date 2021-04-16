@@ -1,9 +1,11 @@
 package com.amf.registration.portlet.portlet.command.render;
 
+import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.portlet.constants.PageConstants;
+import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.amf.registration.utilities.EventStatus;
@@ -22,9 +24,9 @@ import org.osgi.service.component.annotations.Reference;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 /**
  * project-name : amf-registration
@@ -68,33 +70,44 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         int delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
         int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
         int end = start + delta;
-
+        String tabIndex = ParamUtil.getString(renderRequest, "tabIndex").toLowerCase(Locale.ROOT);
+        List<AMFEventLog> eventLogs = new ArrayList<>();
         try {
             User loggedInUser = userService.getCurrentUser();
-            List<AMFUser> amfUsers = AMFUserLocalServiceUtil.getAMFUsers(start, end);
-
-            String tabIndex = ParamUtil.getString(renderRequest, "tabIndex").toLowerCase(Locale.ROOT);
+            boolean adminFlag = loggedInUser.getRoles().get(0).getDescriptiveName().equals("Administrator");
             switch (tabIndex) {
                 case PageConstants.TAB_PROFILE:
-                    AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
-                    renderRequest.setAttribute("amfUser", amfUser);
+                    if (!adminFlag) {
+                        AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
+                        renderRequest.setAttribute("amfUser", amfUser);
+                    }
                     break;
 
                 case PageConstants.TAB_ALL:
-                    renderRequest.setAttribute("amfUsers", amfUsers);
-                    renderRequest.setAttribute("amfUserCount", amfUsers.size());
+                    if (adminFlag) {
+                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.ALL, start, end));
+                    } else {
+                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogs(start, end));
+                    }
+                    setRequestAttribute(renderRequest, eventLogs);
                     break;
 
                 case PageConstants.TAB_REGISTRATION:
-                    renderRequest.setAttribute("amfUsers",
-                            amfUsers.stream().filter(user -> user.getEventStatus().equalsIgnoreCase(EventStatus.REGISTER)).collect(Collectors.toList()));
-                    renderRequest.setAttribute("amfUserCount", amfUsers.size());
+                    if (adminFlag) {
+                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.REGISTER, start, end));
+                    } else {
+                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.REGISTER, start, end));
+                    }
+                    setRequestAttribute(renderRequest, eventLogs);
                     break;
 
                 case PageConstants.TAB_LOGIN:
-                    renderRequest.setAttribute("amfUsers",
-                            amfUsers.stream().filter(user -> user.getEventStatus().equalsIgnoreCase(EventStatus.LOGIN)).collect(Collectors.toList()));
-                    renderRequest.setAttribute("amfUserCount", amfUsers.size());
+                    if (adminFlag) {
+                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.LOGIN, start, end));
+                    } else {
+                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.LOGIN, start, end));
+                    }
+                    setRequestAttribute(renderRequest, eventLogs);
                     break;
             }
 
@@ -102,9 +115,17 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         } catch (PortalException pe) {
             return "";
         }
-
-
     }
+
+    /**
+     * @param renderRequest
+     * @param eventLogs
+     */
+    private void setRequestAttribute(RenderRequest renderRequest, List<AMFEventLog> eventLogs) {
+        renderRequest.setAttribute("amfEvents", eventLogs);
+        renderRequest.setAttribute("amfEventCount", eventLogs.size());
+    }
+
 
     @Reference
     private UserService userService;

@@ -17,6 +17,7 @@ package com.amf.registration.service;
 import com.amf.registration.model.AMFEventLog;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
@@ -76,6 +78,12 @@ public interface AMFEventLogLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public AMFEventLog addAMFEventLog(AMFEventLog amfEventLog);
+
+	/**
+	 * @param loggedInUser
+	 * @return
+	 */
+	public AMFEventLog addAMFEventLog(User loggedInUser);
 
 	public void addAMFUserAMFEventLog(long amfUserId, AMFEventLog amfEventLog);
 
@@ -242,6 +250,26 @@ public interface AMFEventLogLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AMFEventLog getAMFEventLog(long amfEventLogId)
 		throws PortalException;
+
+	/**
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFEventLog> getAMFEventLogBy(
+		long groupId, long userId, String status, int start, int end);
+
+	/**
+	 * @param groupId
+	 * @param status
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFEventLog> getAMFEventLogBy(
+		long groupId, String status, int start, int end);
 
 	/**
 	 * @param groupId
