@@ -8,8 +8,8 @@ package com.amf.registration.portlet.constants;
  * crated-date  : 4/15/2021
  */
 public final class PageConstants {
-    public static final String TAB_PROFILE      = "profile";
-    public static final String TAB_ALL          = "all";
-    public static final String TAB_REGISTRATION = "registration";
-    public static final String TAB_LOGIN        = "login";
+    public static final String TAB_PROFILE      = "Profile";
+    public static final String TAB_ALL          = "All";
+    public static final String TAB_REGISTRATION = "Registration";
+    public static final String TAB_LOGIN        = "Login";
 }

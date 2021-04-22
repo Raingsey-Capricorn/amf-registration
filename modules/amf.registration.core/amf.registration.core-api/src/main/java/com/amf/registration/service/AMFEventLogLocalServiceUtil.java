@@ -310,13 +310,15 @@ public class AMFEventLogLocalServiceUtil {
 	}
 
 	/**
+	 * @param groupId
 	 * @param userId
 	 * @param status
+	 * @param start
+	 * @param end
 	 * @return
 	 */
-	public static java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogBy(
-			long groupId, long userId, String status, int start, int end) {
+	public static java.util.HashMap<String, Object> getAMFEventLogBy(
+		long groupId, long userId, String status, int start, int end) {
 
 		return getService().getAMFEventLogBy(
 			groupId, userId, status, start, end);
@@ -329,8 +331,8 @@ public class AMFEventLogLocalServiceUtil {
 	 * @param end
 	 * @return
 	 */
-	public static java.util.List<com.amf.registration.model.AMFEventLog>
-		getAMFEventLogBy(long groupId, String status, int start, int end) {
+	public static java.util.HashMap<String, Object> getAMFEventLogBy(
+		long groupId, String status, int start, int end) {
 
 		return getService().getAMFEventLogBy(groupId, status, start, end);
 	}
@@ -376,6 +378,18 @@ public class AMFEventLogLocalServiceUtil {
 		getAMFEventLogs(int start, int end) {
 
 		return getService().getAMFEventLogs(start, end);
+	}
+
+	/**
+	 * @param groupId
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static java.util.HashMap<String, Object> getAMFEventLogs(
+		long groupId, int start, int end) {
+
+		return getService().getAMFEventLogs(groupId, start, end);
 	}
 
 	/**

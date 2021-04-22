@@ -14,6 +14,7 @@
         title="<%= user.getFullName() %>"
         subtitle="<%= user.getEmailAddress() %>"
         actionJsp="/META-INF/resources/fragments/sections/registration-info.jsp">
+
     <liferay-frontend:vertical-card-header>
         <liferay-ui:message
                 arguments="<%= LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - user.getLastLoginDate().getTime(), true) %>"

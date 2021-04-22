@@ -1,16 +1,13 @@
-<%@ page language="java" pageEncoding="UTF-8" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
 
 <div class="container-fluid-1280">
     <b><liferay-ui:message key="amf-registration.caption"/></b>
-    <liferay-ui:search-container total="${amfEventCount}"
-                                 iteratorURL="${portletURL}"
-                                 var="searchContainer"
-                                 deltaParam="10"
+    <liferay-ui:search-container
+            total="${amfEventCount}"
+            iteratorURL="<%=iteratorURL%>"
+            deltaConfigurable="true"
+            emptyResultsMessage="Oops. There Are No Users To Display, Please add Users">
 
-                                 deltaConfigurable="true"
-                                 emptyResultsMessage="Oops. There Are No Users To Display, Please add Users">
-        <%--        delta="10"--%>
         <liferay-ui:search-container-results results="${amfEvents}"/>
         <liferay-ui:search-container-row className="com.amf.registration.model.AMFEventLog"
                                          modelVar="amfEvent"

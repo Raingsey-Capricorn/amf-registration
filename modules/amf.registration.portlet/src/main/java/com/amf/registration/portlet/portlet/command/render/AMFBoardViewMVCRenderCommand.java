@@ -1,9 +1,7 @@
 package com.amf.registration.portlet.portlet.command.render;
 
-import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
-import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.portlet.constants.PageConstants;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.AMFUserLocalService;
@@ -24,9 +22,7 @@ import org.osgi.service.component.annotations.Reference;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.HashMap;
 
 /**
  * project-name : amf-registration
@@ -38,12 +34,14 @@ import java.util.Locale;
 @Component(
         property = {
                 "javax.portlet.name=" + AMFRegistrationPortletKeys.AMF_REGISTRATION,
-                "mvc.command.name=/",
-                "mvc.command.name=" + MVCCommandNames.AMF_DISPLAY_EVENTS,
+                "mvc.command.name=/"
         },
         service = MVCRenderCommand.class
 )
 public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
+
+    private String currentTabIndex = "";
+
     /**
      * @param renderRequest
      * @param renderResponse
@@ -66,16 +64,24 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
      */
     private String displayEventBoard(RenderRequest renderRequest) {
 
-        int currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
-        int delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
-        int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
-        int end = start + delta;
-        String tabIndex = ParamUtil.getString(renderRequest, "tabIndex").toLowerCase(Locale.ROOT);
-        List<AMFEventLog> eventLogs = new ArrayList<>();
+        var currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
+        var delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
+        var start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
+        var end = start + delta;
+
+        String selectedTab = ParamUtil.getString(renderRequest, "tabIndex");
+        if (selectedTab != null && !selectedTab.isEmpty()) {
+            currentTabIndex = selectedTab;
+            renderRequest.getPortletSession().setAttribute("selectedTab", selectedTab);
+        } else {
+            selectedTab = (String) renderRequest.getPortletSession().getAttribute("selectedTab");
+            renderRequest.setAttribute("selectedTab", selectedTab);
+        }
+        HashMap<String, Object> objectHashMap = new HashMap<>();
         try {
             User loggedInUser = userService.getCurrentUser();
             boolean adminFlag = loggedInUser.getRoles().get(0).getDescriptiveName().equals("Administrator");
-            switch (tabIndex) {
+            switch (currentTabIndex) {
                 case PageConstants.TAB_PROFILE:
                     if (!adminFlag) {
                         AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
@@ -85,45 +91,44 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
 
                 case PageConstants.TAB_ALL:
                     if (adminFlag) {
-                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.ALL, start, end));
+                        objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogs(loggedInUser.getGroupId(), start, end);
                     } else {
-                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogs(start, end));
+                        objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.ALL, start, end);
                     }
-                    setRequestAttribute(renderRequest, eventLogs);
                     break;
 
                 case PageConstants.TAB_REGISTRATION:
                     if (adminFlag) {
-                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.REGISTER, start, end));
+                        objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.REGISTER, start, end);
                     } else {
-                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.REGISTER, start, end));
+                        objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.REGISTER, start, end);
                     }
-                    setRequestAttribute(renderRequest, eventLogs);
                     break;
 
                 case PageConstants.TAB_LOGIN:
                     if (adminFlag) {
-                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.LOGIN, start, end));
+                        objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.LOGIN, start, end);
                     } else {
-                        eventLogs.addAll(AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.LOGIN, start, end));
+                        objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.LOGIN, start, end);
                     }
-                    setRequestAttribute(renderRequest, eventLogs);
                     break;
             }
 
+            setRequestAttribute(renderRequest, objectHashMap);
             return "/fragments/events-board.jsp";
         } catch (PortalException pe) {
-            return "";
+            return "/fragments/events-board.jsp";
         }
     }
 
     /**
      * @param renderRequest
-     * @param eventLogs
+     * @param objectHashMap
      */
-    private void setRequestAttribute(RenderRequest renderRequest, List<AMFEventLog> eventLogs) {
-        renderRequest.setAttribute("amfEvents", eventLogs);
-        renderRequest.setAttribute("amfEventCount", eventLogs.size());
+    private void setRequestAttribute(RenderRequest renderRequest, HashMap<String, Object> objectHashMap) {
+        renderRequest.setAttribute("amfEvents", objectHashMap.get("eventLogs"));
+        renderRequest.setAttribute("amfEventCount", objectHashMap.get("total"));
+        renderRequest.setAttribute("selectedTab", currentTabIndex);
     }
 
 

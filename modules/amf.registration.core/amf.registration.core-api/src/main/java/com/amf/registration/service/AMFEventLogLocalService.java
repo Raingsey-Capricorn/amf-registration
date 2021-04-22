@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -252,12 +253,15 @@ public interface AMFEventLogLocalService
 		throws PortalException;
 
 	/**
+	 * @param groupId
 	 * @param userId
 	 * @param status
+	 * @param start
+	 * @param end
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFEventLog> getAMFEventLogBy(
+	public HashMap<String, Object> getAMFEventLogBy(
 		long groupId, long userId, String status, int start, int end);
 
 	/**
@@ -268,7 +272,7 @@ public interface AMFEventLogLocalService
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFEventLog> getAMFEventLogBy(
+	public HashMap<String, Object> getAMFEventLogBy(
 		long groupId, String status, int start, int end);
 
 	/**
@@ -304,6 +308,16 @@ public interface AMFEventLogLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AMFEventLog> getAMFEventLogs(int start, int end);
+
+	/**
+	 * @param groupId
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public HashMap<String, Object> getAMFEventLogs(
+		long groupId, int start, int end);
 
 	/**
 	 * Returns all the amf event logs matching the UUID and company.

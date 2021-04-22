@@ -1,19 +1,26 @@
+<%@ page language="java" pageEncoding="UTF-8" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
 <%@ taglib prefix="liferay" uri="http://liferay.com/tld/ui" %>
 <%@ taglib prefix="liferay-ui" uri="http://liferay.com/tld/ui" %>
 
-<portlet:renderURL var="viewDetails">
-    <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_DISPLAY_EVENTS%>"/>
-    <portlet:param name="redirect" value="${currentURL}"/>
-</portlet:renderURL>
+<%
+    String tabIndex = ParamUtil.getString(request, "tabIndex");
+    String selectedTab = String.valueOf(request.getAttribute("selectedTab"));
+    String defaultValue = "Profile";
+    if (selectedTab != null) {
+        defaultValue = selectedTab;
+        tabIndex = defaultValue;
+    }
+    PortletURL iteratorURL = renderResponse.createRenderURL();
+%>
 
 <div class="container-fluid-1280">
     <b><liferay-ui:message key="amf-registration.caption"/></b>
     <liferay-ui:tabs names="Profile,All,Registration,Login"
                      tabsValues="Profile,All,Registration,Login"
-                     refresh="true"
-                     url="${viewDetails}"
                      param="tabIndex"
+                     url="<%=iteratorURL.toString()%>"
+                     value='<%=tabIndex%>'
                      type="pills">
 
         <liferay-ui:section>
@@ -33,4 +40,5 @@
         </liferay-ui:section>
 
     </liferay-ui:tabs>
+
 </div>
