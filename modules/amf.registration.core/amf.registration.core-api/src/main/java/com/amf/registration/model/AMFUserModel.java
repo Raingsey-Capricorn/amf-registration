@@ -15,16 +15,12 @@
 package com.amf.registration.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
-import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.GroupedModel;
-import com.liferay.portal.kernel.model.LocalizedModel;
 import com.liferay.portal.kernel.model.ShardedModel;
 import com.liferay.portal.kernel.model.StagedAuditedModel;
 
 import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -41,8 +37,7 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface AMFUserModel
-	extends BaseModel<AMFUser>, GroupedModel, LocalizedModel, ShardedModel,
-			StagedAuditedModel {
+	extends BaseModel<AMFUser>, GroupedModel, ShardedModel, StagedAuditedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -142,55 +137,6 @@ public interface AMFUserModel
 	public void setCompanyId(long companyId);
 
 	/**
-	 * Returns the user ID of this amf user.
-	 *
-	 * @return the user ID of this amf user
-	 */
-	@Override
-	public long getUserId();
-
-	/**
-	 * Sets the user ID of this amf user.
-	 *
-	 * @param userId the user ID of this amf user
-	 */
-	@Override
-	public void setUserId(long userId);
-
-	/**
-	 * Returns the user uuid of this amf user.
-	 *
-	 * @return the user uuid of this amf user
-	 */
-	@Override
-	public String getUserUuid();
-
-	/**
-	 * Sets the user uuid of this amf user.
-	 *
-	 * @param userUuid the user uuid of this amf user
-	 */
-	@Override
-	public void setUserUuid(String userUuid);
-
-	/**
-	 * Returns the user name of this amf user.
-	 *
-	 * @return the user name of this amf user
-	 */
-	@AutoEscape
-	@Override
-	public String getUserName();
-
-	/**
-	 * Sets the user name of this amf user.
-	 *
-	 * @param userName the user name of this amf user
-	 */
-	@Override
-	public void setUserName(String userName);
-
-	/**
 	 * Returns the create date of this amf user.
 	 *
 	 * @return the create date of this amf user
@@ -223,136 +169,81 @@ public interface AMFUserModel
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
-	 * Returns the first name of this amf user.
+	 * Returns the user name of this amf user.
 	 *
-	 * @return the first name of this amf user
+	 * @return the user name of this amf user
 	 */
 	@AutoEscape
-	public String getFirstName();
+	@Override
+	public String getUserName();
 
 	/**
-	 * Sets the first name of this amf user.
+	 * Sets the user name of this amf user.
 	 *
-	 * @param firstName the first name of this amf user
+	 * @param userName the user name of this amf user
 	 */
-	public void setFirstName(String firstName);
+	@Override
+	public void setUserName(String userName);
 
 	/**
-	 * Returns the last name of this amf user.
+	 * Returns the user ID of this amf user.
 	 *
-	 * @return the last name of this amf user
+	 * @return the user ID of this amf user
 	 */
-	@AutoEscape
-	public String getLastName();
+	@Override
+	public long getUserId();
 
 	/**
-	 * Sets the last name of this amf user.
+	 * Sets the user ID of this amf user.
 	 *
-	 * @param lastName the last name of this amf user
+	 * @param userId the user ID of this amf user
 	 */
-	public void setLastName(String lastName);
+	@Override
+	public void setUserId(long userId);
 
 	/**
-	 * Returns the email address of this amf user.
+	 * Returns the user uuid of this amf user.
 	 *
-	 * @return the email address of this amf user
+	 * @return the user uuid of this amf user
 	 */
-	@AutoEscape
-	public String getEmailAddress();
+	@Override
+	public String getUserUuid();
 
 	/**
-	 * Sets the email address of this amf user.
+	 * Sets the user uuid of this amf user.
 	 *
-	 * @param emailAddress the email address of this amf user
+	 * @param userUuid the user uuid of this amf user
 	 */
-	public void setEmailAddress(String emailAddress);
+	@Override
+	public void setUserUuid(String userUuid);
 
 	/**
-	 * Returns the gender of this amf user.
+	 * Returns the contract ID of this amf user.
 	 *
-	 * @return the gender of this amf user
+	 * @return the contract ID of this amf user
 	 */
-	@AutoEscape
-	public String getGender();
+	public long getContractId();
 
 	/**
-	 * Sets the gender of this amf user.
+	 * Sets the contract ID of this amf user.
 	 *
-	 * @param gender the gender of this amf user
+	 * @param contractId the contract ID of this amf user
 	 */
-	public void setGender(String gender);
+	public void setContractId(long contractId);
 
 	/**
-	 * Returns the birth day of this amf user.
+	 * Returns the address ID of this amf user.
 	 *
-	 * @return the birth day of this amf user
+	 * @return the address ID of this amf user
 	 */
-	public int getBirthDay();
+	public long getAddressId();
 
 	/**
-	 * Sets the birth day of this amf user.
+	 * Sets the address ID of this amf user.
 	 *
-	 * @param birthDay the birth day of this amf user
+	 * @param addressId the address ID of this amf user
 	 */
-	public void setBirthDay(int birthDay);
-
-	/**
-	 * Returns the birth month of this amf user.
-	 *
-	 * @return the birth month of this amf user
-	 */
-	public int getBirthMonth();
-
-	/**
-	 * Sets the birth month of this amf user.
-	 *
-	 * @param birthMonth the birth month of this amf user
-	 */
-	public void setBirthMonth(int birthMonth);
-
-	/**
-	 * Returns the birth year of this amf user.
-	 *
-	 * @return the birth year of this amf user
-	 */
-	public int getBirthYear();
-
-	/**
-	 * Sets the birth year of this amf user.
-	 *
-	 * @param birthYear the birth year of this amf user
-	 */
-	public void setBirthYear(int birthYear);
-
-	/**
-	 * Returns the password of this amf user.
-	 *
-	 * @return the password of this amf user
-	 */
-	@AutoEscape
-	public String getPassword();
-
-	/**
-	 * Sets the password of this amf user.
-	 *
-	 * @param password the password of this amf user
-	 */
-	public void setPassword(String password);
-
-	/**
-	 * Returns the confirmed password of this amf user.
-	 *
-	 * @return the confirmed password of this amf user
-	 */
-	@AutoEscape
-	public String getConfirmedPassword();
-
-	/**
-	 * Sets the confirmed password of this amf user.
-	 *
-	 * @param confirmedPassword the confirmed password of this amf user
-	 */
-	public void setConfirmedPassword(String confirmedPassword);
+	public void setAddressId(long addressId);
 
 	/**
 	 * Returns the home phone of this amf user.
@@ -383,396 +274,5 @@ public interface AMFUserModel
 	 * @param mobilePhone the mobile phone of this amf user
 	 */
 	public void setMobilePhone(String mobilePhone);
-
-	/**
-	 * Returns the address of this amf user.
-	 *
-	 * @return the address of this amf user
-	 */
-	@AutoEscape
-	public String getAddress();
-
-	/**
-	 * Sets the address of this amf user.
-	 *
-	 * @param address the address of this amf user
-	 */
-	public void setAddress(String address);
-
-	/**
-	 * Returns the address2 of this amf user.
-	 *
-	 * @return the address2 of this amf user
-	 */
-	@AutoEscape
-	public String getAddress2();
-
-	/**
-	 * Sets the address2 of this amf user.
-	 *
-	 * @param address2 the address2 of this amf user
-	 */
-	public void setAddress2(String address2);
-
-	/**
-	 * Returns the city of this amf user.
-	 *
-	 * @return the city of this amf user
-	 */
-	@AutoEscape
-	public String getCity();
-
-	/**
-	 * Sets the city of this amf user.
-	 *
-	 * @param city the city of this amf user
-	 */
-	public void setCity(String city);
-
-	/**
-	 * Returns the state of this amf user.
-	 *
-	 * @return the state of this amf user
-	 */
-	@AutoEscape
-	public String getState();
-
-	/**
-	 * Sets the state of this amf user.
-	 *
-	 * @param state the state of this amf user
-	 */
-	public void setState(String state);
-
-	/**
-	 * Returns the zip of this amf user.
-	 *
-	 * @return the zip of this amf user
-	 */
-	@AutoEscape
-	public String getZip();
-
-	/**
-	 * Sets the zip of this amf user.
-	 *
-	 * @param zip the zip of this amf user
-	 */
-	public void setZip(String zip);
-
-	/**
-	 * Returns the security question of this amf user.
-	 *
-	 * @return the security question of this amf user
-	 */
-	public String getSecurityQuestion();
-
-	/**
-	 * Returns the localized security question of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the locale of the language
-	 * @return the localized security question of this amf user
-	 */
-	@AutoEscape
-	public String getSecurityQuestion(Locale locale);
-
-	/**
-	 * Returns the localized security question of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the local of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security question of this amf user. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
-	 */
-	@AutoEscape
-	public String getSecurityQuestion(Locale locale, boolean useDefault);
-
-	/**
-	 * Returns the localized security question of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @return the localized security question of this amf user
-	 */
-	@AutoEscape
-	public String getSecurityQuestion(String languageId);
-
-	/**
-	 * Returns the localized security question of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security question of this amf user
-	 */
-	@AutoEscape
-	public String getSecurityQuestion(String languageId, boolean useDefault);
-
-	@AutoEscape
-	public String getSecurityQuestionCurrentLanguageId();
-
-	@AutoEscape
-	public String getSecurityQuestionCurrentValue();
-
-	/**
-	 * Returns a map of the locales and localized security questions of this amf user.
-	 *
-	 * @return the locales and localized security questions of this amf user
-	 */
-	public Map<Locale, String> getSecurityQuestionMap();
-
-	/**
-	 * Sets the security question of this amf user.
-	 *
-	 * @param securityQuestion the security question of this amf user
-	 */
-	public void setSecurityQuestion(String securityQuestion);
-
-	/**
-	 * Sets the localized security question of this amf user in the language.
-	 *
-	 * @param securityQuestion the localized security question of this amf user
-	 * @param locale the locale of the language
-	 */
-	public void setSecurityQuestion(String securityQuestion, Locale locale);
-
-	/**
-	 * Sets the localized security question of this amf user in the language, and sets the default locale.
-	 *
-	 * @param securityQuestion the localized security question of this amf user
-	 * @param locale the locale of the language
-	 * @param defaultLocale the default locale
-	 */
-	public void setSecurityQuestion(
-		String securityQuestion, Locale locale, Locale defaultLocale);
-
-	public void setSecurityQuestionCurrentLanguageId(String languageId);
-
-	/**
-	 * Sets the localized security questions of this amf user from the map of locales and localized security questions.
-	 *
-	 * @param securityQuestionMap the locales and localized security questions of this amf user
-	 */
-	public void setSecurityQuestionMap(Map<Locale, String> securityQuestionMap);
-
-	/**
-	 * Sets the localized security questions of this amf user from the map of locales and localized security questions, and sets the default locale.
-	 *
-	 * @param securityQuestionMap the locales and localized security questions of this amf user
-	 * @param defaultLocale the default locale
-	 */
-	public void setSecurityQuestionMap(
-		Map<Locale, String> securityQuestionMap, Locale defaultLocale);
-
-	/**
-	 * Returns the security answer of this amf user.
-	 *
-	 * @return the security answer of this amf user
-	 */
-	public String getSecurityAnswer();
-
-	/**
-	 * Returns the localized security answer of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the locale of the language
-	 * @return the localized security answer of this amf user
-	 */
-	@AutoEscape
-	public String getSecurityAnswer(Locale locale);
-
-	/**
-	 * Returns the localized security answer of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the local of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security answer of this amf user. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
-	 */
-	@AutoEscape
-	public String getSecurityAnswer(Locale locale, boolean useDefault);
-
-	/**
-	 * Returns the localized security answer of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @return the localized security answer of this amf user
-	 */
-	@AutoEscape
-	public String getSecurityAnswer(String languageId);
-
-	/**
-	 * Returns the localized security answer of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized security answer of this amf user
-	 */
-	@AutoEscape
-	public String getSecurityAnswer(String languageId, boolean useDefault);
-
-	@AutoEscape
-	public String getSecurityAnswerCurrentLanguageId();
-
-	@AutoEscape
-	public String getSecurityAnswerCurrentValue();
-
-	/**
-	 * Returns a map of the locales and localized security answers of this amf user.
-	 *
-	 * @return the locales and localized security answers of this amf user
-	 */
-	public Map<Locale, String> getSecurityAnswerMap();
-
-	/**
-	 * Sets the security answer of this amf user.
-	 *
-	 * @param securityAnswer the security answer of this amf user
-	 */
-	public void setSecurityAnswer(String securityAnswer);
-
-	/**
-	 * Sets the localized security answer of this amf user in the language.
-	 *
-	 * @param securityAnswer the localized security answer of this amf user
-	 * @param locale the locale of the language
-	 */
-	public void setSecurityAnswer(String securityAnswer, Locale locale);
-
-	/**
-	 * Sets the localized security answer of this amf user in the language, and sets the default locale.
-	 *
-	 * @param securityAnswer the localized security answer of this amf user
-	 * @param locale the locale of the language
-	 * @param defaultLocale the default locale
-	 */
-	public void setSecurityAnswer(
-		String securityAnswer, Locale locale, Locale defaultLocale);
-
-	public void setSecurityAnswerCurrentLanguageId(String languageId);
-
-	/**
-	 * Sets the localized security answers of this amf user from the map of locales and localized security answers.
-	 *
-	 * @param securityAnswerMap the locales and localized security answers of this amf user
-	 */
-	public void setSecurityAnswerMap(Map<Locale, String> securityAnswerMap);
-
-	/**
-	 * Sets the localized security answers of this amf user from the map of locales and localized security answers, and sets the default locale.
-	 *
-	 * @param securityAnswerMap the locales and localized security answers of this amf user
-	 * @param defaultLocale the default locale
-	 */
-	public void setSecurityAnswerMap(
-		Map<Locale, String> securityAnswerMap, Locale defaultLocale);
-
-	/**
-	 * Returns the accepted tou of this amf user.
-	 *
-	 * @return the accepted tou of this amf user
-	 */
-	public String getAcceptedTOU();
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the locale of the language
-	 * @return the localized accepted tou of this amf user
-	 */
-	@AutoEscape
-	public String getAcceptedTOU(Locale locale);
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param locale the local of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized accepted tou of this amf user. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
-	 */
-	@AutoEscape
-	public String getAcceptedTOU(Locale locale, boolean useDefault);
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language. Uses the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @return the localized accepted tou of this amf user
-	 */
-	@AutoEscape
-	public String getAcceptedTOU(String languageId);
-
-	/**
-	 * Returns the localized accepted tou of this amf user in the language, optionally using the default language if no localization exists for the requested language.
-	 *
-	 * @param languageId the ID of the language
-	 * @param useDefault whether to use the default language if no localization exists for the requested language
-	 * @return the localized accepted tou of this amf user
-	 */
-	@AutoEscape
-	public String getAcceptedTOU(String languageId, boolean useDefault);
-
-	@AutoEscape
-	public String getAcceptedTOUCurrentLanguageId();
-
-	@AutoEscape
-	public String getAcceptedTOUCurrentValue();
-
-	/**
-	 * Returns a map of the locales and localized accepted tous of this amf user.
-	 *
-	 * @return the locales and localized accepted tous of this amf user
-	 */
-	public Map<Locale, String> getAcceptedTOUMap();
-
-	/**
-	 * Sets the accepted tou of this amf user.
-	 *
-	 * @param acceptedTOU the accepted tou of this amf user
-	 */
-	public void setAcceptedTOU(String acceptedTOU);
-
-	/**
-	 * Sets the localized accepted tou of this amf user in the language.
-	 *
-	 * @param acceptedTOU the localized accepted tou of this amf user
-	 * @param locale the locale of the language
-	 */
-	public void setAcceptedTOU(String acceptedTOU, Locale locale);
-
-	/**
-	 * Sets the localized accepted tou of this amf user in the language, and sets the default locale.
-	 *
-	 * @param acceptedTOU the localized accepted tou of this amf user
-	 * @param locale the locale of the language
-	 * @param defaultLocale the default locale
-	 */
-	public void setAcceptedTOU(
-		String acceptedTOU, Locale locale, Locale defaultLocale);
-
-	public void setAcceptedTOUCurrentLanguageId(String languageId);
-
-	/**
-	 * Sets the localized accepted tous of this amf user from the map of locales and localized accepted tous.
-	 *
-	 * @param acceptedTOUMap the locales and localized accepted tous of this amf user
-	 */
-	public void setAcceptedTOUMap(Map<Locale, String> acceptedTOUMap);
-
-	/**
-	 * Sets the localized accepted tous of this amf user from the map of locales and localized accepted tous, and sets the default locale.
-	 *
-	 * @param acceptedTOUMap the locales and localized accepted tous of this amf user
-	 * @param defaultLocale the default locale
-	 */
-	public void setAcceptedTOUMap(
-		Map<Locale, String> acceptedTOUMap, Locale defaultLocale);
-
-	@Override
-	public String[] getAvailableLanguageIds();
-
-	@Override
-	public String getDefaultLanguageId();
-
-	@Override
-	public void prepareLocalizedFieldsForImport() throws LocaleException;
-
-	@Override
-	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
-		throws LocaleException;
 
 }

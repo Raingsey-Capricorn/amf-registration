@@ -31,6 +31,10 @@ public class AMFToolbarDisplayContext extends BaseManagementToolbarDisplayContex
 
     @Override
     public CreationMenu getCreationMenu() {
+
+        if (themeDisplay.isSignedIn()) {
+            return null;
+        }
         return new CreationMenu() {{
             addDropdownItem(
                     dropdownItem -> {

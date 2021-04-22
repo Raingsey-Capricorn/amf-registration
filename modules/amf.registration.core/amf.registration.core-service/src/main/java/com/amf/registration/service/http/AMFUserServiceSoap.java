@@ -64,53 +64,6 @@ import java.rmi.RemoteException;
 @Deprecated
 public class AMFUserServiceSoap {
 
-	/**
-	 * @param groupId
-	 * @param userName
-	 * @param firstName
-	 * @param lastName
-	 * @param emailAddress
-	 * @param gender
-	 * @param birthDate
-	 * @param password
-	 * @param confirmedPassword
-	 * @param homePhone
-	 * @param mobilePhone
-	 * @param zip
-	 * @param securityQuestion
-	 * @param securityAnswer
-	 * @param acceptedTOU
-	 * @return
-	 */
-	public static com.amf.registration.model.AMFUserSoap addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
-			String emailAddress, String gender, java.util.Date birthDate,
-			String password, String confirmedPassword, String homePhone,
-			String mobilePhone, String address, String address2, String city,
-			String state, String zip, String securityQuestion,
-			String securityAnswer, String acceptedTOU,
-			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws RemoteException {
-
-		try {
-			com.amf.registration.model.AMFUser returnValue =
-				AMFUserServiceUtil.addAMFUser(
-					groupId, userName, firstName, lastName, emailAddress,
-					gender, birthDate, password, confirmedPassword, homePhone,
-					mobilePhone, address, address2, city, state, zip,
-					securityQuestion, securityAnswer, acceptedTOU,
-					serviceContext);
-
-			return com.amf.registration.model.AMFUserSoap.toSoapModel(
-				returnValue);
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-
-			throw new RemoteException(exception.getMessage());
-		}
-	}
-
 	public static com.amf.registration.model.AMFUserSoap[]
 			getAMFUsersByKeywords(
 				long groupId, String keywords, int start, int end,

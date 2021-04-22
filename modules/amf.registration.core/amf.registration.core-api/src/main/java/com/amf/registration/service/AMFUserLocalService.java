@@ -27,9 +27,10 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.*;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
-import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -65,6 +66,14 @@ public interface AMFUserLocalService
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.amf.registration.service.impl.AMFUserLocalServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the amf user local service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link AMFUserLocalServiceUtil} if injection and service tracking are not available.
 	 */
+	public void addAMFEventLogAMFUser(long amfEventLogId, AMFUser amfUser);
+
+	public void addAMFEventLogAMFUser(long amfEventLogId, long amfUserId);
+
+	public void addAMFEventLogAMFUsers(
+		long amfEventLogId, List<AMFUser> amfUsers);
+
+	public void addAMFEventLogAMFUsers(long amfEventLogId, long[] amfUserIds);
 
 	/**
 	 * Adds the amf user to the database. Also notifies the appropriate model listeners.
@@ -80,7 +89,6 @@ public interface AMFUserLocalService
 	public AMFUser addAMFUser(AMFUser amfUser);
 
 	/**
-	 * @param groupId
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -91,26 +99,28 @@ public interface AMFUserLocalService
 	 * @param confirmedPassword
 	 * @param homePhone
 	 * @param mobilePhone
-	 * @param address
-	 * @param address2
+	 * @param addressLineOne
+	 * @param addressLineTwo
 	 * @param city
-	 * @param state
+	 * @param regionId
 	 * @param zip
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
-	 * @param serviceContext
 	 * @return
 	 * @throws PortalException
 	 */
 	public AMFUser addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
-			String emailAddress, String gender, Date birthDate, String password,
-			String confirmedPassword, String homePhone, String mobilePhone,
-			String address, String address2, String city, String state,
-			String zip, String securityQuestion, String securityAnswer,
-			String acceptedTOU, ServiceContext serviceContext)
+			ThemeDisplay themeDisplay, String userName, String firstName,
+			String lastName, String emailAddress, String gender, Date birthDate,
+			String password, String confirmedPassword, String homePhone,
+			String mobilePhone, String addressLineOne, String addressLineTwo,
+			String city, String regionId, String zip, String securityQuestion,
+			String securityAnswer, String acceptedTOU,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException;
+
+	public void clearAMFEventLogAMFUsers(long amfEventLogId);
 
 	/**
 	 * Creates a new amf user with the primary key. Does not add the amf user to the database.
@@ -126,6 +136,16 @@ public interface AMFUserLocalService
 	 */
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
+
+	public void deleteAMFEventLogAMFUser(long amfEventLogId, AMFUser amfUser);
+
+	public void deleteAMFEventLogAMFUser(long amfEventLogId, long amfUserId);
+
+	public void deleteAMFEventLogAMFUsers(
+		long amfEventLogId, List<AMFUser> amfUsers);
+
+	public void deleteAMFEventLogAMFUsers(
+		long amfEventLogId, long[] amfUserIds);
 
 	/**
 	 * Deletes the amf user from the database. Also notifies the appropriate model listeners.
@@ -243,6 +263,30 @@ public interface AMFUserLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFUser> getAMFEventLogAMFUsers(long amfEventLogId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFUser> getAMFEventLogAMFUsers(
+		long amfEventLogId, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFUser> getAMFEventLogAMFUsers(
+		long amfEventLogId, int start, int end,
+		OrderByComparator<AMFUser> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getAMFEventLogAMFUsersCount(long amfEventLogId);
+
+	/**
+	 * Returns the amfEventLogIds of the amf event logs associated with the amf user.
+	 *
+	 * @param amfUserId the amfUserId of the amf user
+	 * @return long[] the amfEventLogIds of amf event logs associated with the amf user
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getAMFEventLogPrimaryKeys(long amfUserId);
+
 	/**
 	 * Returns the amf user with the primary key.
 	 *
@@ -252,6 +296,16 @@ public interface AMFUserLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AMFUser getAMFUser(long amfUserId) throws PortalException;
+
+	/**
+	 * @param groupId
+	 * @param userId
+	 * @param userName
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AMFUser getAMFUserByGroupUserAndUserName(
+		long groupId, long userId, String userName);
 
 	/**
 	 * @param groupId
@@ -272,6 +326,10 @@ public interface AMFUserLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AMFUser getAMFUserByUuidAndGroupId(String uuid, long groupId)
 		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFUser> getAMFUserEventLogByStatus(
+		long groupId, String eventStatus);
 
 	/**
 	 * Returns a range of all the amf users.
@@ -365,7 +423,18 @@ public interface AMFUserLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasAMFEventLogAMFUser(long amfEventLogId, long amfUserId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasAMFEventLogAMFUsers(long amfEventLogId);
+
+	/**
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean isUserNameUnique();
+
+	public void setAMFEventLogAMFUsers(long amfEventLogId, long[] amfUserIds);
 
 	/**
 	 * Updates the amf user in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

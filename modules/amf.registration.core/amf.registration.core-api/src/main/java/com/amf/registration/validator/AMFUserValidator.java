@@ -1,7 +1,6 @@
 package com.amf.registration.validator;
 
 import com.amf.registration.exception.AMFUserValidationException;
-import com.amf.registration.service.AMFUserLocalService;
 
 import java.util.Date;
 import java.util.List;
@@ -30,8 +29,7 @@ public interface AMFUserValidator {
      * @param acceptedTOU
      * @throws AMFUserValidationException
      */
-    public void validate(
-            AMFUserLocalService amfUserLocalService,
+    void validate(
             String userName,
             String firstName,
             String lastName,

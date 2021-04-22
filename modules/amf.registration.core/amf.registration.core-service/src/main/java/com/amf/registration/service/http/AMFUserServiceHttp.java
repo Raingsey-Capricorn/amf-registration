@@ -53,13 +53,14 @@ import com.liferay.portal.kernel.util.MethodKey;
 public class AMFUserServiceHttp {
 
 	public static com.amf.registration.model.AMFUser addAMFUser(
-			HttpPrincipal httpPrincipal, long groupId, String userName,
-			String firstName, String lastName, String emailAddress,
-			String gender, java.util.Date birthDate, String password,
-			String confirmedPassword, String homePhone, String mobilePhone,
-			String address, String address2, String city, String state,
-			String zip, String securityQuestion, String securityAnswer,
-			String acceptedTOU,
+			HttpPrincipal httpPrincipal,
+			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
+			String userName, String firstName, String lastName,
+			String emailAddress, String gender, java.util.Date birthDate,
+			String password, String confirmedPassword, String homePhone,
+			String mobilePhone, String address, String address2, String city,
+			String state, String zip, String securityQuestion,
+			String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
@@ -69,9 +70,9 @@ public class AMFUserServiceHttp {
 				_addAMFUserParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, userName, firstName, lastName, emailAddress,
-				gender, birthDate, password, confirmedPassword, homePhone,
-				mobilePhone, address, address2, city, state, zip,
+				methodKey, themeDisplay, userName, firstName, lastName,
+				emailAddress, gender, birthDate, password, confirmedPassword,
+				homePhone, mobilePhone, address, address2, city, state, zip,
 				securityQuestion, securityAnswer, acceptedTOU, serviceContext);
 
 			Object returnObj = null;
@@ -214,10 +215,11 @@ public class AMFUserServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(AMFUserServiceHttp.class);
 
 	private static final Class<?>[] _addAMFUserParameterTypes0 = new Class[] {
-		long.class, String.class, String.class, String.class, String.class,
-		String.class, java.util.Date.class, String.class, String.class,
+		com.liferay.portal.kernel.theme.ThemeDisplay.class, String.class,
+		String.class, String.class, String.class, String.class,
+		java.util.Date.class, String.class, String.class, String.class,
 		String.class, String.class, String.class, String.class, String.class,
-		String.class, String.class, String.class, String.class, String.class,
+		String.class, String.class, String.class, String.class,
 		com.liferay.portal.kernel.service.ServiceContext.class
 	};
 	private static final Class<?>[] _getAMFUsersByKeywordsParameterTypes1 =

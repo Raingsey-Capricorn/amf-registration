@@ -1,33 +1,30 @@
 <?xml version="1.0"?>
 
 <model-hints>
+	<model name="com.amf.registration.model.AMFEventLog">
+		<field name="uuid" type="String" />
+		<field name="amfEventLogId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="lastLoginDate" type="Date" />
+		<field name="lastLoginIP" type="String" />
+		<field name="status" type="String" />
+	</model>
 	<model name="com.amf.registration.model.AMFUser">
 		<field name="uuid" type="String" />
 		<field name="amfUserId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="firstName" type="String" />
-		<field name="lastName" type="String" />
-		<field name="emailAddress" type="String" />
-		<field name="gender" type="String" />
-		<field name="birthDay" type="int" />
-		<field name="birthMonth" type="int" />
-		<field name="birthYear" type="int" />
-		<field name="password" type="String" />
-		<field name="confirmedPassword" type="String" />
+		<field name="userName" type="String" />
+		<field name="userId" type="long" />
+		<field name="contractId" type="long" />
+		<field name="addressId" type="long" />
 		<field name="homePhone" type="String" />
 		<field name="mobilePhone" type="String" />
-		<field name="address" type="String" />
-		<field name="address2" type="String" />
-		<field name="city" type="String" />
-		<field name="state" type="String" />
-		<field name="zip" type="String" />
-		<field localized="true" name="securityQuestion" type="String" />
-		<field localized="true" name="securityAnswer" type="String" />
-		<field localized="true" name="acceptedTOU" type="String" />
 	</model>
 </model-hints>

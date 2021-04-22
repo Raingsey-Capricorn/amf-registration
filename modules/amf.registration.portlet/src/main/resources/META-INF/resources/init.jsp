@@ -7,7 +7,9 @@
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %>
-<%@ page import="com.liferay.portal.kernel.servlet.SessionErrors" %>
+<%@ page import="com.amf.registration.portlet.constants.MVCCommandNames" %>
+<%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
+<%@ page import="javax.portlet.PortletURL" %>
 <liferay-frontend:defineObjects/>
 <liferay-theme:defineObjects/>
 <portlet:defineObjects/>
