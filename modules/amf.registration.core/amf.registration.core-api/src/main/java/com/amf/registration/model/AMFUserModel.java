@@ -218,20 +218,6 @@ public interface AMFUserModel
 	public void setUserUuid(String userUuid);
 
 	/**
-	 * Returns the contract ID of this amf user.
-	 *
-	 * @return the contract ID of this amf user
-	 */
-	public long getContractId();
-
-	/**
-	 * Sets the contract ID of this amf user.
-	 *
-	 * @param contractId the contract ID of this amf user
-	 */
-	public void setContractId(long contractId);
-
-	/**
 	 * Returns the address ID of this amf user.
 	 *
 	 * @return the address ID of this amf user
