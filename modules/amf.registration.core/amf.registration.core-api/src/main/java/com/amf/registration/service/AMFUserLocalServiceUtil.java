@@ -374,6 +374,18 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
+	 * @param groupID
+	 * @param postalCode
+	 * @return
+	 */
+	public static java.util.HashMap<String, Object> getAMFUserBaseOnPostalCode(
+		long groupID, int postalCode, int start, int end) {
+
+		return getService().getAMFUserBaseOnPostalCode(
+			groupID, postalCode, start, end);
+	}
+
+	/**
 	 * @param groupId
 	 * @param userId
 	 * @param userName
@@ -411,6 +423,11 @@ public class AMFUserLocalServiceUtil {
 		return getService().getAMFUserByUuidAndGroupId(uuid, groupId);
 	}
 
+	/**
+	 * @param groupId
+	 * @param eventStatus
+	 * @return
+	 */
 	public static java.util.List<com.amf.registration.model.AMFUser>
 		getAMFUserEventLogByStatus(long groupId, String eventStatus) {
 

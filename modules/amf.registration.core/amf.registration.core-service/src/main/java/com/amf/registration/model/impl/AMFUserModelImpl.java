@@ -79,8 +79,8 @@ public class AMFUserModelImpl
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
 		{"userName", Types.VARCHAR}, {"userId", Types.BIGINT},
-		{"contractId", Types.BIGINT}, {"addressId", Types.BIGINT},
-		{"homePhone", Types.VARCHAR}, {"mobilePhone", Types.VARCHAR}
+		{"addressId", Types.BIGINT}, {"homePhone", Types.VARCHAR},
+		{"mobilePhone", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -95,14 +95,13 @@ public class AMFUserModelImpl
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("contractId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("addressId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("homePhone", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("mobilePhone", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,userName VARCHAR(75) null,userId LONG,contractId LONG,addressId LONG,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null)";
+		"create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,userName VARCHAR(75) null,userId LONG,addressId LONG,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table amfuser";
 
@@ -178,7 +177,6 @@ public class AMFUserModelImpl
 		model.setModifiedDate(soapModel.getModifiedDate());
 		model.setUserName(soapModel.getUserName());
 		model.setUserId(soapModel.getUserId());
-		model.setContractId(soapModel.getContractId());
 		model.setAddressId(soapModel.getAddressId());
 		model.setHomePhone(soapModel.getHomePhone());
 		model.setMobilePhone(soapModel.getMobilePhone());
@@ -365,9 +363,6 @@ public class AMFUserModelImpl
 		attributeGetterFunctions.put("userId", AMFUser::getUserId);
 		attributeSetterBiConsumers.put(
 			"userId", (BiConsumer<AMFUser, Long>)AMFUser::setUserId);
-		attributeGetterFunctions.put("contractId", AMFUser::getContractId);
-		attributeSetterBiConsumers.put(
-			"contractId", (BiConsumer<AMFUser, Long>)AMFUser::setContractId);
 		attributeGetterFunctions.put("addressId", AMFUser::getAddressId);
 		attributeSetterBiConsumers.put(
 			"addressId", (BiConsumer<AMFUser, Long>)AMFUser::setAddressId);
@@ -583,21 +578,6 @@ public class AMFUserModelImpl
 
 	@JSON
 	@Override
-	public long getContractId() {
-		return _contractId;
-	}
-
-	@Override
-	public void setContractId(long contractId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_contractId = contractId;
-	}
-
-	@JSON
-	@Override
 	public long getAddressId() {
 		return _addressId;
 	}
@@ -719,7 +699,6 @@ public class AMFUserModelImpl
 		amfUserImpl.setModifiedDate(getModifiedDate());
 		amfUserImpl.setUserName(getUserName());
 		amfUserImpl.setUserId(getUserId());
-		amfUserImpl.setContractId(getContractId());
 		amfUserImpl.setAddressId(getAddressId());
 		amfUserImpl.setHomePhone(getHomePhone());
 		amfUserImpl.setMobilePhone(getMobilePhone());
@@ -842,8 +821,6 @@ public class AMFUserModelImpl
 
 		amfUserCacheModel.userId = getUserId();
 
-		amfUserCacheModel.contractId = getContractId();
-
 		amfUserCacheModel.addressId = getAddressId();
 
 		amfUserCacheModel.homePhone = getHomePhone();
@@ -944,7 +921,6 @@ public class AMFUserModelImpl
 	private boolean _setModifiedDate;
 	private String _userName;
 	private long _userId;
-	private long _contractId;
 	private long _addressId;
 	private String _homePhone;
 	private String _mobilePhone;
@@ -986,7 +962,6 @@ public class AMFUserModelImpl
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
 		_columnOriginalValues.put("userName", _userName);
 		_columnOriginalValues.put("userId", _userId);
-		_columnOriginalValues.put("contractId", _contractId);
 		_columnOriginalValues.put("addressId", _addressId);
 		_columnOriginalValues.put("homePhone", _homePhone);
 		_columnOriginalValues.put("mobilePhone", _mobilePhone);
@@ -1029,13 +1004,11 @@ public class AMFUserModelImpl
 
 		columnBitmasks.put("userId", 128L);
 
-		columnBitmasks.put("contractId", 256L);
+		columnBitmasks.put("addressId", 256L);
 
-		columnBitmasks.put("addressId", 512L);
+		columnBitmasks.put("homePhone", 512L);
 
-		columnBitmasks.put("homePhone", 1024L);
-
-		columnBitmasks.put("mobilePhone", 2048L);
+		columnBitmasks.put("mobilePhone", 1024L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

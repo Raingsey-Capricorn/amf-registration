@@ -22,7 +22,6 @@
 		<field name="modifiedDate" type="Date" />
 		<field name="userName" type="String" />
 		<field name="userId" type="long" />
-		<field name="contractId" type="long" />
 		<field name="addressId" type="long" />
 		<field name="homePhone" type="String" />
 		<field name="mobilePhone" type="String" />

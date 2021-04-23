@@ -23,7 +23,6 @@
         <column name="userName" type="String"/>
 
         <column name="userId" type="long"/>
-        <column name="contractId" type="long"/>
         <column name="addressId" type="long"/>
 
         <!-- User info fields -->

@@ -20,7 +20,6 @@ create table amfuser (
 	modifiedDate DATE null,
 	userName VARCHAR(75) null,
 	userId LONG,
-	contractId LONG,
 	addressId LONG,
 	homePhone VARCHAR(75) null,
 	mobilePhone VARCHAR(75) null
