@@ -60,14 +60,14 @@ public class AMFRegistrationViewMVCRenderCommand implements MVCRenderCommand {
      * @param renderRequest
      */
     private void addAMFUsersToDisplay(RenderRequest renderRequest) {
-        ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
         int currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
         int delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
         int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
         int end = start + delta;
-        Integer postalCode = ParamUtil.getInteger(renderRequest, "keywords");
+        long postalCode = ParamUtil.getLong(renderRequest, "keywords");
 
-        HashMap<String, Object> amfUserHashMap = AMFUserLocalServiceUtil.getAMFUserBaseOnPostalCode(themeDisplay.getScopeGroupId(), postalCode, start, end);
+        HashMap<String, Object> amfUserHashMap = AMFUserLocalServiceUtil.getAMFUserBaseOnPostalCode(postalCode, start, end);
         renderRequest.setAttribute("amfUsers", amfUserHashMap.get("amfUsers"));
         renderRequest.setAttribute("amfUserCount", amfUserHashMap.get("amfUserCount"));
 

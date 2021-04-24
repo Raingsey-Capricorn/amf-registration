@@ -16,7 +16,6 @@
                 id="amf-user-search-input"
         />
         <aui:button name="submitButton" value="Register" onClick="${registerURL}"/>
-
     </div>
 
     <liferay-ui:search-container

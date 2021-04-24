@@ -386,16 +386,17 @@ public class AMFUserLocalServiceWrapper
 	}
 
 	/**
-	 * @param groupID
-	 * @param postalCode
+	 * @param regionCode
+	 * @param start
+	 * @param end
 	 * @return
 	 */
 	@Override
 	public java.util.HashMap<String, Object> getAMFUserBaseOnPostalCode(
-		long groupID, int postalCode, int start, int end) {
+		long regionCode, int start, int end) {
 
 		return _amfUserLocalService.getAMFUserBaseOnPostalCode(
-			groupID, postalCode, start, end);
+			regionCode, start, end);
 	}
 
 	/**

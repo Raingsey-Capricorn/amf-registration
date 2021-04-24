@@ -374,15 +374,15 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
-	 * @param groupID
-	 * @param postalCode
+	 * @param regionCode
+	 * @param start
+	 * @param end
 	 * @return
 	 */
 	public static java.util.HashMap<String, Object> getAMFUserBaseOnPostalCode(
-		long groupID, int postalCode, int start, int end) {
+		long regionCode, int start, int end) {
 
-		return getService().getAMFUserBaseOnPostalCode(
-			groupID, postalCode, start, end);
+		return getService().getAMFUserBaseOnPostalCode(regionCode, start, end);
 	}
 
 	/**
