@@ -15,21 +15,13 @@
 package com.amf.registration.model.impl;
 
 import com.amf.registration.model.AMFEventLog;
-import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
-import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.utilities.EventStatus;
-import com.liferay.portal.kernel.dao.orm.Disjunction;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.AddressLocalServiceUtil;
-import com.liferay.portal.kernel.service.ContactLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.Validator;
-import org.osgi.service.component.annotations.Reference;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -104,7 +96,7 @@ public class AMFUserImpl extends AMFUserBaseImpl {
     public String getCombinedUserInfo() {
         try {
             User userInfo = UserLocalServiceUtil.getUser(getUserId());
-            return String.format("%s (%s)", userInfo.getScreenName(), userInfo.getUserId());
+            return String.format("%s (%s)", userInfo.getFullName(), userInfo.getUserId());
         } catch (PortalException e) {
             return "No Data";
         }
@@ -124,13 +116,12 @@ public class AMFUserImpl extends AMFUserBaseImpl {
     }
 
     /**
-     * @param contactId
      * @return
      */
     @Override
-    public String getEmailAddress(long contactId) {
+    public String getEmailAddress() {
         try {
-            return ContactLocalServiceUtil.getContact(contactId).getEmailAddress();
+            return UserLocalServiceUtil.getUser(getUserId()).getEmailAddress();
         } catch (Exception e) {
             e.printStackTrace();
             return "No-Data";

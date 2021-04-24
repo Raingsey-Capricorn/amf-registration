@@ -25,6 +25,7 @@ import com.amf.registration.validator.AMFUserValidator;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Address;
@@ -40,10 +41,8 @@ import lombok.Setter;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The implementation of the amf user local service.
@@ -160,7 +159,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                     cal.get(Calendar.MONTH) + 1,
                     cal.get(Calendar.DAY_OF_MONTH),
                     cal.get(Calendar.YEAR),
-                    null,
+                    "AMF User",
                     null,
                     null,
                     null,
@@ -168,9 +167,9 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                     false,
                     serviceContext
             );
-            Contact registerContact = createContactEntity(birthDate, registerUser);
-            Address registerAddress = createAddressEntity(userName, addressLineOne, addressLineTwo, city, regionId, zip, registerUser);
-            AMFUser registerAMFUser = createAMFUserEntity(homePhone, mobilePhone, registerUser, registerContact, registerAddress);
+            UserLocalServiceUtil.addGroupUser(getAMFUserGroupID(), registerUser);
+            Address registerAddress = createAddressEntity(userName, addressLineOne, addressLineTwo, city, Long.parseLong(regionId), zip, registerUser);
+            AMFUser registerAMFUser = createAMFUserEntity(homePhone, mobilePhone, registerUser, registerAddress);
             AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser.getGroupId(), EventStatus.REGISTER);
             AMFEventLogLocalServiceUtil.addAMFUserAMFEventLogs(registerAMFUser.getAmfUserId(), Collections.singletonList(amfEventLog));
 
@@ -194,12 +193,70 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     }
 
     /**
+     * @param regionCode
+     * @param start
+     * @param end
+     * @return
+     */
+    @Override
+    public HashMap<String, Object> getAMFUserBaseOnPostalCode(long regionCode, int start, int end) {
+        HashMap<String, Object> searchData = new HashMap<>();
+        if (getDynamicQueryForUserBaseOnRegion(regionCode, start, end) != null) {
+            searchData.put("amfUsers", amfUserLocalService.dynamicQuery(getDynamicQueryForUserBaseOnRegion(regionCode, start, end)));
+            searchData.put("amfUserCount", amfUserLocalService.dynamicQueryCount(getDynamicQueryForUserBaseOnRegion(regionCode, 0, 0)));
+        } else {
+            searchData.put("amfUsers", Collections.emptyList());
+            searchData.put("amfUserCount", 0);
+        }
+        return searchData;
+
+    }
+
+    /**
+     * @param regionCode
+     * @param start
+     * @param end
+     * @return
+     */
+    private DynamicQuery getDynamicQueryForUserBaseOnRegion(long regionCode, int start, int end) {
+        try {
+            List<Long> amfMemberIds = UserLocalServiceUtil
+                    .getUserGroupUsers(getAMFUserGroupID())
+                    .stream()
+                    .map(User::getUserId).collect(Collectors.toList());
+
+            DynamicQuery addressDQ = addressLocalService.dynamicQuery()
+                    .add(RestrictionsFactoryUtil.conjunction())
+                    .add(RestrictionsFactoryUtil.in("userId", amfMemberIds))
+                    .add(RestrictionsFactoryUtil.eq("regionId", regionCode))
+                    .setProjection(ProjectionFactoryUtil.groupProperty(("userId")));
+
+            List<Long> matchedAddresses = addressLocalService.dynamicQuery(addressDQ);
+
+            if (matchedAddresses.size() > 0) {
+                DynamicQuery amfUserDQ = dynamicQuery();
+                amfUserDQ.add(RestrictionsFactoryUtil.conjunction().add(RestrictionsFactoryUtil.in("userId", matchedAddresses)));
+                if (start >= 0 && end > 0) {
+                    amfUserDQ.setLimit(start, end);
+                }
+                return amfUserDQ;
+            }
+            return null;
+        } catch (
+                NullPointerException npe) {
+            return null;
+        }
+
+    }
+
+    /**
      * @param amfUser
      */
     private AMFEventLog createEventLogEntity(AMFUser amfUser, long groupID, String eventStatus) {
         long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
         AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
         amfEventLog.setUserId(amfUser.getUserId());
+        amfEventLog.setLastLoginIP("0.0.0.0");
         amfEventLog.setGroupId(groupID);
         amfEventLog.setStatus(eventStatus);
         amfEventLog.setCreateDate(new Date());
@@ -211,18 +268,16 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @param homePhone
      * @param mobilePhone
      * @param registerUser
-     * @param registerContact
      * @param registerAddress
      * @return
      */
-    private AMFUser createAMFUserEntity(String homePhone, String mobilePhone, User registerUser, Contact
-            registerContact, Address registerAddress) {
+    private AMFUser createAMFUserEntity(String homePhone, String mobilePhone, User registerUser, Address
+            registerAddress) {
         long amfUserID = counterLocalService.increment(AMFUser.class.getName());
         AMFUser amfUser = AMFUserLocalServiceUtil.createAMFUser(amfUserID);
         amfUser.setUserId(registerUser.getUserId());
         amfUser.setUserName(registerUser.getScreenName());
         amfUser.setAddressId(registerAddress.getAddressId());
-        amfUser.setContractId(registerContact.getContactId());
         amfUser.setGroupId(registerUser.getGroupId());
         amfUser.setHomePhone(homePhone);
         amfUser.setMobilePhone(mobilePhone);
@@ -242,41 +297,38 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @return
      * @throws PortalException
      */
-    private Address createAddressEntity(String userName, String addressLineOne, String addressLineTwo, String
-            city, String regionId, String zip, User registerUser) throws PortalException {
-        long addressId = counterLocalService.increment(Address.class.getName());
+    private Address createAddressEntity(String userName,
+                                        String addressLineOne,
+                                        String addressLineTwo,
+                                        String city,
+                                        long regionId,
+                                        String zip,
+                                        User registerUser) throws PortalException {
+
+        final var addressId = counterLocalService.increment(Address.class.getName());
+        final var className = Address.class.getName();
+        final var classPk = registerUser.getContactId();
+        final var contactClassNameId = ClassNameLocalServiceUtil.getClassNameId(Contact.class);
+        final var countryId = countryService.getCountryByName("united-states").getCountryId();
+
         Address registerAddress = AddressLocalServiceUtil.createAddress(addressId);
-        registerAddress.setCreateDate(new Date());
-        registerAddress.setModifiedDate(new Date());
         registerAddress.setUserId(registerUser.getUserId());
+        registerAddress.setClassPK(classPk);
+        registerAddress.setClassName(className);
+        registerAddress.setClassNameId(contactClassNameId);
+        registerAddress.setTypeId(11001); //Other
+        registerAddress.setCountryId(countryId);
+        registerAddress.setRegionId(regionId);
         registerAddress.setCity(city);
-        registerAddress.setCountryId(countryService.getCountryByName("united-states").getCountryId());
-        registerAddress.setRegionId(Long.parseLong(regionId));
         registerAddress.setZip(zip);
         registerAddress.setNew(true);
+        registerAddress.setUserName(userName);
         registerAddress.setStreet1(addressLineOne);
         registerAddress.setStreet2(addressLineTwo);
-        registerAddress.setUserName(userName);
-        return AddressLocalServiceUtil.addAddress(registerAddress);
-    }
+        registerAddress.setCreateDate(new Date());
+        registerAddress.setModifiedDate(new Date());
 
-    /**
-     * @param birthDate
-     * @param registerUser
-     * @return
-     */
-    private Contact createContactEntity(Date birthDate, User registerUser) {
-        long contactID = counterLocalService.increment(Contact.class.getName());
-        Contact registerContact = ContactLocalServiceUtil.createContact(contactID);
-        registerContact.setUserId(registerUser.getUserId());
-        registerContact.setCreateDate(new Date());
-        registerContact.setModifiedDate(new Date());
-        registerContact.setBirthday(birthDate);
-        registerContact.setMale(true);
-        registerContact.setEmailAddress(registerUser.getEmailAddress());
-        registerContact.setUserName(registerUser.getScreenName());
-        registerContact.setUserId(registerUser.getUserId());
-        return ContactLocalServiceUtil.addContact(registerContact);
+        return AddressLocalServiceUtil.addAddress(registerAddress);
     }
 
     /**
@@ -293,8 +345,8 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             final String keywords,
             final int start,
             final int end,
-            final OrderByComparator<AMFUser> orderByComparator
-    ) {
+            final OrderByComparator<AMFUser> orderByComparator) {
+
         return amfUserLocalService.dynamicQuery(getKeywordSearchDynamicQuery(groupId, keywords), start, end, orderByComparator);
     }
 
@@ -339,6 +391,11 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         return getAMFUserByUserName(getGroupID(), getInputUserName()) == 0;
     }
 
+    /**
+     * @param groupId
+     * @param eventStatus
+     * @return
+     */
     @Override
     public List<AMFUser> getAMFUserEventLogByStatus(long groupId, String eventStatus) {
         return amfEventLogLocalService.dynamicQuery(getEventLogStatusSearchDynamicQuery(groupId, eventStatus));
@@ -420,6 +477,21 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
         }
     }
 
+    /**
+     * @return
+     */
+    private long getAMFUserGroupID() {
+        try {
+            return (long) userGroupLocalService.dynamicQuery(
+                    userGroupLocalService.dynamicQuery()
+                            .add(RestrictionsFactoryUtil.conjunction()
+                                    .add(RestrictionsFactoryUtil.eq("name", "AMF-Community")))
+                            .setProjection(ProjectionFactoryUtil.groupProperty("userGroupId"))
+            ).stream().findFirst().get();
+        } catch (NullPointerException e) {
+            throw new NullPointerException("AMD-Community Group is not existing yet. Please add the group using Admin user.");
+        }
+    }
 
     @Reference
     private AMFUserValidator amfUserValidator;
@@ -435,4 +507,16 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
 
     @Reference
     private AMFEventLogLocalService amfEventLogLocalService;
+
+    @Reference
+    private AddressLocalService addressLocalService;
+
+    @Reference
+    private UserGroupLocalService userGroupLocalService;
+
+    @Reference
+    private UserLocalService userLocalService;
+
+    @Reference
+    private ListTypeLocalService listTypeLocalService;
 }

@@ -38,7 +38,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -112,11 +112,11 @@ public interface AMFUserLocalService
 	 */
 	public AMFUser addAMFUser(
 			ThemeDisplay themeDisplay, String userName, String firstName,
-			String lastName, String emailAddress, String gender, Date birthDate,
-			String password, String confirmedPassword, String homePhone,
-			String mobilePhone, String addressLineOne, String addressLineTwo,
-			String city, String regionId, String zip, String securityQuestion,
-			String securityAnswer, String acceptedTOU,
+			String lastName, String emailAddress, String gender,
+			java.util.Date birthDate, String password, String confirmedPassword,
+			String homePhone, String mobilePhone, String addressLineOne,
+			String addressLineTwo, String city, String regionId, String zip,
+			String securityQuestion, String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException;
 
@@ -298,6 +298,16 @@ public interface AMFUserLocalService
 	public AMFUser getAMFUser(long amfUserId) throws PortalException;
 
 	/**
+	 * @param regionCode
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.HashMap<String, Object> getAMFUserBaseOnPostalCode(
+		long regionCode, int start, int end);
+
+	/**
 	 * @param groupId
 	 * @param userId
 	 * @param userName
@@ -327,6 +337,11 @@ public interface AMFUserLocalService
 	public AMFUser getAMFUserByUuidAndGroupId(String uuid, long groupId)
 		throws PortalException;
 
+	/**
+	 * @param groupId
+	 * @param eventStatus
+	 * @return
+	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AMFUser> getAMFUserEventLogByStatus(
 		long groupId, String eventStatus);

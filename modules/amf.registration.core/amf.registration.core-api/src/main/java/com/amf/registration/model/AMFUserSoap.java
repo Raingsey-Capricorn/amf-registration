@@ -41,7 +41,6 @@ public class AMFUserSoap implements Serializable {
 		soapModel.setModifiedDate(model.getModifiedDate());
 		soapModel.setUserName(model.getUserName());
 		soapModel.setUserId(model.getUserId());
-		soapModel.setContractId(model.getContractId());
 		soapModel.setAddressId(model.getAddressId());
 		soapModel.setHomePhone(model.getHomePhone());
 		soapModel.setMobilePhone(model.getMobilePhone());
@@ -162,14 +161,6 @@ public class AMFUserSoap implements Serializable {
 		_userId = userId;
 	}
 
-	public long getContractId() {
-		return _contractId;
-	}
-
-	public void setContractId(long contractId) {
-		_contractId = contractId;
-	}
-
 	public long getAddressId() {
 		return _addressId;
 	}
@@ -202,7 +193,6 @@ public class AMFUserSoap implements Serializable {
 	private Date _modifiedDate;
 	private String _userName;
 	private long _userId;
-	private long _contractId;
 	private long _addressId;
 	private String _homePhone;
 	private String _mobilePhone;

@@ -13,5 +13,6 @@ public final class MVCCommandNames {
     public static final String AMF_DISPLAY_EVENT_REGISTRATION   = "/amf/registration";
     public static final String AMF_DISPLAY_EVENT_LOGIN          = "/amf/login";
 
+    public static final String AMF_SEARCH_MEMBERS     = "/amf/search/members";
 
 }

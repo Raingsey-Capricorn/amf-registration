@@ -51,7 +51,6 @@ public class AMFUserWrapper
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("userName", getUserName());
 		attributes.put("userId", getUserId());
-		attributes.put("contractId", getContractId());
 		attributes.put("addressId", getAddressId());
 		attributes.put("homePhone", getHomePhone());
 		attributes.put("mobilePhone", getMobilePhone());
@@ -107,12 +106,6 @@ public class AMFUserWrapper
 
 		if (userId != null) {
 			setUserId(userId);
-		}
-
-		Long contractId = (Long)attributes.get("contractId");
-
-		if (contractId != null) {
-			setContractId(contractId);
 		}
 
 		Long addressId = (Long)attributes.get("addressId");
@@ -211,16 +204,6 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * Returns the contract ID of this amf user.
-	 *
-	 * @return the contract ID of this amf user
-	 */
-	@Override
-	public long getContractId() {
-		return model.getContractId();
-	}
-
-	/**
 	 * Returns the create date of this amf user.
 	 *
 	 * @return the create date of this amf user
@@ -231,12 +214,11 @@ public class AMFUserWrapper
 	}
 
 	/**
-	 * @param contactId
 	 * @return
 	 */
 	@Override
-	public String getEmailAddress(long contactId) {
-		return model.getEmailAddress(contactId);
+	public String getEmailAddress() {
+		return model.getEmailAddress();
 	}
 
 	/**
@@ -394,16 +376,6 @@ public class AMFUserWrapper
 	@Override
 	public void setCompanyId(long companyId) {
 		model.setCompanyId(companyId);
-	}
-
-	/**
-	 * Sets the contract ID of this amf user.
-	 *
-	 * @param contractId the contract ID of this amf user
-	 */
-	@Override
-	public void setContractId(long contractId) {
-		model.setContractId(contractId);
 	}
 
 	/**

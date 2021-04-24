@@ -61,7 +61,7 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -79,8 +79,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		sb.append(userName);
 		sb.append(", userId=");
 		sb.append(userId);
-		sb.append(", contractId=");
-		sb.append(contractId);
 		sb.append(", addressId=");
 		sb.append(addressId);
 		sb.append(", homePhone=");
@@ -129,7 +127,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		}
 
 		amfUserImpl.setUserId(userId);
-		amfUserImpl.setContractId(contractId);
 		amfUserImpl.setAddressId(addressId);
 
 		if (homePhone == null) {
@@ -166,8 +163,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 
 		userId = objectInput.readLong();
 
-		contractId = objectInput.readLong();
-
 		addressId = objectInput.readLong();
 		homePhone = objectInput.readUTF();
 		mobilePhone = objectInput.readUTF();
@@ -199,8 +194,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 
 		objectOutput.writeLong(userId);
 
-		objectOutput.writeLong(contractId);
-
 		objectOutput.writeLong(addressId);
 
 		if (homePhone == null) {
@@ -226,7 +219,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 	public long modifiedDate;
 	public String userName;
 	public long userId;
-	public long contractId;
 	public long addressId;
 	public String homePhone;
 	public String mobilePhone;

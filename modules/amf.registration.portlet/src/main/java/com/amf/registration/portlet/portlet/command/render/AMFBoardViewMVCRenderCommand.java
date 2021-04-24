@@ -2,7 +2,9 @@ package com.amf.registration.portlet.portlet.command.render;
 
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
+import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.portlet.constants.PageConstants;
+import com.amf.registration.portlet.internal.security.permission.resource.AMFRegistrationTopLevelPermission;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
@@ -34,7 +36,7 @@ import java.util.HashMap;
 @Component(
         property = {
                 "javax.portlet.name=" + AMFRegistrationPortletKeys.AMF_REGISTRATION,
-                "mvc.command.name=/"
+                "mvc.command.name=" + MVCCommandNames.AMF_DISPLAY_EVENTS
         },
         service = MVCRenderCommand.class
 )
@@ -50,8 +52,10 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
      */
     @Override
     public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
-        if (((ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY)).isSignedIn()) {
-            return displayEventBoard(renderRequest);
+
+        ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+        if (themeDisplay.isSignedIn()) {
+            return displayEventBoard(renderRequest, themeDisplay);
         } else {
             renderRequest.setAttribute("regions", regionService.getRegions(19));
             return "/fragments/registration.jsp";
@@ -62,7 +66,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
      * @param renderRequest
      * @return
      */
-    private String displayEventBoard(RenderRequest renderRequest) {
+    private String displayEventBoard(RenderRequest renderRequest, ThemeDisplay themeDisplay) {
 
         var currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
         var delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
@@ -80,7 +84,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         HashMap<String, Object> objectHashMap = new HashMap<>();
         try {
             User loggedInUser = userService.getCurrentUser();
-            boolean adminFlag = loggedInUser.getRoles().get(0).getDescriptiveName().equals("Administrator");
+            boolean adminFlag = AMFRegistrationTopLevelPermission.contains(themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(), "VIEW");
             switch (currentTabIndex) {
                 case PageConstants.TAB_PROFILE:
                     if (!adminFlag) {
