@@ -8,10 +8,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.WebKeys;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -35,8 +33,11 @@ import java.util.HashMap;
         },
         service = MVCRenderCommand.class
 )
-public class AMFRegistrationViewMVCRenderCommand implements MVCRenderCommand {
+public class AMFSearchViewMVCRenderCommand implements MVCRenderCommand {
+
     /**
+     * This render will work for un-registered/guest user only
+     *
      * @param renderRequest
      * @param renderResponse
      * @return

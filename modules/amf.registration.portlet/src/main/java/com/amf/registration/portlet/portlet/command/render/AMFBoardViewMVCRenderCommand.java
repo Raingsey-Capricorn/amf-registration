@@ -42,9 +42,13 @@ import java.util.HashMap;
 )
 public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
 
+
+    // TODO : redirect from search to profile page, after login
     private String currentTabIndex = "";
 
     /**
+     * This render will be displayed for logged in user only
+     *
      * @param renderRequest
      * @param renderResponse
      * @return
@@ -54,20 +58,6 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
     public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-        if (themeDisplay.isSignedIn()) {
-            return displayEventBoard(renderRequest, themeDisplay);
-        } else {
-            renderRequest.setAttribute("regions", regionService.getRegions(19));
-            return "/fragments/registration.jsp";
-        }
-    }
-
-    /**
-     * @param renderRequest
-     * @return
-     */
-    private String displayEventBoard(RenderRequest renderRequest, ThemeDisplay themeDisplay) {
-
         var currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
         var delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
         var start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
@@ -124,6 +114,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
             return "/fragments/events-board.jsp";
         }
     }
+
 
     /**
      * @param renderRequest

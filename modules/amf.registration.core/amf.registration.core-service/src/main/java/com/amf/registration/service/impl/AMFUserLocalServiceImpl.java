@@ -167,7 +167,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                     false,
                     serviceContext
             );
-            UserLocalServiceUtil.addGroupUser(getAMFUserGroupID(), registerUser);
+            UserLocalServiceUtil.addUserGroupUser(getAMFUserGroupID(), registerUser);
             Address registerAddress = createAddressEntity(userName, addressLineOne, addressLineTwo, city, Long.parseLong(regionId), zip, registerUser);
             AMFUser registerAMFUser = createAMFUserEntity(homePhone, mobilePhone, registerUser, registerAddress);
             AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser.getGroupId(), EventStatus.REGISTER);
@@ -488,7 +488,8 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                                     .add(RestrictionsFactoryUtil.eq("name", "AMF-Community")))
                             .setProjection(ProjectionFactoryUtil.groupProperty("userGroupId"))
             ).stream().findFirst().get();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new NullPointerException("AMD-Community Group is not existing yet. Please add the group using Admin user.");
         }
     }
