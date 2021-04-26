@@ -2,6 +2,11 @@
 
 <portlet:renderURL var="registerURL">
     <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_REGISTER%>"/>
+    <portlet:param name="redirect" value="/amf/member-register"/>
+</portlet:renderURL>
+
+<portlet:renderURL var="searchURL">
+    <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_CLEAR_SEARCH%>"/>
     <portlet:param name="redirect" value="${currentURL}"/>
 </portlet:renderURL>
 
@@ -11,8 +16,9 @@
         <label>Enter US Zip</label>
         <clay:management-toolbar
                 itemsTotal="${amfUserCount}"
-                searchContainerId="amfUserEntries"
-                selectable="${false}"
+                searchContainerId="${postalSearchContainer}"
+                clearResultsURL="${searchURL}"
+                selectable="<%=false%>"
                 id="amf-user-search-input"
         />
         <aui:button name="submitButton" value="Register" onClick="${registerURL}"/>
@@ -20,9 +26,10 @@
 
     <liferay-ui:search-container
             emptyResultsMessage="no-entry"
-            id="amf-user-search-container"
+            id="postalSearchContainer"
             iteratorURL="${portletURL}"
             total="${amfUserCount}">
+
         <liferay-ui:search-container-results results="${amfUsers}"/>
         <liferay-ui:search-container-row className="com.amf.registration.model.AMFUser"
                                          modelVar="amfUser">

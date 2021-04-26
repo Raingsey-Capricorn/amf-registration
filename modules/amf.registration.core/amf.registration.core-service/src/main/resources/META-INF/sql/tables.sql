@@ -5,6 +5,7 @@ create table amfeventlog (
 	createDate DATE null,
 	modifiedDate DATE null,
 	groupId LONG,
+	userGroupId LONG,
 	userId LONG,
 	lastLoginDate DATE null,
 	lastLoginIP VARCHAR(75) null,

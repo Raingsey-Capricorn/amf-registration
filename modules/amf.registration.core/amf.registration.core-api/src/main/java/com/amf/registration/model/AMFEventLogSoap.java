@@ -39,6 +39,7 @@ public class AMFEventLogSoap implements Serializable {
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
 		soapModel.setGroupId(model.getGroupId());
+		soapModel.setUserGroupId(model.getUserGroupId());
 		soapModel.setUserId(model.getUserId());
 		soapModel.setLastLoginDate(model.getLastLoginDate());
 		soapModel.setLastLoginIP(model.getLastLoginIP());
@@ -144,6 +145,14 @@ public class AMFEventLogSoap implements Serializable {
 		_groupId = groupId;
 	}
 
+	public long getUserGroupId() {
+		return _userGroupId;
+	}
+
+	public void setUserGroupId(long userGroupId) {
+		_userGroupId = userGroupId;
+	}
+
 	public long getUserId() {
 		return _userId;
 	}
@@ -182,6 +191,7 @@ public class AMFEventLogSoap implements Serializable {
 	private Date _createDate;
 	private Date _modifiedDate;
 	private long _groupId;
+	private long _userGroupId;
 	private long _userId;
 	private Date _lastLoginDate;
 	private String _lastLoginIP;

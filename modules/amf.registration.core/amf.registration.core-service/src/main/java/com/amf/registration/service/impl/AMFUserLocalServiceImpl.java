@@ -170,7 +170,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             UserLocalServiceUtil.addUserGroupUser(getAMFUserGroupID(), registerUser);
             Address registerAddress = createAddressEntity(userName, addressLineOne, addressLineTwo, city, Long.parseLong(regionId), zip, registerUser);
             AMFUser registerAMFUser = createAMFUserEntity(homePhone, mobilePhone, registerUser, registerAddress);
-            AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser.getGroupId(), EventStatus.REGISTER);
+            AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser, registerUser.getGroupId(), EventStatus.REGISTER);
             AMFEventLogLocalServiceUtil.addAMFUserAMFEventLogs(registerAMFUser.getAmfUserId(), Collections.singletonList(amfEventLog));
 
             final boolean portletActions = false;
@@ -252,10 +252,11 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     /**
      * @param amfUser
      */
-    private AMFEventLog createEventLogEntity(AMFUser amfUser, long groupID, String eventStatus) {
+    private AMFEventLog createEventLogEntity(AMFUser amfUser, User user, long groupID, String eventStatus) throws PortalException {
         long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
         AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
         amfEventLog.setUserId(amfUser.getUserId());
+        amfEventLog.setUserGroupId(user.getUserGroups().stream().findFirst().get().getGroupId());
         amfEventLog.setLastLoginIP("0.0.0.0");
         amfEventLog.setGroupId(groupID);
         amfEventLog.setStatus(eventStatus);
@@ -356,7 +357,10 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @return
      */
     @Override
-    public long getAMFUsersCountByKeywords(long groupId, String userName) {
+    public long getAMFUsersCountByKeywords(
+            long groupId,
+            String userName) {
+
         return amfUserLocalService.dynamicQueryCount(
                 getKeywordSearchDynamicQuery(groupId, userName));
     }
@@ -367,7 +371,10 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @return
      */
     @Override
-    public long getAMFUserByUserName(long groupId, String userName) {
+    public long getAMFUserByUserName(
+            long groupId,
+            String userName) {
+
         return amfUserLocalService.dynamicQueryCount(
                 getUserNameSearchDynamicQuery(groupId, userName));
     }
@@ -379,7 +386,11 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @return
      */
     @Override
-    public AMFUser getAMFUserByGroupUserAndUserName(long groupId, long userId, String userName) {
+    public AMFUser getAMFUserByGroupUserAndUserName(
+            long groupId,
+            long userId,
+            String userName) {
+
         return (AMFUser) amfUserLocalService.dynamicQuery(getDynamicQueryForGroupUserAndUsername(groupId, userId, userName)).stream().findFirst().get();
     }
 
@@ -397,7 +408,10 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @return
      */
     @Override
-    public List<AMFUser> getAMFUserEventLogByStatus(long groupId, String eventStatus) {
+    public List<AMFUser> getAMFUserEventLogByStatus(
+            long groupId,
+            String eventStatus) {
+
         return amfEventLogLocalService.dynamicQuery(getEventLogStatusSearchDynamicQuery(groupId, eventStatus));
     }
 
@@ -461,7 +475,11 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @param userName
      * @return
      */
-    private DynamicQuery getDynamicQueryForGroupUserAndUsername(long groupId, long userId, String userName) {
+    private DynamicQuery getDynamicQueryForGroupUserAndUsername(
+            long groupId,
+            long userId,
+            String userName) {
+
         try {
 
             DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));

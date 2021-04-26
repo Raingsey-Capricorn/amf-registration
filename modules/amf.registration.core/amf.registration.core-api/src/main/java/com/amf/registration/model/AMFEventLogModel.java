@@ -152,6 +152,20 @@ public interface AMFEventLogModel
 	public void setGroupId(long groupId);
 
 	/**
+	 * Returns the user group ID of this amf event log.
+	 *
+	 * @return the user group ID of this amf event log
+	 */
+	public long getUserGroupId();
+
+	/**
+	 * Sets the user group ID of this amf event log.
+	 *
+	 * @param userGroupId the user group ID of this amf event log
+	 */
+	public void setUserGroupId(long userGroupId);
+
+	/**
 	 * Returns the user ID of this amf event log.
 	 *
 	 * @return the user ID of this amf event log

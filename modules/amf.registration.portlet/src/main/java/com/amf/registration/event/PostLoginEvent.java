@@ -29,11 +29,11 @@ public class PostLoginEvent implements LifecycleAction {
             if (loggedInUser.getRoles().get(0).getDescriptiveName().equals("User")) {
                 AMFEventLogLocalServiceUtil.addAMFEventLog(userService.getCurrentUser());
             }
-            //TODO : will need to do redirect to the profile page
         } catch (PortalException e) {
 
         }
     }
+
 
     @Reference
     private UserService userService;

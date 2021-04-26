@@ -63,7 +63,7 @@ public class AMFEventLogCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -77,6 +77,8 @@ public class AMFEventLogCacheModel
 		sb.append(modifiedDate);
 		sb.append(", groupId=");
 		sb.append(groupId);
+		sb.append(", userGroupId=");
+		sb.append(userGroupId);
 		sb.append(", userId=");
 		sb.append(userId);
 		sb.append(", lastLoginDate=");
@@ -119,6 +121,7 @@ public class AMFEventLogCacheModel
 		}
 
 		amfEventLogImpl.setGroupId(groupId);
+		amfEventLogImpl.setUserGroupId(userGroupId);
 		amfEventLogImpl.setUserId(userId);
 
 		if (lastLoginDate == Long.MIN_VALUE) {
@@ -159,6 +162,8 @@ public class AMFEventLogCacheModel
 
 		groupId = objectInput.readLong();
 
+		userGroupId = objectInput.readLong();
+
 		userId = objectInput.readLong();
 		lastLoginDate = objectInput.readLong();
 		lastLoginIP = objectInput.readUTF();
@@ -181,6 +186,8 @@ public class AMFEventLogCacheModel
 		objectOutput.writeLong(modifiedDate);
 
 		objectOutput.writeLong(groupId);
+
+		objectOutput.writeLong(userGroupId);
 
 		objectOutput.writeLong(userId);
 		objectOutput.writeLong(lastLoginDate);
@@ -206,6 +213,7 @@ public class AMFEventLogCacheModel
 	public long createDate;
 	public long modifiedDate;
 	public long groupId;
+	public long userGroupId;
 	public long userId;
 	public long lastLoginDate;
 	public String lastLoginIP;
