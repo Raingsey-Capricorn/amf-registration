@@ -8,8 +8,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 @Component(
-        immediate = true
-        , service = AMFRegistrationPermission.class
+        immediate = true,
+        service = AMFRegistrationPermission.class
 )
 public class AMFRegistrationPermission {
 
@@ -27,6 +27,22 @@ public class AMFRegistrationPermission {
 
         return amfUserModelResourcePermission.contains(
                 permissionChecker, amfUser, actionId);
+    }
+
+    /**
+     * @param permissionChecker
+     * @param amfUserId
+     * @param actionId
+     * @return
+     * @throws PortalException
+     */
+    public static boolean contains(
+            PermissionChecker permissionChecker,
+            long amfUserId,
+            String actionId) throws PortalException {
+
+        return amfUserModelResourcePermission.contains(
+                permissionChecker, amfUserId, actionId);
     }
 
     @Reference(

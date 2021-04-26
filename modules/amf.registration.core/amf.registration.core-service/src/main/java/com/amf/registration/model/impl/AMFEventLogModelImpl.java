@@ -74,8 +74,9 @@ public class AMFEventLogModelImpl
 		{"uuid_", Types.VARCHAR}, {"amfEventLogId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"createDate", Types.TIMESTAMP},
 		{"modifiedDate", Types.TIMESTAMP}, {"groupId", Types.BIGINT},
-		{"userId", Types.BIGINT}, {"lastLoginDate", Types.TIMESTAMP},
-		{"lastLoginIP", Types.VARCHAR}, {"status", Types.VARCHAR}
+		{"userGroupId", Types.BIGINT}, {"userId", Types.BIGINT},
+		{"lastLoginDate", Types.TIMESTAMP}, {"lastLoginIP", Types.VARCHAR},
+		{"status", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -88,6 +89,7 @@ public class AMFEventLogModelImpl
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("userGroupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("lastLoginDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("lastLoginIP", Types.VARCHAR);
@@ -95,7 +97,7 @@ public class AMFEventLogModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table amfeventlog (uuid_ VARCHAR(75) null,amfEventLogId LONG not null primary key,companyId LONG,createDate DATE null,modifiedDate DATE null,groupId LONG,userId LONG,lastLoginDate DATE null,lastLoginIP VARCHAR(75) null,status VARCHAR(75) null)";
+		"create table amfeventlog (uuid_ VARCHAR(75) null,amfEventLogId LONG not null primary key,companyId LONG,createDate DATE null,modifiedDate DATE null,groupId LONG,userGroupId LONG,userId LONG,lastLoginDate DATE null,lastLoginIP VARCHAR(75) null,status VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table amfeventlog";
 
@@ -308,6 +310,11 @@ public class AMFEventLogModelImpl
 		attributeGetterFunctions.put("groupId", AMFEventLog::getGroupId);
 		attributeSetterBiConsumers.put(
 			"groupId", (BiConsumer<AMFEventLog, Long>)AMFEventLog::setGroupId);
+		attributeGetterFunctions.put(
+			"userGroupId", AMFEventLog::getUserGroupId);
+		attributeSetterBiConsumers.put(
+			"userGroupId",
+			(BiConsumer<AMFEventLog, Long>)AMFEventLog::setUserGroupId);
 		attributeGetterFunctions.put("userId", AMFEventLog::getUserId);
 		attributeSetterBiConsumers.put(
 			"userId", (BiConsumer<AMFEventLog, Long>)AMFEventLog::setUserId);
@@ -452,6 +459,20 @@ public class AMFEventLogModelImpl
 	@Deprecated
 	public long getOriginalGroupId() {
 		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("groupId"));
+	}
+
+	@Override
+	public long getUserGroupId() {
+		return _userGroupId;
+	}
+
+	@Override
+	public void setUserGroupId(long userGroupId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_userGroupId = userGroupId;
 	}
 
 	@Override
@@ -602,6 +623,7 @@ public class AMFEventLogModelImpl
 		amfEventLogImpl.setCreateDate(getCreateDate());
 		amfEventLogImpl.setModifiedDate(getModifiedDate());
 		amfEventLogImpl.setGroupId(getGroupId());
+		amfEventLogImpl.setUserGroupId(getUserGroupId());
 		amfEventLogImpl.setUserId(getUserId());
 		amfEventLogImpl.setLastLoginDate(getLastLoginDate());
 		amfEventLogImpl.setLastLoginIP(getLastLoginIP());
@@ -717,6 +739,8 @@ public class AMFEventLogModelImpl
 
 		amfEventLogCacheModel.groupId = getGroupId();
 
+		amfEventLogCacheModel.userGroupId = getUserGroupId();
+
 		amfEventLogCacheModel.userId = getUserId();
 
 		Date lastLoginDate = getLastLoginDate();
@@ -824,6 +848,7 @@ public class AMFEventLogModelImpl
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _groupId;
+	private long _userGroupId;
 	private long _userId;
 	private Date _lastLoginDate;
 	private String _lastLoginIP;
@@ -864,6 +889,7 @@ public class AMFEventLogModelImpl
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
 		_columnOriginalValues.put("groupId", _groupId);
+		_columnOriginalValues.put("userGroupId", _userGroupId);
 		_columnOriginalValues.put("userId", _userId);
 		_columnOriginalValues.put("lastLoginDate", _lastLoginDate);
 		_columnOriginalValues.put("lastLoginIP", _lastLoginIP);
@@ -903,13 +929,15 @@ public class AMFEventLogModelImpl
 
 		columnBitmasks.put("groupId", 32L);
 
-		columnBitmasks.put("userId", 64L);
+		columnBitmasks.put("userGroupId", 64L);
 
-		columnBitmasks.put("lastLoginDate", 128L);
+		columnBitmasks.put("userId", 128L);
 
-		columnBitmasks.put("lastLoginIP", 256L);
+		columnBitmasks.put("lastLoginDate", 256L);
 
-		columnBitmasks.put("status", 512L);
+		columnBitmasks.put("lastLoginIP", 512L);
+
+		columnBitmasks.put("status", 1024L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

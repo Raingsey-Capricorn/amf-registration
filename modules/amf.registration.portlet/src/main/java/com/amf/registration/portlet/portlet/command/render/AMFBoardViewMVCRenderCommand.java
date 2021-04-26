@@ -4,7 +4,6 @@ import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.portlet.constants.PageConstants;
-import com.amf.registration.portlet.internal.security.permission.resource.AMFRegistrationTopLevelPermission;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
@@ -13,7 +12,6 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
-import com.liferay.portal.kernel.service.RegionService;
 import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -36,15 +34,22 @@ import java.util.HashMap;
 @Component(
         property = {
                 "javax.portlet.name=" + AMFRegistrationPortletKeys.AMF_REGISTRATION,
-                "mvc.command.name=" + MVCCommandNames.AMF_DISPLAY_EVENTS
+                "mvc.command.name=/",
+                "mvc.command.name=" + MVCCommandNames.AMF_DISPLAY_EVENTS,
+                "mvc.command.name=" + MVCCommandNames.AMF_SEARCH_MEMBERS,
+                "mvc.command.name=" + MVCCommandNames.AMF_CLEAR_SEARCH
         },
         service = MVCRenderCommand.class
 )
 public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
 
+
+    // TODO : redirect from search to profile page, after login
     private String currentTabIndex = "";
 
     /**
+     * This render method determines which page to be displayed based on sign-in status
+     *
      * @param renderRequest
      * @param renderResponse
      * @return
@@ -57,8 +62,8 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         if (themeDisplay.isSignedIn()) {
             return displayEventBoard(renderRequest, themeDisplay);
         } else {
-            renderRequest.setAttribute("regions", regionService.getRegions(19));
-            return "/fragments/registration.jsp";
+            addAMFUsersToDisplay(renderRequest);
+            return "/search.jsp";
         }
     }
 
@@ -84,17 +89,19 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         HashMap<String, Object> objectHashMap = new HashMap<>();
         try {
             User loggedInUser = userService.getCurrentUser();
-            boolean adminFlag = AMFRegistrationTopLevelPermission.contains(themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(), "VIEW");
+            boolean viewAllFlag = userService.getCurrentUser().getRoles()
+                    .stream().anyMatch(role -> role.getName().equals("AMF_Superuser") || role.getName().equals("Administrator"));
+
             switch (currentTabIndex) {
                 case PageConstants.TAB_PROFILE:
-                    if (!adminFlag) {
+                    if (!viewAllFlag) {
                         AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
                         renderRequest.setAttribute("amfUser", amfUser);
                     }
                     break;
 
                 case PageConstants.TAB_ALL:
-                    if (adminFlag) {
+                    if (viewAllFlag) {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogs(loggedInUser.getGroupId(), start, end);
                     } else {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.ALL, start, end);
@@ -102,7 +109,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
                     break;
 
                 case PageConstants.TAB_REGISTRATION:
-                    if (adminFlag) {
+                    if (viewAllFlag) {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.REGISTER, start, end);
                     } else {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.REGISTER, start, end);
@@ -110,7 +117,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
                     break;
 
                 case PageConstants.TAB_LOGIN:
-                    if (adminFlag) {
+                    if (viewAllFlag) {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.LOGIN, start, end);
                     } else {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.LOGIN, start, end);
@@ -135,6 +142,22 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         renderRequest.setAttribute("selectedTab", currentTabIndex);
     }
 
+    /**
+     * @param renderRequest
+     */
+    private void addAMFUsersToDisplay(RenderRequest renderRequest) {
+
+        int currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
+        int delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
+        int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
+        int end = start + delta;
+        long postalCode = ParamUtil.getLong(renderRequest, "keywords");
+
+        HashMap<String, Object> amfUserHashMap = AMFUserLocalServiceUtil.getAMFUserBaseOnPostalCode(postalCode, start, end);
+        renderRequest.setAttribute("amfUsers", amfUserHashMap.get("amfUsers"));
+        renderRequest.setAttribute("amfUserCount", amfUserHashMap.get("amfUserCount"));
+
+    }
 
     @Reference
     private UserService userService;
@@ -142,6 +165,4 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
     @Reference
     AMFUserLocalService service;
 
-    @Reference
-    private RegionService regionService;
 }

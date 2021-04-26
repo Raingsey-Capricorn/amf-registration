@@ -21,8 +21,10 @@ import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserGroupLocalService;
 import com.liferay.portal.kernel.util.Validator;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -63,10 +65,9 @@ public class AMFEventLogLocalServiceImpl
      */
     @Override
     public HashMap<String, Object> getAMFEventLogs(long groupId, int start, int end) {
-
         return new HashMap<>() {{
-            put("eventLogs", amfEventLogLocalService.dynamicQuery(getUserNameSearchDynamicQuery(groupId, start, end)));
-            put("total", amfEventLogLocalService.dynamicQueryCount(getUserNameSearchDynamicQuery(groupId, 0, 0)));
+            put("eventLogs", amfEventLogLocalService.dynamicQuery(getAMFMembersUserNameSearchDynamicQuery(start, end)));
+            put("total", amfEventLogLocalService.dynamicQueryCount(getAMFMembersUserNameSearchDynamicQuery(0, 0)));
         }};
     }
 
@@ -116,6 +117,25 @@ public class AMFEventLogLocalServiceImpl
 
         return (AMFEventLog) amfEventLogLocalService.dynamicQuery(
                 getUserNameSearchDynamicQuery(groupId, userId)).stream().findFirst().get();
+    }
+
+    /**
+     * @param loggedInUser
+     * @return
+     */
+    @Override
+    public AMFEventLog addAMFEventLog(User loggedInUser) {
+
+        long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
+        AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
+        amfEventLog.setUserId(loggedInUser.getUserId());
+        amfEventLog.setGroupId(loggedInUser.getGroupId());
+        amfEventLog.setStatus(EventStatus.LOGIN);
+        amfEventLog.setCreateDate(new Date());
+        amfEventLog.setLastLoginDate(loggedInUser.getLastLoginDate());
+        amfEventLog.setLastLoginIP(loggedInUser.getLastLoginIP());
+        amfEventLog.setNew(false);
+        return AMFEventLogLocalServiceUtil.addAMFEventLog(amfEventLog);
     }
 
     /**
@@ -212,17 +232,15 @@ public class AMFEventLogLocalServiceImpl
     }
 
     /**
-     * @param groupId
      * @param start
      * @param end
      * @return
      */
-    private DynamicQuery getUserNameSearchDynamicQuery(
-            final long groupId,
+    private DynamicQuery getAMFMembersUserNameSearchDynamicQuery(
             final int start,
             final int end) {
 
-        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("userGroupId", getAMFUserGroupID()));
         if (start >= 0 && end > 0) {
             dynamicQuery.setLimit(start, end);
         }
@@ -230,22 +248,24 @@ public class AMFEventLogLocalServiceImpl
     }
 
     /**
-     * @param loggedInUser
      * @return
      */
-    @Override
-    public AMFEventLog addAMFEventLog(User loggedInUser) {
-
-        long amfEvenLogId = counterLocalService.increment(AMFEventLog.class.getName());
-        AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
-        amfEventLog.setUserId(loggedInUser.getUserId());
-        amfEventLog.setGroupId(loggedInUser.getGroupId());
-        amfEventLog.setStatus(EventStatus.LOGIN);
-        amfEventLog.setCreateDate(new Date());
-        amfEventLog.setLastLoginDate(loggedInUser.getLastLoginDate());
-        amfEventLog.setLastLoginIP(loggedInUser.getLastLoginIP());
-        amfEventLog.setNew(false);
-        return AMFEventLogLocalServiceUtil.addAMFEventLog(amfEventLog);
+    private long getAMFUserGroupID() {
+        try {
+            return (long) userGroupLocalService.dynamicQuery(
+                    userGroupLocalService.dynamicQuery()
+                            .add(RestrictionsFactoryUtil.conjunction()
+                                    .add(RestrictionsFactoryUtil.eq("name", "AMF-Community")))
+                            .setProjection(ProjectionFactoryUtil.groupProperty("userGroupId"))
+            ).stream().findFirst().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new NullPointerException("AMD-Community Group is not existing yet. Please add the group using Admin user.");
+        }
     }
+
+    @Reference
+    private UserGroupLocalService userGroupLocalService;
+
 
 }

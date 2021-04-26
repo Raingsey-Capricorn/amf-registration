@@ -49,6 +49,7 @@ public class AMFEventLogWrapper
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("groupId", getGroupId());
+		attributes.put("userGroupId", getUserGroupId());
 		attributes.put("userId", getUserId());
 		attributes.put("lastLoginDate", getLastLoginDate());
 		attributes.put("lastLoginIP", getLastLoginIP());
@@ -93,6 +94,12 @@ public class AMFEventLogWrapper
 
 		if (groupId != null) {
 			setGroupId(groupId);
+		}
+
+		Long userGroupId = (Long)attributes.get("userGroupId");
+
+		if (userGroupId != null) {
+			setUserGroupId(userGroupId);
 		}
 
 		Long userId = (Long)attributes.get("userId");
@@ -218,6 +225,16 @@ public class AMFEventLogWrapper
 	}
 
 	/**
+	 * Returns the user group ID of this amf event log.
+	 *
+	 * @return the user group ID of this amf event log
+	 */
+	@Override
+	public long getUserGroupId() {
+		return model.getUserGroupId();
+	}
+
+	/**
 	 * Returns the user ID of this amf event log.
 	 *
 	 * @return the user ID of this amf event log
@@ -340,6 +357,16 @@ public class AMFEventLogWrapper
 	@Override
 	public void setStatus(String status) {
 		model.setStatus(status);
+	}
+
+	/**
+	 * Sets the user group ID of this amf event log.
+	 *
+	 * @param userGroupId the user group ID of this amf event log
+	 */
+	@Override
+	public void setUserGroupId(long userGroupId) {
+		model.setUserGroupId(userGroupId);
 	}
 
 	/**

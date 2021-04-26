@@ -54,6 +54,7 @@
         <column name="createDate" type="Date"/>
         <column name="modifiedDate" type="Date"/>
         <column name="groupId" type="long"/>
+        <column name="userGroupId" type="long"/>
         <column name="userId" type="long"/>
         <column name="lastLoginDate" type="Date"/>
         <column name="lastLoginIP" type="String"/>

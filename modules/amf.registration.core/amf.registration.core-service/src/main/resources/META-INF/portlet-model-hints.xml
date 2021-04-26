@@ -8,6 +8,7 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="groupId" type="long" />
+		<field name="userGroupId" type="long" />
 		<field name="userId" type="long" />
 		<field name="lastLoginDate" type="Date" />
 		<field name="lastLoginIP" type="String" />

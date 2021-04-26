@@ -34,6 +34,7 @@ public class PostLoginEvent implements LifecycleAction {
         }
     }
 
+
     @Reference
     private UserService userService;
 }
