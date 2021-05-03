@@ -259,7 +259,6 @@ public class AMFEventLogLocalServiceImpl
                             .setProjection(ProjectionFactoryUtil.groupProperty("userGroupId"))
             ).stream().findFirst().get();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new NullPointerException("AMD-Community Group is not existing yet. Please add the group using Admin user.");
         }
     }

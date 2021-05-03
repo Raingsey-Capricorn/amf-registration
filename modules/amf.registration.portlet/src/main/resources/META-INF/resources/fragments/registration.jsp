@@ -17,7 +17,7 @@
         <liferay-ui:message arguments='<%= SessionErrors.get(liferayPortletRequest, "serviceErrorDetails") %>'
                             key="error.registration-service-error"/>
     </liferay-ui:error>
-    <liferay-ui:error key="duplicatedUserName" message="error.field-duplicate-username"/>
+    <liferay-ui:error key="invalidUserName" message="error.field-duplicate-username"/>
     <liferay-ui:error key="zipCodeInvalid" message="error.field-zipcode"/>
     <liferay-ui:error key="stateInvalid" message="error.field-address"/>
     <liferay-ui:error key="cityInvalid" message="error.field-address"/>
@@ -34,7 +34,6 @@
     <h4 style="text-decoration: underline"><liferay-ui:message key="eligibility-country"/></h4>
     <aui:model-context bean="${amfUser}" model="${userClass}"/>
     <aui:form action="${registerMembershipURL}" name="fm" method="post">
-<%--        <aui:input name="amfUserId" field="amfUserId" type="hidden"/>--%>
 
         <aui:fieldset-group markupView="lexicon">
             <aui:fieldset label="Basic Info">
@@ -134,7 +133,7 @@
                         </aui:select>
                     </aui:col>
                     <aui:col width="50">
-                        <aui:input name="zip" type="number" maxlength="5" pattern="\d*">
+                        <aui:input name="zip" type="number" maxlength="5" pattern="\d*" required="true">
                             <aui:validator name="number" errorMessage="error.field-zipcode"/>
                         </aui:input>
                     </aui:col>

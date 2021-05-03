@@ -14,6 +14,7 @@
 
 package com.amf.registration.service;
 
+import com.amf.registration.exception.AMFUserValidationException;
 import com.amf.registration.model.AMFUser;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -24,6 +25,7 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.model.*;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -38,7 +40,8 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -112,13 +115,13 @@ public interface AMFUserLocalService
 	 */
 	public AMFUser addAMFUser(
 			ThemeDisplay themeDisplay, String userName, String firstName,
-			String lastName, String emailAddress, String gender,
-			java.util.Date birthDate, String password, String confirmedPassword,
-			String homePhone, String mobilePhone, String addressLineOne,
-			String addressLineTwo, String city, String regionId, String zip,
-			String securityQuestion, String securityAnswer, String acceptedTOU,
+			String lastName, String emailAddress, String gender, Date birthDate,
+			String password, String confirmedPassword, String homePhone,
+			String mobilePhone, String addressLineOne, String addressLineTwo,
+			String city, String regionId, String zip, String securityQuestion,
+			String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws PortalException;
+		throws AMFUserValidationException;
 
 	public void clearAMFEventLogAMFUsers(long amfEventLogId);
 
@@ -304,7 +307,7 @@ public interface AMFUserLocalService
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.HashMap<String, Object> getAMFUserBaseOnPostalCode(
+	public HashMap<String, Object> getAMFUserBaseOnPostalCode(
 		long regionCode, int start, int end);
 
 	/**

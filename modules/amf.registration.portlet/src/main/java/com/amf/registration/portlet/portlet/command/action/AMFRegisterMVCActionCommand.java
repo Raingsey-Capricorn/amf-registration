@@ -66,9 +66,11 @@ public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
             SessionMessages.add(actionRequest, "amfUserAdded");
             sendRedirect(actionRequest, actionResponse);
         } catch (AMFUserValidationException validationException) {
+            SessionErrors.add(actionRequest, "serviceErrorDetails", validationException.getMessage());
             validationException.getErrors().forEach(error -> SessionErrors.add(actionRequest, error));
             actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
         } catch (Exception e) {
+            e.printStackTrace();
             SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());
             actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
         }

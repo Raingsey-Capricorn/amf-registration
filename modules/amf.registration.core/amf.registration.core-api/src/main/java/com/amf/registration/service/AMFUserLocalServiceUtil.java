@@ -109,7 +109,7 @@ public class AMFUserLocalServiceUtil {
 			String city, String regionId, String zip, String securityQuestion,
 			String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.amf.registration.exception.AMFUserValidationException {
 
 		return getService().addAMFUser(
 			themeDisplay, userName, firstName, lastName, emailAddress, gender,

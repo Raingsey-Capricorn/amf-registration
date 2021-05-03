@@ -43,8 +43,6 @@ import java.util.HashMap;
 )
 public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
 
-
-    // TODO : redirect from search to profile page, after login
     private String currentTabIndex = "";
 
     /**
@@ -60,7 +58,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
         if (themeDisplay.isSignedIn()) {
-            return displayEventBoard(renderRequest, themeDisplay);
+            return displayEventBoard(renderRequest);
         } else {
             addAMFUsersToDisplay(renderRequest);
             return "/search.jsp";
@@ -71,7 +69,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
      * @param renderRequest
      * @return
      */
-    private String displayEventBoard(RenderRequest renderRequest, ThemeDisplay themeDisplay) {
+    private String displayEventBoard(RenderRequest renderRequest) {
 
         var currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
         var delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
@@ -125,21 +123,13 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
                     break;
             }
 
-            setRequestAttribute(renderRequest, objectHashMap);
+            renderRequest.setAttribute("amfEvents", objectHashMap.get("eventLogs"));
+            renderRequest.setAttribute("amfEventCount", objectHashMap.get("total"));
+            renderRequest.setAttribute("selectedTab", currentTabIndex);
             return "/fragments/events-board.jsp";
         } catch (PortalException pe) {
             return "/fragments/events-board.jsp";
         }
-    }
-
-    /**
-     * @param renderRequest
-     * @param objectHashMap
-     */
-    private void setRequestAttribute(RenderRequest renderRequest, HashMap<String, Object> objectHashMap) {
-        renderRequest.setAttribute("amfEvents", objectHashMap.get("eventLogs"));
-        renderRequest.setAttribute("amfEventCount", objectHashMap.get("total"));
-        renderRequest.setAttribute("selectedTab", currentTabIndex);
     }
 
     /**
