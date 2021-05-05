@@ -332,7 +332,8 @@ public class AMFEventLogLocalServiceUtil {
 	 * @return
 	 */
 	public static java.util.HashMap<String, Object> getAMFEventLogBy(
-		long groupId, String status, int start, int end) {
+			long groupId, String status, int start, int end)
+		throws com.amf.registration.exception.NoSuchAMFEventLogException {
 
 		return getService().getAMFEventLogBy(groupId, status, start, end);
 	}
@@ -343,7 +344,8 @@ public class AMFEventLogLocalServiceUtil {
 	 * @return
 	 */
 	public static com.amf.registration.model.AMFEventLog
-		getAmfEventLogByGroupAndUser(long groupId, long userId) {
+			getAmfEventLogByGroupAndUser(long groupId, long userId)
+		throws com.amf.registration.exception.NoSuchAMFEventLogException {
 
 		return getService().getAmfEventLogByGroupAndUser(groupId, userId);
 	}
@@ -387,7 +389,8 @@ public class AMFEventLogLocalServiceUtil {
 	 * @return
 	 */
 	public static java.util.HashMap<String, Object> getAMFEventLogs(
-		long groupId, int start, int end) {
+			long groupId, int start, int end)
+		throws com.amf.registration.exception.NoSuchAMFEventLogException {
 
 		return getService().getAMFEventLogs(groupId, start, end);
 	}

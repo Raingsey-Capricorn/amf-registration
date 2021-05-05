@@ -14,6 +14,7 @@
 
 package com.amf.registration.service;
 
+import com.amf.registration.exception.NoSuchAMFEventLogException;
 import com.amf.registration.model.AMFEventLog;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -273,7 +274,8 @@ public interface AMFEventLogLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public HashMap<String, Object> getAMFEventLogBy(
-		long groupId, String status, int start, int end);
+			long groupId, String status, int start, int end)
+		throws NoSuchAMFEventLogException;
 
 	/**
 	 * @param groupId
@@ -281,7 +283,8 @@ public interface AMFEventLogLocalService
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public AMFEventLog getAmfEventLogByGroupAndUser(long groupId, long userId);
+	public AMFEventLog getAmfEventLogByGroupAndUser(long groupId, long userId)
+		throws NoSuchAMFEventLogException;
 
 	/**
 	 * Returns the amf event log matching the UUID and group.
@@ -317,7 +320,8 @@ public interface AMFEventLogLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public HashMap<String, Object> getAMFEventLogs(
-		long groupId, int start, int end);
+			long groupId, int start, int end)
+		throws NoSuchAMFEventLogException;
 
 	/**
 	 * Returns all the amf event logs matching the UUID and company.

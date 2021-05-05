@@ -355,7 +355,8 @@ public class AMFEventLogLocalServiceWrapper
 	 */
 	@Override
 	public java.util.HashMap<String, Object> getAMFEventLogBy(
-		long groupId, String status, int start, int end) {
+			long groupId, String status, int start, int end)
+		throws com.amf.registration.exception.NoSuchAMFEventLogException {
 
 		return _amfEventLogLocalService.getAMFEventLogBy(
 			groupId, status, start, end);
@@ -368,7 +369,8 @@ public class AMFEventLogLocalServiceWrapper
 	 */
 	@Override
 	public com.amf.registration.model.AMFEventLog getAmfEventLogByGroupAndUser(
-		long groupId, long userId) {
+			long groupId, long userId)
+		throws com.amf.registration.exception.NoSuchAMFEventLogException {
 
 		return _amfEventLogLocalService.getAmfEventLogByGroupAndUser(
 			groupId, userId);
@@ -417,7 +419,8 @@ public class AMFEventLogLocalServiceWrapper
 	 */
 	@Override
 	public java.util.HashMap<String, Object> getAMFEventLogs(
-		long groupId, int start, int end) {
+			long groupId, int start, int end)
+		throws com.amf.registration.exception.NoSuchAMFEventLogException {
 
 		return _amfEventLogLocalService.getAMFEventLogs(groupId, start, end);
 	}

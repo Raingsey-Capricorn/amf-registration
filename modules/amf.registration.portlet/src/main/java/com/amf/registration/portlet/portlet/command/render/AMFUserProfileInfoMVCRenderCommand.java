@@ -16,11 +16,11 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 /**
- * project-name : amf-registration
- * package-name : com.amf.registration.portlet.portlet.command.action
- * author       : Pisethraingsey SUON
- * email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
- * crated-date  : 03/25/2021
+ * @project-name : amf-registration
+ * @package-name : com.amf.registration.portlet.portlet.command.action
+ * @author       : Pisethraingsey SUON
+ * @email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
+ * @crated-date  : 03/25/2021
  */
 @Component(
         immediate = true,

@@ -9,6 +9,7 @@ import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -16,6 +17,7 @@ import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import lombok.SneakyThrows;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -25,11 +27,11 @@ import javax.portlet.RenderResponse;
 import java.util.HashMap;
 
 /**
- * project-name : amf-registration
- * package-name : com.amf.registration.portlet.portlet.command.action
- * author       : Pisethraingsey SUON
- * email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
- * crated-date  : 4/09/2021
+ * @project-name : amf-registration
+ * @package-name : com.amf.registration.portlet.portlet.command.action
+ * @author       : Pisethraingsey SUON
+ * @email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
+ * @crated-date  : 4/09/2021
  */
 @Component(
         property = {
@@ -53,9 +55,11 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
      * @return
      * @throws PortletException
      */
+    @SneakyThrows
     @Override
     public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
 
+        User loggedInUser = userService.getCurrentUser();
         ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
         if (themeDisplay.isSignedIn()) {
             return displayEventBoard(renderRequest);
@@ -87,16 +91,9 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         HashMap<String, Object> objectHashMap = new HashMap<>();
         try {
             User loggedInUser = userService.getCurrentUser();
-            boolean viewAllFlag = userService.getCurrentUser().getRoles()
-                    .stream().anyMatch(role -> role.getName().equals("AMF_Superuser") || role.getName().equals("Administrator"));
+            boolean viewAllFlag = loggedInUser.getRoles().stream().anyMatch(role -> role.getName().equals("AMF_Superuser") || role.getName().equals("Administrator"));
 
             switch (currentTabIndex) {
-                case PageConstants.TAB_PROFILE:
-                    if (!viewAllFlag) {
-                        AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
-                        renderRequest.setAttribute("amfUser", amfUser);
-                    }
-                    break;
 
                 case PageConstants.TAB_ALL:
                     if (viewAllFlag) {
@@ -121,6 +118,12 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.LOGIN, start, end);
                     }
                     break;
+                default:
+                    if (!viewAllFlag) {
+                        AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
+                        renderRequest.setAttribute("amfUser", amfUser);
+                    }
+                    break;
             }
 
             renderRequest.setAttribute("amfEvents", objectHashMap.get("eventLogs"));
@@ -128,6 +131,9 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
             renderRequest.setAttribute("selectedTab", currentTabIndex);
             return "/fragments/events-board.jsp";
         } catch (PortalException pe) {
+            return "/fragments/events-board.jsp";
+        } catch (Exception e) {
+            e.printStackTrace();
             return "/fragments/events-board.jsp";
         }
     }

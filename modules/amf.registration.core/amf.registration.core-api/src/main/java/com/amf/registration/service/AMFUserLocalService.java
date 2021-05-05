@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.*;
@@ -40,8 +41,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -115,13 +115,13 @@ public interface AMFUserLocalService
 	 */
 	public AMFUser addAMFUser(
 			ThemeDisplay themeDisplay, String userName, String firstName,
-			String lastName, String emailAddress, String gender, Date birthDate,
-			String password, String confirmedPassword, String homePhone,
-			String mobilePhone, String addressLineOne, String addressLineTwo,
-			String city, String regionId, String zip, String securityQuestion,
-			String securityAnswer, String acceptedTOU,
+			String lastName, String emailAddress, String gender,
+			java.util.Date birthDate, String password, String confirmedPassword,
+			String homePhone, String mobilePhone, String addressLineOne,
+			String addressLineTwo, String city, String regionId, String zip,
+			String securityQuestion, String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws AMFUserValidationException;
+		throws AMFUserValidationException, NoSuchGroupException;
 
 	public void clearAMFEventLogAMFUsers(long amfEventLogId);
 
@@ -307,7 +307,7 @@ public interface AMFUserLocalService
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public HashMap<String, Object> getAMFUserBaseOnPostalCode(
+	public java.util.HashMap<String, Object> getAMFUserBaseOnPostalCode(
 		long regionCode, int start, int end);
 
 	/**
@@ -318,7 +318,8 @@ public interface AMFUserLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AMFUser getAMFUserByGroupUserAndUserName(
-		long groupId, long userId, String userName);
+			long groupId, long userId, String userName)
+		throws NoSuchGroupException;
 
 	/**
 	 * @param groupId
