@@ -16,6 +16,7 @@ package com.amf.registration.service.base;
 
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.AMFUserService;
+import com.amf.registration.service.persistence.AMFEventLogPersistence;
 import com.amf.registration.service.persistence.AMFUserPersistence;
 
 import com.liferay.portal.aop.AopService;
@@ -116,16 +117,11 @@ public abstract class AMFUserServiceBaseImpl
 	protected AMFUserPersistence amfUserPersistence;
 
 	@Reference
+	protected AMFEventLogPersistence amfEventLogPersistence;
+
+	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService
 		counterLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.ClassNameLocalService
-		classNameLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.ClassNameService
-		classNameService;
 
 	@Reference
 	protected com.liferay.portal.kernel.service.GroupLocalService
@@ -133,35 +129,5 @@ public abstract class AMFUserServiceBaseImpl
 
 	@Reference
 	protected com.liferay.portal.kernel.service.GroupService groupService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.ResourceLocalService
-		resourceLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.UserLocalService
-		userLocalService;
-
-	@Reference
-	protected com.liferay.portal.kernel.service.UserService userService;
-
-	@Reference
-	protected com.liferay.asset.kernel.service.AssetEntryLocalService
-		assetEntryLocalService;
-
-	@Reference
-	protected com.liferay.asset.kernel.service.AssetEntryService
-		assetEntryService;
-
-	@Reference
-	protected com.liferay.asset.kernel.service.AssetLinkLocalService
-		assetLinkLocalService;
-
-	@Reference
-	protected com.liferay.asset.kernel.service.AssetTagLocalService
-		assetTagLocalService;
-
-	@Reference
-	protected com.liferay.asset.kernel.service.AssetTagService assetTagService;
 
 }

@@ -1,7 +1,6 @@
 package com.amf.registration.utilities.validator;
 
 import com.amf.registration.exception.AMFUserValidationException;
-import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.validator.AMFUserValidator;
 import lombok.Getter;
 import org.osgi.service.component.annotations.Component;
@@ -32,7 +31,6 @@ public class AMFUserValidatorImpl implements AMFUserValidator {
 
     @Override
     public void validate(
-            AMFUserLocalService amfUserLocalService,
             String userName,
             String firstName,
             String lastName,
@@ -54,133 +52,23 @@ public class AMFUserValidatorImpl implements AMFUserValidator {
             throws AMFUserValidationException {
 
         errorMessages = new ArrayList<>();
-        if (!isAMFUserValid(
-                amfUserLocalService,
-                firstName,
-                lastName,
-                emailAddress,
-                userName,
-                gender,
-                birthDate,
-                password,
-                confirmedPassword,
-                address,
-                city,
-                state,
-                zip,
-                securityAnswer,
-                acceptedTOU,
-                errorMessages)) {
+        boolean result = true;
+        result &= getValidityCheckFor(firstName, errorMessages, ALPHANUMERIC_WITH_MIN1_MAX50_LENGTH_PATTERN, "invalidFirstName");
+        result &= getValidityCheckFor(lastName, errorMessages, ALPHANUMERIC_WITH_MIN1_MAX50_LENGTH_PATTERN, "invalidLastName");
+        result &= getValidityCheckFor(userName, errorMessages, ALPHANUMERIC_WITH_MIN4_MAX16_LENGTH_PATTERN, "invalidUserName");
+        result &= getValidityCheckFor(emailAddress, errorMessages, ALPHABETIC_EMAIL_PATTERN, "invalidEmail");
+        result &= getValidityCheckFor(gender, errorMessages, null, "invalidGender");
+        result &= isDateOfBirthValid(birthDate, errorMessages);
+        result &= isPasswordMatchedAndValid(password, confirmedPassword, errorMessages);
+        result &= getValidityCheckFor(address, errorMessages, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "addressInvalid");
+        result &= getValidityCheckFor(city, errorMessages, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "cityInvalid");
+        result &= getValidityCheckFor(state, errorMessages, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "stateInvalid");
+        result &= getValidityCheckFor(zip, errorMessages, NUMERIC_WITH_MIN1_MAX5_LENGTH_PATTERN, "zipCodeInvalid");
+        result &= getValidityCheckFor(securityAnswer, errorMessages, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "stateInvalid");
+        result &= getValidityCheckFor(acceptedTOU, errorMessages, null, "termAndConditionInvalid");
+        if (!result) {
             throw new AMFUserValidationException(errorMessages);
         }
-    }
-
-    /**
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param userName
-     * @param gender
-     * @param dateOfBirth
-     * @param password
-     * @param passwordConfirmation
-     * @param addressOne
-     * @param city
-     * @param state
-     * @param zipCode
-     * @param securityAnswer
-     * @param accepted
-     * @param errors
-     * @return
-     */
-    private boolean isAMFUserValid(
-            AMFUserLocalService amfUserLocalService,
-            String firstName,
-            String lastName,
-            String email,
-            String userName,
-            String gender,
-            final Date dateOfBirth,
-            String password,
-            String passwordConfirmation,
-            String addressOne,
-            String city,
-            String state,
-            String zipCode,
-            String securityAnswer,
-            String accepted,
-            final List<String> errors) {
-
-        boolean result = true;
-        result &= isFirstNameValid(firstName, errors);
-        result &= isLastNameValid(lastName, errors);
-        result &= isUserNameValid(amfUserLocalService, userName, errors);
-        result &= isEmailValid(email, errors);
-        result &= isGenderValid(gender, errors);
-        result &= isDateOfBirthValid(dateOfBirth, errors);
-        result &= isPasswordMatchedAndValid(password, passwordConfirmation, errors);
-        result &= isAddressOneValid(addressOne, errors);
-        result &= isCityValid(city, errors);
-        result &= isStateValid(state, errors);
-        result &= isZipCodeValid(zipCode, errors);
-        result &= isSecurityAnswerValid(securityAnswer, errors);
-        result &= isAcceptedValid(accepted, errors);
-        return result;
-    }
-
-
-    /**
-     * @param acceptedMap
-     * @param errors
-     * @return
-     */
-    private boolean isAcceptedValid(String acceptedMap, List<String> errors) {
-        return getValidityCheckFor(acceptedMap, errors, null, "termAndConditionInvalid");
-    }
-
-    /**
-     * @param securityAnswerMap
-     * @param errors
-     * @return
-     */
-    private boolean isSecurityAnswerValid(String securityAnswerMap, List<String> errors) {
-        return getValidityCheckFor(securityAnswerMap, errors, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "stateInvalid");
-    }
-
-    /**
-     * @param zipCodeMap
-     * @param errors
-     * @return
-     */
-    private boolean isZipCodeValid(String zipCodeMap, List<String> errors) {
-        return getValidityCheckFor(zipCodeMap, errors, NUMERIC_WITH_MIN1_MAX5_LENGTH_PATTERN, "zipCodeInvalid");
-    }
-
-    /**
-     * @param stateMap
-     * @param errors
-     * @return
-     */
-    private boolean isStateValid(String stateMap, List<String> errors) {
-        return getValidityCheckFor(stateMap, errors, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "stateInvalid");
-    }
-
-    /**
-     * @param cityMap
-     * @param errors
-     * @return
-     */
-    private boolean isCityValid(String cityMap, List<String> errors) {
-        return getValidityCheckFor(cityMap, errors, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "cityInvalid");
-    }
-
-    /**
-     * @param addressOneMap
-     * @param errors
-     * @return
-     */
-    private boolean isAddressOneValid(String addressOneMap, List<String> errors) {
-        return getValidityCheckFor(addressOneMap, errors, ALPHANUMERIC_WITH_MIN1_MAX255_LENGTH_PATTERN, "addressInvalid");
     }
 
     /**
@@ -190,25 +78,9 @@ public class AMFUserValidatorImpl implements AMFUserValidator {
      * @return
      */
     private boolean isPasswordMatchedAndValid(String passwordMap, String passwordConfirmationMap, List<String> errors) {
-        return isPasswordValid(passwordMap, errors) && isPasswordConfirmationValid(passwordConfirmationMap, errors) && passwordMap.compareTo(passwordConfirmationMap) == 0;
-    }
-
-    /**
-     * @param passwordConfirmationMap
-     * @param errors
-     * @return
-     */
-    private boolean isPasswordConfirmationValid(String passwordConfirmationMap, List<String> errors) {
-        return getValidityCheckFor(passwordConfirmationMap, errors, PASSWORD_MIN8_MAX20_LENGTH_PATTERN_COMPLEX, "confirmationPasswordMismatch");
-    }
-
-    /**
-     * @param passwordMap
-     * @param errors
-     * @return
-     */
-    private boolean isPasswordValid(String passwordMap, List<String> errors) {
-        return getValidityCheckFor(passwordMap, errors, PASSWORD_MIN8_MAX20_LENGTH_PATTERN_COMPLEX, "invalidPassword");
+        return getValidityCheckFor(passwordMap, errorMessages, PASSWORD_MIN8_MAX20_LENGTH_PATTERN_COMPLEX, "invalidPassword") &&
+                getValidityCheckFor(passwordConfirmationMap, errorMessages, PASSWORD_MIN8_MAX20_LENGTH_PATTERN_COMPLEX, "confirmationPasswordMismatch") &&
+                passwordMap.compareTo(passwordConfirmationMap) == 0;
     }
 
     /**
@@ -229,65 +101,15 @@ public class AMFUserValidatorImpl implements AMFUserValidator {
     }
 
     /**
-     * @param genderMap
-     * @param errors
-     * @return
-     */
-    private boolean isGenderValid(String genderMap, List<String> errors) {
-        return getValidityCheckFor(genderMap, errors, null, "invalidGender");
-    }
-
-    /**
-     * @param emailMap
-     * @param errors
-     * @return
-     */
-    private boolean isEmailValid(String emailMap, List<String> errors) {
-        return getValidityCheckFor(emailMap, errors, ALPHABETIC_EMAIL_PATTERN, "invalidEmail");
-    }
-
-    /**
-     * @param amfUserLocalService
-     * @param userName
-     * @param errors
-     * @return
-     */
-    private boolean isUserNameValid(AMFUserLocalService amfUserLocalService, String userName, List<String> errors) {
-        boolean validityFlag = true;
-        if (!amfUserLocalService.isUserNameUnique()) {
-            validityFlag = false;
-            errorMessages.add("duplicatedUserName");
-        }
-
-        return validityFlag && getValidityCheckFor(userName, errors, ALPHANUMERIC_WITH_MIN4_MAX16_LENGTH_PATTERN, "invalidUserName");
-    }
-
-    /**
-     * @param lastNameMap
-     * @param errors
-     * @return
-     */
-    private boolean isLastNameValid(String lastNameMap, List<String> errors) {
-        return getValidityCheckFor(lastNameMap, errors, ALPHANUMERIC_WITH_MIN1_MAX50_LENGTH_PATTERN, "invalidLastName");
-    }
-
-    /**
-     * @param firstNameMap
-     * @param errors
-     * @return
-     */
-    private boolean isFirstNameValid(String firstNameMap, List<String> errors) {
-        return getValidityCheckFor(firstNameMap, errors, ALPHANUMERIC_WITH_MIN1_MAX50_LENGTH_PATTERN, "invalidFirstName");
-    }
-
-    /**
      * @param inputValue
-     * @param errors
+     * @param errorMessages
+     * @param regularExpressionForValidation
+     * @param invalidMessage
      * @return
      */
     private boolean getValidityCheckFor(
             String inputValue,
-            final List<String> errors,
+            final List<String> errorMessages,
             final String regularExpressionForValidation,
             final String invalidMessage) {
         boolean result = true;
@@ -295,7 +117,7 @@ public class AMFUserValidatorImpl implements AMFUserValidator {
         if (regularExpressionForValidation != null) {
             result &= Pattern.compile(regularExpressionForValidation).matcher(inputValue).matches();
         }
-        errors.add(!result ? invalidMessage : "");
+        errorMessages.add(!result ? invalidMessage : "");
         return result;
     }
 

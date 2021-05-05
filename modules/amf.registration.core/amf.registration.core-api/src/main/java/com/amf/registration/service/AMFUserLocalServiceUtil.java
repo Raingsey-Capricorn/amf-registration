@@ -37,6 +37,30 @@ public class AMFUserLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to <code>com.amf.registration.service.impl.AMFUserLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static void addAMFEventLogAMFUser(
+		long amfEventLogId, com.amf.registration.model.AMFUser amfUser) {
+
+		getService().addAMFEventLogAMFUser(amfEventLogId, amfUser);
+	}
+
+	public static void addAMFEventLogAMFUser(
+		long amfEventLogId, long amfUserId) {
+
+		getService().addAMFEventLogAMFUser(amfEventLogId, amfUserId);
+	}
+
+	public static void addAMFEventLogAMFUsers(
+		long amfEventLogId,
+		java.util.List<com.amf.registration.model.AMFUser> amfUsers) {
+
+		getService().addAMFEventLogAMFUsers(amfEventLogId, amfUsers);
+	}
+
+	public static void addAMFEventLogAMFUsers(
+		long amfEventLogId, long[] amfUserIds) {
+
+		getService().addAMFEventLogAMFUsers(amfEventLogId, amfUserIds);
+	}
 
 	/**
 	 * Adds the amf user to the database. Also notifies the appropriate model listeners.
@@ -55,7 +79,6 @@ public class AMFUserLocalServiceUtil {
 	}
 
 	/**
-	 * @param groupId
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -66,33 +89,38 @@ public class AMFUserLocalServiceUtil {
 	 * @param confirmedPassword
 	 * @param homePhone
 	 * @param mobilePhone
-	 * @param address
-	 * @param address2
+	 * @param addressLineOne
+	 * @param addressLineTwo
 	 * @param city
-	 * @param state
+	 * @param regionId
 	 * @param zip
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
-	 * @param serviceContext
 	 * @return
 	 * @throws PortalException
 	 */
 	public static com.amf.registration.model.AMFUser addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
+			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
+			String userName, String firstName, String lastName,
 			String emailAddress, String gender, java.util.Date birthDate,
 			String password, String confirmedPassword, String homePhone,
-			String mobilePhone, String address, String address2, String city,
-			String state, String zip, String securityQuestion,
+			String mobilePhone, String addressLineOne, String addressLineTwo,
+			String city, String regionId, String zip, String securityQuestion,
 			String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.amf.registration.exception.AMFUserValidationException,
+			   com.liferay.portal.kernel.exception.NoSuchGroupException {
 
 		return getService().addAMFUser(
-			groupId, userName, firstName, lastName, emailAddress, gender,
+			themeDisplay, userName, firstName, lastName, emailAddress, gender,
 			birthDate, password, confirmedPassword, homePhone, mobilePhone,
-			address, address2, city, state, zip, securityQuestion,
-			securityAnswer, acceptedTOU, serviceContext);
+			addressLineOne, addressLineTwo, city, regionId, zip,
+			securityQuestion, securityAnswer, acceptedTOU, serviceContext);
+	}
+
+	public static void clearAMFEventLogAMFUsers(long amfEventLogId) {
+		getService().clearAMFEventLogAMFUsers(amfEventLogId);
 	}
 
 	/**
@@ -115,6 +143,31 @@ public class AMFUserLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().createPersistedModel(primaryKeyObj);
+	}
+
+	public static void deleteAMFEventLogAMFUser(
+		long amfEventLogId, com.amf.registration.model.AMFUser amfUser) {
+
+		getService().deleteAMFEventLogAMFUser(amfEventLogId, amfUser);
+	}
+
+	public static void deleteAMFEventLogAMFUser(
+		long amfEventLogId, long amfUserId) {
+
+		getService().deleteAMFEventLogAMFUser(amfEventLogId, amfUserId);
+	}
+
+	public static void deleteAMFEventLogAMFUsers(
+		long amfEventLogId,
+		java.util.List<com.amf.registration.model.AMFUser> amfUsers) {
+
+		getService().deleteAMFEventLogAMFUsers(amfEventLogId, amfUsers);
+	}
+
+	public static void deleteAMFEventLogAMFUsers(
+		long amfEventLogId, long[] amfUserIds) {
+
+		getService().deleteAMFEventLogAMFUsers(amfEventLogId, amfUserIds);
 	}
 
 	/**
@@ -272,6 +325,42 @@ public class AMFUserLocalServiceUtil {
 		return getService().getActionableDynamicQuery();
 	}
 
+	public static java.util.List<com.amf.registration.model.AMFUser>
+		getAMFEventLogAMFUsers(long amfEventLogId) {
+
+		return getService().getAMFEventLogAMFUsers(amfEventLogId);
+	}
+
+	public static java.util.List<com.amf.registration.model.AMFUser>
+		getAMFEventLogAMFUsers(long amfEventLogId, int start, int end) {
+
+		return getService().getAMFEventLogAMFUsers(amfEventLogId, start, end);
+	}
+
+	public static java.util.List<com.amf.registration.model.AMFUser>
+		getAMFEventLogAMFUsers(
+			long amfEventLogId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.amf.registration.model.AMFUser> orderByComparator) {
+
+		return getService().getAMFEventLogAMFUsers(
+			amfEventLogId, start, end, orderByComparator);
+	}
+
+	public static int getAMFEventLogAMFUsersCount(long amfEventLogId) {
+		return getService().getAMFEventLogAMFUsersCount(amfEventLogId);
+	}
+
+	/**
+	 * Returns the amfEventLogIds of the amf event logs associated with the amf user.
+	 *
+	 * @param amfUserId the amfUserId of the amf user
+	 * @return long[] the amfEventLogIds of amf event logs associated with the amf user
+	 */
+	public static long[] getAMFEventLogPrimaryKeys(long amfUserId) {
+		return getService().getAMFEventLogPrimaryKeys(amfUserId);
+	}
+
 	/**
 	 * Returns the amf user with the primary key.
 	 *
@@ -283,6 +372,33 @@ public class AMFUserLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getAMFUser(amfUserId);
+	}
+
+	/**
+	 * @param regionCode
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static java.util.HashMap<String, Object> getAMFUserBaseOnPostalCode(
+		long regionCode, int start, int end) {
+
+		return getService().getAMFUserBaseOnPostalCode(regionCode, start, end);
+	}
+
+	/**
+	 * @param groupId
+	 * @param userId
+	 * @param userName
+	 * @return
+	 */
+	public static com.amf.registration.model.AMFUser
+			getAMFUserByGroupUserAndUserName(
+				long groupId, long userId, String userName)
+		throws com.liferay.portal.kernel.exception.NoSuchGroupException {
+
+		return getService().getAMFUserByGroupUserAndUserName(
+			groupId, userId, userName);
 	}
 
 	/**
@@ -307,6 +423,17 @@ public class AMFUserLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getAMFUserByUuidAndGroupId(uuid, groupId);
+	}
+
+	/**
+	 * @param groupId
+	 * @param eventStatus
+	 * @return
+	 */
+	public static java.util.List<com.amf.registration.model.AMFUser>
+		getAMFUserEventLogByStatus(long groupId, String eventStatus) {
+
+		return getService().getAMFUserEventLogByStatus(groupId, eventStatus);
 	}
 
 	/**
@@ -431,8 +558,27 @@ public class AMFUserLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	public static boolean hasAMFEventLogAMFUser(
+		long amfEventLogId, long amfUserId) {
+
+		return getService().hasAMFEventLogAMFUser(amfEventLogId, amfUserId);
+	}
+
+	public static boolean hasAMFEventLogAMFUsers(long amfEventLogId) {
+		return getService().hasAMFEventLogAMFUsers(amfEventLogId);
+	}
+
+	/**
+	 * @return
+	 */
 	public static boolean isUserNameUnique() {
 		return getService().isUserNameUnique();
+	}
+
+	public static void setAMFEventLogAMFUsers(
+		long amfEventLogId, long[] amfUserIds) {
+
+		getService().setAMFEventLogAMFUsers(amfEventLogId, amfUserIds);
 	}
 
 	/**

@@ -1,4 +1,5 @@
 Bundle-Name: amf.registration.portlet
 Bundle-SymbolicName: com.amf.registration.portlet
 Bundle-Version: 1.0.0
-Export-Package: com.amf.registration.portlet.constants
+Export-Package: com.amf.registration.portlet
+Import-Package: *; version="0";resolution:=optional

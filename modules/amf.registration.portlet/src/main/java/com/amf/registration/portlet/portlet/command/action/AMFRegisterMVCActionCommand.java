@@ -4,8 +4,8 @@ import com.amf.registration.exception.AMFUserValidationException;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
-import com.amf.registration.service.AMFUserService;
-import com.liferay.portal.kernel.exception.PortalException;
+import com.amf.registration.service.AMFUserLocalServiceUtil;
+import com.liferay.account.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -16,21 +16,28 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import java.text.SimpleDateFormat;
 
+/**
+ * @project-name : amf-registration
+ * @package-name : com.amf.registration.portlet.portlet.command.action
+ * @author       : Pisethraingsey SUON
+ * @email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
+ * @crated-date  : 3/25/2021
+ */
 @Component(
+        immediate = true,
         property = {
                 "javax.portlet.name=" + AMFRegistrationPortletKeys.AMF_REGISTRATION,
                 "mvc.command.name=" + MVCCommandNames.AMF_ADD
         },
         service = MVCActionCommand.class
 )
-public class AMFRegistrationPageMVCActionCommand extends BaseMVCActionCommand {
+public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
     /**
      * @param actionRequest
      * @param actionResponse
@@ -42,8 +49,8 @@ public class AMFRegistrationPageMVCActionCommand extends BaseMVCActionCommand {
         ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
         ServiceContext serviceContext = ServiceContextFactory.getInstance(AMFUser.class.getName(), actionRequest);
         try {
-            amfUserService.addAMFUser(
-                    themeDisplay.getScopeGroupId(),
+            AMFUserLocalServiceUtil.addAMFUser(
+                    themeDisplay,
                     ParamUtil.getString(actionRequest, "userName"),
                     ParamUtil.getString(actionRequest, "firstName"),
                     ParamUtil.getString(actionRequest, "lastName"),
@@ -57,7 +64,7 @@ public class AMFRegistrationPageMVCActionCommand extends BaseMVCActionCommand {
                     ParamUtil.getString(actionRequest, "address"),
                     ParamUtil.getString(actionRequest, "address2"),
                     ParamUtil.getString(actionRequest, "city"),
-                    ParamUtil.getString(actionRequest, "state"),
+                    ParamUtil.getString(actionRequest, "region"),
                     ParamUtil.getString(actionRequest, "zip"),
                     ParamUtil.getString(actionRequest, "securityQuestion"),
                     ParamUtil.getString(actionRequest, "securityAnswer"),
@@ -66,16 +73,15 @@ public class AMFRegistrationPageMVCActionCommand extends BaseMVCActionCommand {
             );
             SessionMessages.add(actionRequest, "amfUserAdded");
             sendRedirect(actionRequest, actionResponse);
-        } catch (AMFUserValidationException validationException) {
-            validationException.getErrors().forEach(error -> SessionErrors.add(actionRequest, error));
+        } catch (AMFUserValidationException e) {
+            SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());
+            e.getErrors().forEach(error -> SessionErrors.add(actionRequest, error));
             actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
-        } catch (PortalException e) {
+        } catch (Exception e) {
             SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());
             actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
         }
 
     }
 
-    @Reference
-    private AMFUserService amfUserService;
 }

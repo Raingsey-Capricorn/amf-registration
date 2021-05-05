@@ -37,29 +37,13 @@ public class AMFUserSoap implements Serializable {
 		soapModel.setAmfUserId(model.getAmfUserId());
 		soapModel.setGroupId(model.getGroupId());
 		soapModel.setCompanyId(model.getCompanyId());
-		soapModel.setUserId(model.getUserId());
-		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
-		soapModel.setFirstName(model.getFirstName());
-		soapModel.setLastName(model.getLastName());
-		soapModel.setEmailAddress(model.getEmailAddress());
-		soapModel.setGender(model.getGender());
-		soapModel.setBirthDay(model.getBirthDay());
-		soapModel.setBirthMonth(model.getBirthMonth());
-		soapModel.setBirthYear(model.getBirthYear());
-		soapModel.setPassword(model.getPassword());
-		soapModel.setConfirmedPassword(model.getConfirmedPassword());
+		soapModel.setUserName(model.getUserName());
+		soapModel.setUserId(model.getUserId());
+		soapModel.setAddressId(model.getAddressId());
 		soapModel.setHomePhone(model.getHomePhone());
 		soapModel.setMobilePhone(model.getMobilePhone());
-		soapModel.setAddress(model.getAddress());
-		soapModel.setAddress2(model.getAddress2());
-		soapModel.setCity(model.getCity());
-		soapModel.setState(model.getState());
-		soapModel.setZip(model.getZip());
-		soapModel.setSecurityQuestion(model.getSecurityQuestion());
-		soapModel.setSecurityAnswer(model.getSecurityAnswer());
-		soapModel.setAcceptedTOU(model.getAcceptedTOU());
 
 		return soapModel;
 	}
@@ -145,22 +129,6 @@ public class AMFUserSoap implements Serializable {
 		_companyId = companyId;
 	}
 
-	public long getUserId() {
-		return _userId;
-	}
-
-	public void setUserId(long userId) {
-		_userId = userId;
-	}
-
-	public String getUserName() {
-		return _userName;
-	}
-
-	public void setUserName(String userName) {
-		_userName = userName;
-	}
-
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -177,76 +145,28 @@ public class AMFUserSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
-	public String getFirstName() {
-		return _firstName;
+	public String getUserName() {
+		return _userName;
 	}
 
-	public void setFirstName(String firstName) {
-		_firstName = firstName;
+	public void setUserName(String userName) {
+		_userName = userName;
 	}
 
-	public String getLastName() {
-		return _lastName;
+	public long getUserId() {
+		return _userId;
 	}
 
-	public void setLastName(String lastName) {
-		_lastName = lastName;
+	public void setUserId(long userId) {
+		_userId = userId;
 	}
 
-	public String getEmailAddress() {
-		return _emailAddress;
+	public long getAddressId() {
+		return _addressId;
 	}
 
-	public void setEmailAddress(String emailAddress) {
-		_emailAddress = emailAddress;
-	}
-
-	public String getGender() {
-		return _gender;
-	}
-
-	public void setGender(String gender) {
-		_gender = gender;
-	}
-
-	public int getBirthDay() {
-		return _birthDay;
-	}
-
-	public void setBirthDay(int birthDay) {
-		_birthDay = birthDay;
-	}
-
-	public int getBirthMonth() {
-		return _birthMonth;
-	}
-
-	public void setBirthMonth(int birthMonth) {
-		_birthMonth = birthMonth;
-	}
-
-	public int getBirthYear() {
-		return _birthYear;
-	}
-
-	public void setBirthYear(int birthYear) {
-		_birthYear = birthYear;
-	}
-
-	public String getPassword() {
-		return _password;
-	}
-
-	public void setPassword(String password) {
-		_password = password;
-	}
-
-	public String getConfirmedPassword() {
-		return _confirmedPassword;
-	}
-
-	public void setConfirmedPassword(String confirmedPassword) {
-		_confirmedPassword = confirmedPassword;
+	public void setAddressId(long addressId) {
+		_addressId = addressId;
 	}
 
 	public String getHomePhone() {
@@ -265,96 +185,16 @@ public class AMFUserSoap implements Serializable {
 		_mobilePhone = mobilePhone;
 	}
 
-	public String getAddress() {
-		return _address;
-	}
-
-	public void setAddress(String address) {
-		_address = address;
-	}
-
-	public String getAddress2() {
-		return _address2;
-	}
-
-	public void setAddress2(String address2) {
-		_address2 = address2;
-	}
-
-	public String getCity() {
-		return _city;
-	}
-
-	public void setCity(String city) {
-		_city = city;
-	}
-
-	public String getState() {
-		return _state;
-	}
-
-	public void setState(String state) {
-		_state = state;
-	}
-
-	public String getZip() {
-		return _zip;
-	}
-
-	public void setZip(String zip) {
-		_zip = zip;
-	}
-
-	public String getSecurityQuestion() {
-		return _securityQuestion;
-	}
-
-	public void setSecurityQuestion(String securityQuestion) {
-		_securityQuestion = securityQuestion;
-	}
-
-	public String getSecurityAnswer() {
-		return _securityAnswer;
-	}
-
-	public void setSecurityAnswer(String securityAnswer) {
-		_securityAnswer = securityAnswer;
-	}
-
-	public String getAcceptedTOU() {
-		return _acceptedTOU;
-	}
-
-	public void setAcceptedTOU(String acceptedTOU) {
-		_acceptedTOU = acceptedTOU;
-	}
-
 	private String _uuid;
 	private long _amfUserId;
 	private long _groupId;
 	private long _companyId;
-	private long _userId;
-	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
-	private String _firstName;
-	private String _lastName;
-	private String _emailAddress;
-	private String _gender;
-	private int _birthDay;
-	private int _birthMonth;
-	private int _birthYear;
-	private String _password;
-	private String _confirmedPassword;
+	private String _userName;
+	private long _userId;
+	private long _addressId;
 	private String _homePhone;
 	private String _mobilePhone;
-	private String _address;
-	private String _address2;
-	private String _city;
-	private String _state;
-	private String _zip;
-	private String _securityQuestion;
-	private String _securityAnswer;
-	private String _acceptedTOU;
 
 }

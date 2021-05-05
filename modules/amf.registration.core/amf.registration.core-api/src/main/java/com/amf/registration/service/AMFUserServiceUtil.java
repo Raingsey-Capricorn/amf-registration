@@ -39,7 +39,7 @@ public class AMFUserServiceUtil {
 	 */
 
 	/**
-	 * @param groupId
+	 * @param themeDisplay
 	 * @param userName
 	 * @param firstName
 	 * @param lastName
@@ -50,14 +50,21 @@ public class AMFUserServiceUtil {
 	 * @param confirmedPassword
 	 * @param homePhone
 	 * @param mobilePhone
+	 * @param address
+	 * @param address2
+	 * @param city
+	 * @param state
 	 * @param zip
 	 * @param securityQuestion
 	 * @param securityAnswer
 	 * @param acceptedTOU
+	 * @param serviceContext
 	 * @return
+	 * @throws PortalException
 	 */
 	public static com.amf.registration.model.AMFUser addAMFUser(
-			long groupId, String userName, String firstName, String lastName,
+			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
+			String userName, String firstName, String lastName,
 			String emailAddress, String gender, java.util.Date birthDate,
 			String password, String confirmedPassword, String homePhone,
 			String mobilePhone, String address, String address2, String city,
@@ -67,7 +74,7 @@ public class AMFUserServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().addAMFUser(
-			groupId, userName, firstName, lastName, emailAddress, gender,
+			themeDisplay, userName, firstName, lastName, emailAddress, gender,
 			birthDate, password, confirmedPassword, homePhone, mobilePhone,
 			address, address2, city, state, zip, securityQuestion,
 			securityAnswer, acceptedTOU, serviceContext);

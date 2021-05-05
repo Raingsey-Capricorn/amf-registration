@@ -1,29 +1,34 @@
+create table amfeventlog (
+	uuid_ VARCHAR(75) null,
+	amfEventLogId LONG not null primary key,
+	companyId LONG,
+	createDate DATE null,
+	modifiedDate DATE null,
+	groupId LONG,
+	userGroupId LONG,
+	userId LONG,
+	lastLoginDate DATE null,
+	lastLoginIP VARCHAR(75) null,
+	status VARCHAR(75) null
+);
+
 create table amfuser (
 	uuid_ VARCHAR(75) null,
 	amfUserId LONG not null primary key,
 	groupId LONG,
 	companyId LONG,
-	userId LONG,
-	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	firstName VARCHAR(75) null,
-	lastName VARCHAR(75) null,
-	emailAddress VARCHAR(75) null,
-	gender VARCHAR(75) null,
-	birthDay INTEGER,
-	birthMonth INTEGER,
-	birthYear INTEGER,
-	password_ VARCHAR(75) null,
-	confirmedPassword VARCHAR(75) null,
+	userName VARCHAR(75) null,
+	userId LONG,
+	addressId LONG,
 	homePhone VARCHAR(75) null,
-	mobilePhone VARCHAR(75) null,
-	address VARCHAR(75) null,
-	address2 VARCHAR(75) null,
-	city VARCHAR(75) null,
-	state_ VARCHAR(75) null,
-	zip VARCHAR(75) null,
-	securityQuestion STRING null,
-	securityAnswer STRING null,
-	acceptedTOU STRING null
+	mobilePhone VARCHAR(75) null
+);
+
+create table eventlog (
+	companyId LONG not null,
+	amfEventLogId LONG not null,
+	amfUserId LONG not null,
+	primary key (amfEventLogId, amfUserId)
 );

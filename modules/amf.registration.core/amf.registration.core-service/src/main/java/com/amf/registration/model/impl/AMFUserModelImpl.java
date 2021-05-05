@@ -23,7 +23,6 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
@@ -33,11 +32,8 @@ import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
@@ -52,10 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -84,18 +77,10 @@ public class AMFUserModelImpl
 	public static final Object[][] TABLE_COLUMNS = {
 		{"uuid_", Types.VARCHAR}, {"amfUserId", Types.BIGINT},
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"firstName", Types.VARCHAR}, {"lastName", Types.VARCHAR},
-		{"emailAddress", Types.VARCHAR}, {"gender", Types.VARCHAR},
-		{"birthDay", Types.INTEGER}, {"birthMonth", Types.INTEGER},
-		{"birthYear", Types.INTEGER}, {"password_", Types.VARCHAR},
-		{"confirmedPassword", Types.VARCHAR}, {"homePhone", Types.VARCHAR},
-		{"mobilePhone", Types.VARCHAR}, {"address", Types.VARCHAR},
-		{"address2", Types.VARCHAR}, {"city", Types.VARCHAR},
-		{"state_", Types.VARCHAR}, {"zip", Types.VARCHAR},
-		{"securityQuestion", Types.VARCHAR}, {"securityAnswer", Types.VARCHAR},
-		{"acceptedTOU", Types.VARCHAR}
+		{"userName", Types.VARCHAR}, {"userId", Types.BIGINT},
+		{"addressId", Types.BIGINT}, {"homePhone", Types.VARCHAR},
+		{"mobilePhone", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -106,40 +91,23 @@ public class AMFUserModelImpl
 		TABLE_COLUMNS_MAP.put("amfUserId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("firstName", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("lastName", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("emailAddress", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("gender", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("birthDay", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("birthMonth", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("birthYear", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("password_", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("confirmedPassword", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("addressId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("homePhone", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("mobilePhone", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("address", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("address2", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("city", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("state_", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("zip", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("securityQuestion", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("securityAnswer", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("acceptedTOU", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,firstName VARCHAR(75) null,lastName VARCHAR(75) null,emailAddress VARCHAR(75) null,gender VARCHAR(75) null,birthDay INTEGER,birthMonth INTEGER,birthYear INTEGER,password_ VARCHAR(75) null,confirmedPassword VARCHAR(75) null,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null,address VARCHAR(75) null,address2 VARCHAR(75) null,city VARCHAR(75) null,state_ VARCHAR(75) null,zip VARCHAR(75) null,securityQuestion STRING null,securityAnswer STRING null,acceptedTOU STRING null)";
+		"create table amfuser (uuid_ VARCHAR(75) null,amfUserId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,userName VARCHAR(75) null,userId LONG,addressId LONG,homePhone VARCHAR(75) null,mobilePhone VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table amfuser";
 
-	public static final String ORDER_BY_JPQL =
-		" ORDER BY amfUser.firstName ASC";
+	public static final String ORDER_BY_JPQL = " ORDER BY amfUser.userName ASC";
 
-	public static final String ORDER_BY_SQL = " ORDER BY amfuser.firstName ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY amfuser.userName ASC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -170,7 +138,7 @@ public class AMFUserModelImpl
 	 *		#getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long FIRSTNAME_COLUMN_BITMASK = 8L;
+	public static final long USERNAME_COLUMN_BITMASK = 8L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -205,29 +173,13 @@ public class AMFUserModelImpl
 		model.setAmfUserId(soapModel.getAmfUserId());
 		model.setGroupId(soapModel.getGroupId());
 		model.setCompanyId(soapModel.getCompanyId());
-		model.setUserId(soapModel.getUserId());
-		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setFirstName(soapModel.getFirstName());
-		model.setLastName(soapModel.getLastName());
-		model.setEmailAddress(soapModel.getEmailAddress());
-		model.setGender(soapModel.getGender());
-		model.setBirthDay(soapModel.getBirthDay());
-		model.setBirthMonth(soapModel.getBirthMonth());
-		model.setBirthYear(soapModel.getBirthYear());
-		model.setPassword(soapModel.getPassword());
-		model.setConfirmedPassword(soapModel.getConfirmedPassword());
+		model.setUserName(soapModel.getUserName());
+		model.setUserId(soapModel.getUserId());
+		model.setAddressId(soapModel.getAddressId());
 		model.setHomePhone(soapModel.getHomePhone());
 		model.setMobilePhone(soapModel.getMobilePhone());
-		model.setAddress(soapModel.getAddress());
-		model.setAddress2(soapModel.getAddress2());
-		model.setCity(soapModel.getCity());
-		model.setState(soapModel.getState());
-		model.setZip(soapModel.getZip());
-		model.setSecurityQuestion(soapModel.getSecurityQuestion());
-		model.setSecurityAnswer(soapModel.getSecurityAnswer());
-		model.setAcceptedTOU(soapModel.getAcceptedTOU());
 
 		return model;
 	}
@@ -253,6 +205,16 @@ public class AMFUserModelImpl
 
 		return models;
 	}
+
+	public static final String MAPPING_TABLE_EVENTLOG_NAME = "eventlog";
+
+	public static final Object[][] MAPPING_TABLE_EVENTLOG_COLUMNS = {
+		{"companyId", Types.BIGINT}, {"amfEventLogId", Types.BIGINT},
+		{"amfUserId", Types.BIGINT}
+	};
+
+	public static final String MAPPING_TABLE_EVENTLOG_SQL_CREATE =
+		"create table eventlog (companyId LONG not null,amfEventLogId LONG not null,amfUserId LONG not null,primary key (amfEventLogId, amfUserId))";
 
 	public AMFUserModelImpl() {
 	}
@@ -388,12 +350,6 @@ public class AMFUserModelImpl
 		attributeGetterFunctions.put("companyId", AMFUser::getCompanyId);
 		attributeSetterBiConsumers.put(
 			"companyId", (BiConsumer<AMFUser, Long>)AMFUser::setCompanyId);
-		attributeGetterFunctions.put("userId", AMFUser::getUserId);
-		attributeSetterBiConsumers.put(
-			"userId", (BiConsumer<AMFUser, Long>)AMFUser::setUserId);
-		attributeGetterFunctions.put("userName", AMFUser::getUserName);
-		attributeSetterBiConsumers.put(
-			"userName", (BiConsumer<AMFUser, String>)AMFUser::setUserName);
 		attributeGetterFunctions.put("createDate", AMFUser::getCreateDate);
 		attributeSetterBiConsumers.put(
 			"createDate", (BiConsumer<AMFUser, Date>)AMFUser::setCreateDate);
@@ -401,36 +357,15 @@ public class AMFUserModelImpl
 		attributeSetterBiConsumers.put(
 			"modifiedDate",
 			(BiConsumer<AMFUser, Date>)AMFUser::setModifiedDate);
-		attributeGetterFunctions.put("firstName", AMFUser::getFirstName);
+		attributeGetterFunctions.put("userName", AMFUser::getUserName);
 		attributeSetterBiConsumers.put(
-			"firstName", (BiConsumer<AMFUser, String>)AMFUser::setFirstName);
-		attributeGetterFunctions.put("lastName", AMFUser::getLastName);
+			"userName", (BiConsumer<AMFUser, String>)AMFUser::setUserName);
+		attributeGetterFunctions.put("userId", AMFUser::getUserId);
 		attributeSetterBiConsumers.put(
-			"lastName", (BiConsumer<AMFUser, String>)AMFUser::setLastName);
-		attributeGetterFunctions.put("emailAddress", AMFUser::getEmailAddress);
+			"userId", (BiConsumer<AMFUser, Long>)AMFUser::setUserId);
+		attributeGetterFunctions.put("addressId", AMFUser::getAddressId);
 		attributeSetterBiConsumers.put(
-			"emailAddress",
-			(BiConsumer<AMFUser, String>)AMFUser::setEmailAddress);
-		attributeGetterFunctions.put("gender", AMFUser::getGender);
-		attributeSetterBiConsumers.put(
-			"gender", (BiConsumer<AMFUser, String>)AMFUser::setGender);
-		attributeGetterFunctions.put("birthDay", AMFUser::getBirthDay);
-		attributeSetterBiConsumers.put(
-			"birthDay", (BiConsumer<AMFUser, Integer>)AMFUser::setBirthDay);
-		attributeGetterFunctions.put("birthMonth", AMFUser::getBirthMonth);
-		attributeSetterBiConsumers.put(
-			"birthMonth", (BiConsumer<AMFUser, Integer>)AMFUser::setBirthMonth);
-		attributeGetterFunctions.put("birthYear", AMFUser::getBirthYear);
-		attributeSetterBiConsumers.put(
-			"birthYear", (BiConsumer<AMFUser, Integer>)AMFUser::setBirthYear);
-		attributeGetterFunctions.put("password", AMFUser::getPassword);
-		attributeSetterBiConsumers.put(
-			"password", (BiConsumer<AMFUser, String>)AMFUser::setPassword);
-		attributeGetterFunctions.put(
-			"confirmedPassword", AMFUser::getConfirmedPassword);
-		attributeSetterBiConsumers.put(
-			"confirmedPassword",
-			(BiConsumer<AMFUser, String>)AMFUser::setConfirmedPassword);
+			"addressId", (BiConsumer<AMFUser, Long>)AMFUser::setAddressId);
 		attributeGetterFunctions.put("homePhone", AMFUser::getHomePhone);
 		attributeSetterBiConsumers.put(
 			"homePhone", (BiConsumer<AMFUser, String>)AMFUser::setHomePhone);
@@ -438,35 +373,6 @@ public class AMFUserModelImpl
 		attributeSetterBiConsumers.put(
 			"mobilePhone",
 			(BiConsumer<AMFUser, String>)AMFUser::setMobilePhone);
-		attributeGetterFunctions.put("address", AMFUser::getAddress);
-		attributeSetterBiConsumers.put(
-			"address", (BiConsumer<AMFUser, String>)AMFUser::setAddress);
-		attributeGetterFunctions.put("address2", AMFUser::getAddress2);
-		attributeSetterBiConsumers.put(
-			"address2", (BiConsumer<AMFUser, String>)AMFUser::setAddress2);
-		attributeGetterFunctions.put("city", AMFUser::getCity);
-		attributeSetterBiConsumers.put(
-			"city", (BiConsumer<AMFUser, String>)AMFUser::setCity);
-		attributeGetterFunctions.put("state", AMFUser::getState);
-		attributeSetterBiConsumers.put(
-			"state", (BiConsumer<AMFUser, String>)AMFUser::setState);
-		attributeGetterFunctions.put("zip", AMFUser::getZip);
-		attributeSetterBiConsumers.put(
-			"zip", (BiConsumer<AMFUser, String>)AMFUser::setZip);
-		attributeGetterFunctions.put(
-			"securityQuestion", AMFUser::getSecurityQuestion);
-		attributeSetterBiConsumers.put(
-			"securityQuestion",
-			(BiConsumer<AMFUser, String>)AMFUser::setSecurityQuestion);
-		attributeGetterFunctions.put(
-			"securityAnswer", AMFUser::getSecurityAnswer);
-		attributeSetterBiConsumers.put(
-			"securityAnswer",
-			(BiConsumer<AMFUser, String>)AMFUser::setSecurityAnswer);
-		attributeGetterFunctions.put("acceptedTOU", AMFUser::getAcceptedTOU);
-		attributeSetterBiConsumers.put(
-			"acceptedTOU",
-			(BiConsumer<AMFUser, String>)AMFUser::setAcceptedTOU);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -585,57 +491,6 @@ public class AMFUserModelImpl
 
 	@JSON
 	@Override
-	public long getUserId() {
-		return _userId;
-	}
-
-	@Override
-	public void setUserId(long userId) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_userId = userId;
-	}
-
-	@Override
-	public String getUserUuid() {
-		try {
-			User user = UserLocalServiceUtil.getUserById(getUserId());
-
-			return user.getUuid();
-		}
-		catch (PortalException portalException) {
-			return "";
-		}
-	}
-
-	@Override
-	public void setUserUuid(String userUuid) {
-	}
-
-	@JSON
-	@Override
-	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
-	}
-
-	@Override
-	public void setUserName(String userName) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_userName = userName;
-	}
-
-	@JSON
-	@Override
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -672,167 +527,68 @@ public class AMFUserModelImpl
 
 	@JSON
 	@Override
-	public String getFirstName() {
-		if (_firstName == null) {
+	public String getUserName() {
+		if (_userName == null) {
 			return "";
 		}
 		else {
-			return _firstName;
+			return _userName;
 		}
 	}
 
 	@Override
-	public void setFirstName(String firstName) {
+	public void setUserName(String userName) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_firstName = firstName;
+		_userName = userName;
 	}
 
 	@JSON
 	@Override
-	public String getLastName() {
-		if (_lastName == null) {
+	public long getUserId() {
+		return _userId;
+	}
+
+	@Override
+	public void setUserId(long userId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_userId = userId;
+	}
+
+	@Override
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException portalException) {
 			return "";
 		}
-		else {
-			return _lastName;
-		}
 	}
 
 	@Override
-	public void setLastName(String lastName) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_lastName = lastName;
+	public void setUserUuid(String userUuid) {
 	}
 
 	@JSON
 	@Override
-	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+	public long getAddressId() {
+		return _addressId;
 	}
 
 	@Override
-	public void setEmailAddress(String emailAddress) {
+	public void setAddressId(long addressId) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_emailAddress = emailAddress;
-	}
-
-	@JSON
-	@Override
-	public String getGender() {
-		if (_gender == null) {
-			return "";
-		}
-		else {
-			return _gender;
-		}
-	}
-
-	@Override
-	public void setGender(String gender) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_gender = gender;
-	}
-
-	@JSON
-	@Override
-	public int getBirthDay() {
-		return _birthDay;
-	}
-
-	@Override
-	public void setBirthDay(int birthDay) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_birthDay = birthDay;
-	}
-
-	@JSON
-	@Override
-	public int getBirthMonth() {
-		return _birthMonth;
-	}
-
-	@Override
-	public void setBirthMonth(int birthMonth) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_birthMonth = birthMonth;
-	}
-
-	@JSON
-	@Override
-	public int getBirthYear() {
-		return _birthYear;
-	}
-
-	@Override
-	public void setBirthYear(int birthYear) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_birthYear = birthYear;
-	}
-
-	@JSON
-	@Override
-	public String getPassword() {
-		if (_password == null) {
-			return "";
-		}
-		else {
-			return _password;
-		}
-	}
-
-	@Override
-	public void setPassword(String password) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_password = password;
-	}
-
-	@JSON
-	@Override
-	public String getConfirmedPassword() {
-		if (_confirmedPassword == null) {
-			return "";
-		}
-		else {
-			return _confirmedPassword;
-		}
-	}
-
-	@Override
-	public void setConfirmedPassword(String confirmedPassword) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_confirmedPassword = confirmedPassword;
+		_addressId = addressId;
 	}
 
 	@JSON
@@ -873,448 +629,6 @@ public class AMFUserModelImpl
 		}
 
 		_mobilePhone = mobilePhone;
-	}
-
-	@JSON
-	@Override
-	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
-	}
-
-	@Override
-	public void setAddress(String address) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_address = address;
-	}
-
-	@JSON
-	@Override
-	public String getAddress2() {
-		if (_address2 == null) {
-			return "";
-		}
-		else {
-			return _address2;
-		}
-	}
-
-	@Override
-	public void setAddress2(String address2) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_address2 = address2;
-	}
-
-	@JSON
-	@Override
-	public String getCity() {
-		if (_city == null) {
-			return "";
-		}
-		else {
-			return _city;
-		}
-	}
-
-	@Override
-	public void setCity(String city) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_city = city;
-	}
-
-	@JSON
-	@Override
-	public String getState() {
-		if (_state == null) {
-			return "";
-		}
-		else {
-			return _state;
-		}
-	}
-
-	@Override
-	public void setState(String state) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_state = state;
-	}
-
-	@JSON
-	@Override
-	public String getZip() {
-		if (_zip == null) {
-			return "";
-		}
-		else {
-			return _zip;
-		}
-	}
-
-	@Override
-	public void setZip(String zip) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_zip = zip;
-	}
-
-	@JSON
-	@Override
-	public String getSecurityQuestion() {
-		if (_securityQuestion == null) {
-			return "";
-		}
-		else {
-			return _securityQuestion;
-		}
-	}
-
-	@Override
-	public String getSecurityQuestion(Locale locale) {
-		String languageId = LocaleUtil.toLanguageId(locale);
-
-		return getSecurityQuestion(languageId);
-	}
-
-	@Override
-	public String getSecurityQuestion(Locale locale, boolean useDefault) {
-		String languageId = LocaleUtil.toLanguageId(locale);
-
-		return getSecurityQuestion(languageId, useDefault);
-	}
-
-	@Override
-	public String getSecurityQuestion(String languageId) {
-		return LocalizationUtil.getLocalization(
-			getSecurityQuestion(), languageId);
-	}
-
-	@Override
-	public String getSecurityQuestion(String languageId, boolean useDefault) {
-		return LocalizationUtil.getLocalization(
-			getSecurityQuestion(), languageId, useDefault);
-	}
-
-	@Override
-	public String getSecurityQuestionCurrentLanguageId() {
-		return _securityQuestionCurrentLanguageId;
-	}
-
-	@JSON
-	@Override
-	public String getSecurityQuestionCurrentValue() {
-		Locale locale = getLocale(_securityQuestionCurrentLanguageId);
-
-		return getSecurityQuestion(locale);
-	}
-
-	@Override
-	public Map<Locale, String> getSecurityQuestionMap() {
-		return LocalizationUtil.getLocalizationMap(getSecurityQuestion());
-	}
-
-	@Override
-	public void setSecurityQuestion(String securityQuestion) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_securityQuestion = securityQuestion;
-	}
-
-	@Override
-	public void setSecurityQuestion(String securityQuestion, Locale locale) {
-		setSecurityQuestion(
-			securityQuestion, locale, LocaleUtil.getSiteDefault());
-	}
-
-	@Override
-	public void setSecurityQuestion(
-		String securityQuestion, Locale locale, Locale defaultLocale) {
-
-		String languageId = LocaleUtil.toLanguageId(locale);
-		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
-
-		if (Validator.isNotNull(securityQuestion)) {
-			setSecurityQuestion(
-				LocalizationUtil.updateLocalization(
-					getSecurityQuestion(), "SecurityQuestion", securityQuestion,
-					languageId, defaultLanguageId));
-		}
-		else {
-			setSecurityQuestion(
-				LocalizationUtil.removeLocalization(
-					getSecurityQuestion(), "SecurityQuestion", languageId));
-		}
-	}
-
-	@Override
-	public void setSecurityQuestionCurrentLanguageId(String languageId) {
-		_securityQuestionCurrentLanguageId = languageId;
-	}
-
-	@Override
-	public void setSecurityQuestionMap(
-		Map<Locale, String> securityQuestionMap) {
-
-		setSecurityQuestionMap(
-			securityQuestionMap, LocaleUtil.getSiteDefault());
-	}
-
-	@Override
-	public void setSecurityQuestionMap(
-		Map<Locale, String> securityQuestionMap, Locale defaultLocale) {
-
-		if (securityQuestionMap == null) {
-			return;
-		}
-
-		setSecurityQuestion(
-			LocalizationUtil.updateLocalization(
-				securityQuestionMap, getSecurityQuestion(), "SecurityQuestion",
-				LocaleUtil.toLanguageId(defaultLocale)));
-	}
-
-	@JSON
-	@Override
-	public String getSecurityAnswer() {
-		if (_securityAnswer == null) {
-			return "";
-		}
-		else {
-			return _securityAnswer;
-		}
-	}
-
-	@Override
-	public String getSecurityAnswer(Locale locale) {
-		String languageId = LocaleUtil.toLanguageId(locale);
-
-		return getSecurityAnswer(languageId);
-	}
-
-	@Override
-	public String getSecurityAnswer(Locale locale, boolean useDefault) {
-		String languageId = LocaleUtil.toLanguageId(locale);
-
-		return getSecurityAnswer(languageId, useDefault);
-	}
-
-	@Override
-	public String getSecurityAnswer(String languageId) {
-		return LocalizationUtil.getLocalization(
-			getSecurityAnswer(), languageId);
-	}
-
-	@Override
-	public String getSecurityAnswer(String languageId, boolean useDefault) {
-		return LocalizationUtil.getLocalization(
-			getSecurityAnswer(), languageId, useDefault);
-	}
-
-	@Override
-	public String getSecurityAnswerCurrentLanguageId() {
-		return _securityAnswerCurrentLanguageId;
-	}
-
-	@JSON
-	@Override
-	public String getSecurityAnswerCurrentValue() {
-		Locale locale = getLocale(_securityAnswerCurrentLanguageId);
-
-		return getSecurityAnswer(locale);
-	}
-
-	@Override
-	public Map<Locale, String> getSecurityAnswerMap() {
-		return LocalizationUtil.getLocalizationMap(getSecurityAnswer());
-	}
-
-	@Override
-	public void setSecurityAnswer(String securityAnswer) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_securityAnswer = securityAnswer;
-	}
-
-	@Override
-	public void setSecurityAnswer(String securityAnswer, Locale locale) {
-		setSecurityAnswer(securityAnswer, locale, LocaleUtil.getSiteDefault());
-	}
-
-	@Override
-	public void setSecurityAnswer(
-		String securityAnswer, Locale locale, Locale defaultLocale) {
-
-		String languageId = LocaleUtil.toLanguageId(locale);
-		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
-
-		if (Validator.isNotNull(securityAnswer)) {
-			setSecurityAnswer(
-				LocalizationUtil.updateLocalization(
-					getSecurityAnswer(), "SecurityAnswer", securityAnswer,
-					languageId, defaultLanguageId));
-		}
-		else {
-			setSecurityAnswer(
-				LocalizationUtil.removeLocalization(
-					getSecurityAnswer(), "SecurityAnswer", languageId));
-		}
-	}
-
-	@Override
-	public void setSecurityAnswerCurrentLanguageId(String languageId) {
-		_securityAnswerCurrentLanguageId = languageId;
-	}
-
-	@Override
-	public void setSecurityAnswerMap(Map<Locale, String> securityAnswerMap) {
-		setSecurityAnswerMap(securityAnswerMap, LocaleUtil.getSiteDefault());
-	}
-
-	@Override
-	public void setSecurityAnswerMap(
-		Map<Locale, String> securityAnswerMap, Locale defaultLocale) {
-
-		if (securityAnswerMap == null) {
-			return;
-		}
-
-		setSecurityAnswer(
-			LocalizationUtil.updateLocalization(
-				securityAnswerMap, getSecurityAnswer(), "SecurityAnswer",
-				LocaleUtil.toLanguageId(defaultLocale)));
-	}
-
-	@JSON
-	@Override
-	public String getAcceptedTOU() {
-		if (_acceptedTOU == null) {
-			return "";
-		}
-		else {
-			return _acceptedTOU;
-		}
-	}
-
-	@Override
-	public String getAcceptedTOU(Locale locale) {
-		String languageId = LocaleUtil.toLanguageId(locale);
-
-		return getAcceptedTOU(languageId);
-	}
-
-	@Override
-	public String getAcceptedTOU(Locale locale, boolean useDefault) {
-		String languageId = LocaleUtil.toLanguageId(locale);
-
-		return getAcceptedTOU(languageId, useDefault);
-	}
-
-	@Override
-	public String getAcceptedTOU(String languageId) {
-		return LocalizationUtil.getLocalization(getAcceptedTOU(), languageId);
-	}
-
-	@Override
-	public String getAcceptedTOU(String languageId, boolean useDefault) {
-		return LocalizationUtil.getLocalization(
-			getAcceptedTOU(), languageId, useDefault);
-	}
-
-	@Override
-	public String getAcceptedTOUCurrentLanguageId() {
-		return _acceptedTOUCurrentLanguageId;
-	}
-
-	@JSON
-	@Override
-	public String getAcceptedTOUCurrentValue() {
-		Locale locale = getLocale(_acceptedTOUCurrentLanguageId);
-
-		return getAcceptedTOU(locale);
-	}
-
-	@Override
-	public Map<Locale, String> getAcceptedTOUMap() {
-		return LocalizationUtil.getLocalizationMap(getAcceptedTOU());
-	}
-
-	@Override
-	public void setAcceptedTOU(String acceptedTOU) {
-		if (_columnOriginalValues == Collections.EMPTY_MAP) {
-			_setColumnOriginalValues();
-		}
-
-		_acceptedTOU = acceptedTOU;
-	}
-
-	@Override
-	public void setAcceptedTOU(String acceptedTOU, Locale locale) {
-		setAcceptedTOU(acceptedTOU, locale, LocaleUtil.getSiteDefault());
-	}
-
-	@Override
-	public void setAcceptedTOU(
-		String acceptedTOU, Locale locale, Locale defaultLocale) {
-
-		String languageId = LocaleUtil.toLanguageId(locale);
-		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
-
-		if (Validator.isNotNull(acceptedTOU)) {
-			setAcceptedTOU(
-				LocalizationUtil.updateLocalization(
-					getAcceptedTOU(), "AcceptedTOU", acceptedTOU, languageId,
-					defaultLanguageId));
-		}
-		else {
-			setAcceptedTOU(
-				LocalizationUtil.removeLocalization(
-					getAcceptedTOU(), "AcceptedTOU", languageId));
-		}
-	}
-
-	@Override
-	public void setAcceptedTOUCurrentLanguageId(String languageId) {
-		_acceptedTOUCurrentLanguageId = languageId;
-	}
-
-	@Override
-	public void setAcceptedTOUMap(Map<Locale, String> acceptedTOUMap) {
-		setAcceptedTOUMap(acceptedTOUMap, LocaleUtil.getSiteDefault());
-	}
-
-	@Override
-	public void setAcceptedTOUMap(
-		Map<Locale, String> acceptedTOUMap, Locale defaultLocale) {
-
-		if (acceptedTOUMap == null) {
-			return;
-		}
-
-		setAcceptedTOU(
-			LocalizationUtil.updateLocalization(
-				acceptedTOUMap, getAcceptedTOU(), "AcceptedTOU",
-				LocaleUtil.toLanguageId(defaultLocale)));
 	}
 
 	@Override
@@ -1359,119 +673,6 @@ public class AMFUserModelImpl
 	}
 
 	@Override
-	public String[] getAvailableLanguageIds() {
-		Set<String> availableLanguageIds = new TreeSet<String>();
-
-		Map<Locale, String> securityQuestionMap = getSecurityQuestionMap();
-
-		for (Map.Entry<Locale, String> entry : securityQuestionMap.entrySet()) {
-			Locale locale = entry.getKey();
-			String value = entry.getValue();
-
-			if (Validator.isNotNull(value)) {
-				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
-			}
-		}
-
-		Map<Locale, String> securityAnswerMap = getSecurityAnswerMap();
-
-		for (Map.Entry<Locale, String> entry : securityAnswerMap.entrySet()) {
-			Locale locale = entry.getKey();
-			String value = entry.getValue();
-
-			if (Validator.isNotNull(value)) {
-				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
-			}
-		}
-
-		Map<Locale, String> acceptedTOUMap = getAcceptedTOUMap();
-
-		for (Map.Entry<Locale, String> entry : acceptedTOUMap.entrySet()) {
-			Locale locale = entry.getKey();
-			String value = entry.getValue();
-
-			if (Validator.isNotNull(value)) {
-				availableLanguageIds.add(LocaleUtil.toLanguageId(locale));
-			}
-		}
-
-		return availableLanguageIds.toArray(
-			new String[availableLanguageIds.size()]);
-	}
-
-	@Override
-	public String getDefaultLanguageId() {
-		String xml = getSecurityQuestion();
-
-		if (xml == null) {
-			return "";
-		}
-
-		Locale defaultLocale = LocaleUtil.getSiteDefault();
-
-		return LocalizationUtil.getDefaultLanguageId(xml, defaultLocale);
-	}
-
-	@Override
-	public void prepareLocalizedFieldsForImport() throws LocaleException {
-		Locale defaultLocale = LocaleUtil.fromLanguageId(
-			getDefaultLanguageId());
-
-		Locale[] availableLocales = LocaleUtil.fromLanguageIds(
-			getAvailableLanguageIds());
-
-		Locale defaultImportLocale = LocalizationUtil.getDefaultImportLocale(
-			AMFUser.class.getName(), getPrimaryKey(), defaultLocale,
-			availableLocales);
-
-		prepareLocalizedFieldsForImport(defaultImportLocale);
-	}
-
-	@Override
-	@SuppressWarnings("unused")
-	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
-		throws LocaleException {
-
-		Locale defaultLocale = LocaleUtil.getSiteDefault();
-
-		String modelDefaultLanguageId = getDefaultLanguageId();
-
-		String securityQuestion = getSecurityQuestion(defaultLocale);
-
-		if (Validator.isNull(securityQuestion)) {
-			setSecurityQuestion(
-				getSecurityQuestion(modelDefaultLanguageId), defaultLocale);
-		}
-		else {
-			setSecurityQuestion(
-				getSecurityQuestion(defaultLocale), defaultLocale,
-				defaultLocale);
-		}
-
-		String securityAnswer = getSecurityAnswer(defaultLocale);
-
-		if (Validator.isNull(securityAnswer)) {
-			setSecurityAnswer(
-				getSecurityAnswer(modelDefaultLanguageId), defaultLocale);
-		}
-		else {
-			setSecurityAnswer(
-				getSecurityAnswer(defaultLocale), defaultLocale, defaultLocale);
-		}
-
-		String acceptedTOU = getAcceptedTOU(defaultLocale);
-
-		if (Validator.isNull(acceptedTOU)) {
-			setAcceptedTOU(
-				getAcceptedTOU(modelDefaultLanguageId), defaultLocale);
-		}
-		else {
-			setAcceptedTOU(
-				getAcceptedTOU(defaultLocale), defaultLocale, defaultLocale);
-		}
-	}
-
-	@Override
 	public AMFUser toEscapedModel() {
 		if (_escapedModel == null) {
 			Function<InvocationHandler, AMFUser>
@@ -1494,29 +695,13 @@ public class AMFUserModelImpl
 		amfUserImpl.setAmfUserId(getAmfUserId());
 		amfUserImpl.setGroupId(getGroupId());
 		amfUserImpl.setCompanyId(getCompanyId());
-		amfUserImpl.setUserId(getUserId());
-		amfUserImpl.setUserName(getUserName());
 		amfUserImpl.setCreateDate(getCreateDate());
 		amfUserImpl.setModifiedDate(getModifiedDate());
-		amfUserImpl.setFirstName(getFirstName());
-		amfUserImpl.setLastName(getLastName());
-		amfUserImpl.setEmailAddress(getEmailAddress());
-		amfUserImpl.setGender(getGender());
-		amfUserImpl.setBirthDay(getBirthDay());
-		amfUserImpl.setBirthMonth(getBirthMonth());
-		amfUserImpl.setBirthYear(getBirthYear());
-		amfUserImpl.setPassword(getPassword());
-		amfUserImpl.setConfirmedPassword(getConfirmedPassword());
+		amfUserImpl.setUserName(getUserName());
+		amfUserImpl.setUserId(getUserId());
+		amfUserImpl.setAddressId(getAddressId());
 		amfUserImpl.setHomePhone(getHomePhone());
 		amfUserImpl.setMobilePhone(getMobilePhone());
-		amfUserImpl.setAddress(getAddress());
-		amfUserImpl.setAddress2(getAddress2());
-		amfUserImpl.setCity(getCity());
-		amfUserImpl.setState(getState());
-		amfUserImpl.setZip(getZip());
-		amfUserImpl.setSecurityQuestion(getSecurityQuestion());
-		amfUserImpl.setSecurityAnswer(getSecurityAnswer());
-		amfUserImpl.setAcceptedTOU(getAcceptedTOU());
 
 		amfUserImpl.resetOriginalValues();
 
@@ -1527,7 +712,7 @@ public class AMFUserModelImpl
 	public int compareTo(AMFUser amfUser) {
 		int value = 0;
 
-		value = getFirstName().compareTo(amfUser.getFirstName());
+		value = getUserName().compareTo(amfUser.getUserName());
 
 		if (value != 0) {
 			return value;
@@ -1608,16 +793,6 @@ public class AMFUserModelImpl
 
 		amfUserCacheModel.companyId = getCompanyId();
 
-		amfUserCacheModel.userId = getUserId();
-
-		amfUserCacheModel.userName = getUserName();
-
-		String userName = amfUserCacheModel.userName;
-
-		if ((userName != null) && (userName.length() == 0)) {
-			amfUserCacheModel.userName = null;
-		}
-
 		Date createDate = getCreateDate();
 
 		if (createDate != null) {
@@ -1636,59 +811,17 @@ public class AMFUserModelImpl
 			amfUserCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		amfUserCacheModel.firstName = getFirstName();
+		amfUserCacheModel.userName = getUserName();
 
-		String firstName = amfUserCacheModel.firstName;
+		String userName = amfUserCacheModel.userName;
 
-		if ((firstName != null) && (firstName.length() == 0)) {
-			amfUserCacheModel.firstName = null;
+		if ((userName != null) && (userName.length() == 0)) {
+			amfUserCacheModel.userName = null;
 		}
 
-		amfUserCacheModel.lastName = getLastName();
+		amfUserCacheModel.userId = getUserId();
 
-		String lastName = amfUserCacheModel.lastName;
-
-		if ((lastName != null) && (lastName.length() == 0)) {
-			amfUserCacheModel.lastName = null;
-		}
-
-		amfUserCacheModel.emailAddress = getEmailAddress();
-
-		String emailAddress = amfUserCacheModel.emailAddress;
-
-		if ((emailAddress != null) && (emailAddress.length() == 0)) {
-			amfUserCacheModel.emailAddress = null;
-		}
-
-		amfUserCacheModel.gender = getGender();
-
-		String gender = amfUserCacheModel.gender;
-
-		if ((gender != null) && (gender.length() == 0)) {
-			amfUserCacheModel.gender = null;
-		}
-
-		amfUserCacheModel.birthDay = getBirthDay();
-
-		amfUserCacheModel.birthMonth = getBirthMonth();
-
-		amfUserCacheModel.birthYear = getBirthYear();
-
-		amfUserCacheModel.password = getPassword();
-
-		String password = amfUserCacheModel.password;
-
-		if ((password != null) && (password.length() == 0)) {
-			amfUserCacheModel.password = null;
-		}
-
-		amfUserCacheModel.confirmedPassword = getConfirmedPassword();
-
-		String confirmedPassword = amfUserCacheModel.confirmedPassword;
-
-		if ((confirmedPassword != null) && (confirmedPassword.length() == 0)) {
-			amfUserCacheModel.confirmedPassword = null;
-		}
+		amfUserCacheModel.addressId = getAddressId();
 
 		amfUserCacheModel.homePhone = getHomePhone();
 
@@ -1704,70 +837,6 @@ public class AMFUserModelImpl
 
 		if ((mobilePhone != null) && (mobilePhone.length() == 0)) {
 			amfUserCacheModel.mobilePhone = null;
-		}
-
-		amfUserCacheModel.address = getAddress();
-
-		String address = amfUserCacheModel.address;
-
-		if ((address != null) && (address.length() == 0)) {
-			amfUserCacheModel.address = null;
-		}
-
-		amfUserCacheModel.address2 = getAddress2();
-
-		String address2 = amfUserCacheModel.address2;
-
-		if ((address2 != null) && (address2.length() == 0)) {
-			amfUserCacheModel.address2 = null;
-		}
-
-		amfUserCacheModel.city = getCity();
-
-		String city = amfUserCacheModel.city;
-
-		if ((city != null) && (city.length() == 0)) {
-			amfUserCacheModel.city = null;
-		}
-
-		amfUserCacheModel.state = getState();
-
-		String state = amfUserCacheModel.state;
-
-		if ((state != null) && (state.length() == 0)) {
-			amfUserCacheModel.state = null;
-		}
-
-		amfUserCacheModel.zip = getZip();
-
-		String zip = amfUserCacheModel.zip;
-
-		if ((zip != null) && (zip.length() == 0)) {
-			amfUserCacheModel.zip = null;
-		}
-
-		amfUserCacheModel.securityQuestion = getSecurityQuestion();
-
-		String securityQuestion = amfUserCacheModel.securityQuestion;
-
-		if ((securityQuestion != null) && (securityQuestion.length() == 0)) {
-			amfUserCacheModel.securityQuestion = null;
-		}
-
-		amfUserCacheModel.securityAnswer = getSecurityAnswer();
-
-		String securityAnswer = amfUserCacheModel.securityAnswer;
-
-		if ((securityAnswer != null) && (securityAnswer.length() == 0)) {
-			amfUserCacheModel.securityAnswer = null;
-		}
-
-		amfUserCacheModel.acceptedTOU = getAcceptedTOU();
-
-		String acceptedTOU = amfUserCacheModel.acceptedTOU;
-
-		if ((acceptedTOU != null) && (acceptedTOU.length() == 0)) {
-			amfUserCacheModel.acceptedTOU = null;
 		}
 
 		return amfUserCacheModel;
@@ -1847,33 +916,14 @@ public class AMFUserModelImpl
 	private long _amfUserId;
 	private long _groupId;
 	private long _companyId;
-	private long _userId;
-	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _firstName;
-	private String _lastName;
-	private String _emailAddress;
-	private String _gender;
-	private int _birthDay;
-	private int _birthMonth;
-	private int _birthYear;
-	private String _password;
-	private String _confirmedPassword;
+	private String _userName;
+	private long _userId;
+	private long _addressId;
 	private String _homePhone;
 	private String _mobilePhone;
-	private String _address;
-	private String _address2;
-	private String _city;
-	private String _state;
-	private String _zip;
-	private String _securityQuestion;
-	private String _securityQuestionCurrentLanguageId;
-	private String _securityAnswer;
-	private String _securityAnswerCurrentLanguageId;
-	private String _acceptedTOU;
-	private String _acceptedTOUCurrentLanguageId;
 
 	public <T> T getColumnValue(String columnName) {
 		columnName = _attributeNames.getOrDefault(columnName, columnName);
@@ -1908,29 +958,13 @@ public class AMFUserModelImpl
 		_columnOriginalValues.put("amfUserId", _amfUserId);
 		_columnOriginalValues.put("groupId", _groupId);
 		_columnOriginalValues.put("companyId", _companyId);
-		_columnOriginalValues.put("userId", _userId);
-		_columnOriginalValues.put("userName", _userName);
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
-		_columnOriginalValues.put("firstName", _firstName);
-		_columnOriginalValues.put("lastName", _lastName);
-		_columnOriginalValues.put("emailAddress", _emailAddress);
-		_columnOriginalValues.put("gender", _gender);
-		_columnOriginalValues.put("birthDay", _birthDay);
-		_columnOriginalValues.put("birthMonth", _birthMonth);
-		_columnOriginalValues.put("birthYear", _birthYear);
-		_columnOriginalValues.put("password_", _password);
-		_columnOriginalValues.put("confirmedPassword", _confirmedPassword);
+		_columnOriginalValues.put("userName", _userName);
+		_columnOriginalValues.put("userId", _userId);
+		_columnOriginalValues.put("addressId", _addressId);
 		_columnOriginalValues.put("homePhone", _homePhone);
 		_columnOriginalValues.put("mobilePhone", _mobilePhone);
-		_columnOriginalValues.put("address", _address);
-		_columnOriginalValues.put("address2", _address2);
-		_columnOriginalValues.put("city", _city);
-		_columnOriginalValues.put("state_", _state);
-		_columnOriginalValues.put("zip", _zip);
-		_columnOriginalValues.put("securityQuestion", _securityQuestion);
-		_columnOriginalValues.put("securityAnswer", _securityAnswer);
-		_columnOriginalValues.put("acceptedTOU", _acceptedTOU);
 	}
 
 	private static final Map<String, String> _attributeNames;
@@ -1939,8 +973,6 @@ public class AMFUserModelImpl
 		Map<String, String> attributeNames = new HashMap<>();
 
 		attributeNames.put("uuid_", "uuid");
-		attributeNames.put("password_", "password");
-		attributeNames.put("state_", "state");
 
 		_attributeNames = Collections.unmodifiableMap(attributeNames);
 	}
@@ -1964,51 +996,19 @@ public class AMFUserModelImpl
 
 		columnBitmasks.put("companyId", 8L);
 
-		columnBitmasks.put("userId", 16L);
+		columnBitmasks.put("createDate", 16L);
 
-		columnBitmasks.put("userName", 32L);
+		columnBitmasks.put("modifiedDate", 32L);
 
-		columnBitmasks.put("createDate", 64L);
+		columnBitmasks.put("userName", 64L);
 
-		columnBitmasks.put("modifiedDate", 128L);
+		columnBitmasks.put("userId", 128L);
 
-		columnBitmasks.put("firstName", 256L);
+		columnBitmasks.put("addressId", 256L);
 
-		columnBitmasks.put("lastName", 512L);
+		columnBitmasks.put("homePhone", 512L);
 
-		columnBitmasks.put("emailAddress", 1024L);
-
-		columnBitmasks.put("gender", 2048L);
-
-		columnBitmasks.put("birthDay", 4096L);
-
-		columnBitmasks.put("birthMonth", 8192L);
-
-		columnBitmasks.put("birthYear", 16384L);
-
-		columnBitmasks.put("password_", 32768L);
-
-		columnBitmasks.put("confirmedPassword", 65536L);
-
-		columnBitmasks.put("homePhone", 131072L);
-
-		columnBitmasks.put("mobilePhone", 262144L);
-
-		columnBitmasks.put("address", 524288L);
-
-		columnBitmasks.put("address2", 1048576L);
-
-		columnBitmasks.put("city", 2097152L);
-
-		columnBitmasks.put("state_", 4194304L);
-
-		columnBitmasks.put("zip", 8388608L);
-
-		columnBitmasks.put("securityQuestion", 16777216L);
-
-		columnBitmasks.put("securityAnswer", 33554432L);
-
-		columnBitmasks.put("acceptedTOU", 67108864L);
+		columnBitmasks.put("mobilePhone", 1024L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

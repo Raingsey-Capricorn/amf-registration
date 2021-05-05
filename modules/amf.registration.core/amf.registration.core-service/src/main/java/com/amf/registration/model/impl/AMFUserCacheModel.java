@@ -61,7 +61,7 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -71,52 +71,20 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		sb.append(groupId);
 		sb.append(", companyId=");
 		sb.append(companyId);
-		sb.append(", userId=");
-		sb.append(userId);
-		sb.append(", userName=");
-		sb.append(userName);
 		sb.append(", createDate=");
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", firstName=");
-		sb.append(firstName);
-		sb.append(", lastName=");
-		sb.append(lastName);
-		sb.append(", emailAddress=");
-		sb.append(emailAddress);
-		sb.append(", gender=");
-		sb.append(gender);
-		sb.append(", birthDay=");
-		sb.append(birthDay);
-		sb.append(", birthMonth=");
-		sb.append(birthMonth);
-		sb.append(", birthYear=");
-		sb.append(birthYear);
-		sb.append(", password=");
-		sb.append(password);
-		sb.append(", confirmedPassword=");
-		sb.append(confirmedPassword);
+		sb.append(", userName=");
+		sb.append(userName);
+		sb.append(", userId=");
+		sb.append(userId);
+		sb.append(", addressId=");
+		sb.append(addressId);
 		sb.append(", homePhone=");
 		sb.append(homePhone);
 		sb.append(", mobilePhone=");
 		sb.append(mobilePhone);
-		sb.append(", address=");
-		sb.append(address);
-		sb.append(", address2=");
-		sb.append(address2);
-		sb.append(", city=");
-		sb.append(city);
-		sb.append(", state=");
-		sb.append(state);
-		sb.append(", zip=");
-		sb.append(zip);
-		sb.append(", securityQuestion=");
-		sb.append(securityQuestion);
-		sb.append(", securityAnswer=");
-		sb.append(securityAnswer);
-		sb.append(", acceptedTOU=");
-		sb.append(acceptedTOU);
 		sb.append("}");
 
 		return sb.toString();
@@ -136,14 +104,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		amfUserImpl.setAmfUserId(amfUserId);
 		amfUserImpl.setGroupId(groupId);
 		amfUserImpl.setCompanyId(companyId);
-		amfUserImpl.setUserId(userId);
-
-		if (userName == null) {
-			amfUserImpl.setUserName("");
-		}
-		else {
-			amfUserImpl.setUserName(userName);
-		}
 
 		if (createDate == Long.MIN_VALUE) {
 			amfUserImpl.setCreateDate(null);
@@ -159,51 +119,15 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 			amfUserImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
-		if (firstName == null) {
-			amfUserImpl.setFirstName("");
+		if (userName == null) {
+			amfUserImpl.setUserName("");
 		}
 		else {
-			amfUserImpl.setFirstName(firstName);
+			amfUserImpl.setUserName(userName);
 		}
 
-		if (lastName == null) {
-			amfUserImpl.setLastName("");
-		}
-		else {
-			amfUserImpl.setLastName(lastName);
-		}
-
-		if (emailAddress == null) {
-			amfUserImpl.setEmailAddress("");
-		}
-		else {
-			amfUserImpl.setEmailAddress(emailAddress);
-		}
-
-		if (gender == null) {
-			amfUserImpl.setGender("");
-		}
-		else {
-			amfUserImpl.setGender(gender);
-		}
-
-		amfUserImpl.setBirthDay(birthDay);
-		amfUserImpl.setBirthMonth(birthMonth);
-		amfUserImpl.setBirthYear(birthYear);
-
-		if (password == null) {
-			amfUserImpl.setPassword("");
-		}
-		else {
-			amfUserImpl.setPassword(password);
-		}
-
-		if (confirmedPassword == null) {
-			amfUserImpl.setConfirmedPassword("");
-		}
-		else {
-			amfUserImpl.setConfirmedPassword(confirmedPassword);
-		}
+		amfUserImpl.setUserId(userId);
+		amfUserImpl.setAddressId(addressId);
 
 		if (homePhone == null) {
 			amfUserImpl.setHomePhone("");
@@ -217,62 +141,6 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		}
 		else {
 			amfUserImpl.setMobilePhone(mobilePhone);
-		}
-
-		if (address == null) {
-			amfUserImpl.setAddress("");
-		}
-		else {
-			amfUserImpl.setAddress(address);
-		}
-
-		if (address2 == null) {
-			amfUserImpl.setAddress2("");
-		}
-		else {
-			amfUserImpl.setAddress2(address2);
-		}
-
-		if (city == null) {
-			amfUserImpl.setCity("");
-		}
-		else {
-			amfUserImpl.setCity(city);
-		}
-
-		if (state == null) {
-			amfUserImpl.setState("");
-		}
-		else {
-			amfUserImpl.setState(state);
-		}
-
-		if (zip == null) {
-			amfUserImpl.setZip("");
-		}
-		else {
-			amfUserImpl.setZip(zip);
-		}
-
-		if (securityQuestion == null) {
-			amfUserImpl.setSecurityQuestion("");
-		}
-		else {
-			amfUserImpl.setSecurityQuestion(securityQuestion);
-		}
-
-		if (securityAnswer == null) {
-			amfUserImpl.setSecurityAnswer("");
-		}
-		else {
-			amfUserImpl.setSecurityAnswer(securityAnswer);
-		}
-
-		if (acceptedTOU == null) {
-			amfUserImpl.setAcceptedTOU("");
-		}
-		else {
-			amfUserImpl.setAcceptedTOU(acceptedTOU);
 		}
 
 		amfUserImpl.resetOriginalValues();
@@ -289,33 +157,15 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		groupId = objectInput.readLong();
 
 		companyId = objectInput.readLong();
-
-		userId = objectInput.readLong();
-		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
-		firstName = objectInput.readUTF();
-		lastName = objectInput.readUTF();
-		emailAddress = objectInput.readUTF();
-		gender = objectInput.readUTF();
+		userName = objectInput.readUTF();
 
-		birthDay = objectInput.readInt();
+		userId = objectInput.readLong();
 
-		birthMonth = objectInput.readInt();
-
-		birthYear = objectInput.readInt();
-		password = objectInput.readUTF();
-		confirmedPassword = objectInput.readUTF();
+		addressId = objectInput.readLong();
 		homePhone = objectInput.readUTF();
 		mobilePhone = objectInput.readUTF();
-		address = objectInput.readUTF();
-		address2 = objectInput.readUTF();
-		city = objectInput.readUTF();
-		state = objectInput.readUTF();
-		zip = objectInput.readUTF();
-		securityQuestion = objectInput.readUTF();
-		securityAnswer = objectInput.readUTF();
-		acceptedTOU = objectInput.readUTF();
 	}
 
 	@Override
@@ -332,8 +182,8 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		objectOutput.writeLong(groupId);
 
 		objectOutput.writeLong(companyId);
-
-		objectOutput.writeLong(userId);
+		objectOutput.writeLong(createDate);
+		objectOutput.writeLong(modifiedDate);
 
 		if (userName == null) {
 			objectOutput.writeUTF("");
@@ -342,56 +192,9 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 			objectOutput.writeUTF(userName);
 		}
 
-		objectOutput.writeLong(createDate);
-		objectOutput.writeLong(modifiedDate);
+		objectOutput.writeLong(userId);
 
-		if (firstName == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(firstName);
-		}
-
-		if (lastName == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(lastName);
-		}
-
-		if (emailAddress == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(emailAddress);
-		}
-
-		if (gender == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(gender);
-		}
-
-		objectOutput.writeInt(birthDay);
-
-		objectOutput.writeInt(birthMonth);
-
-		objectOutput.writeInt(birthYear);
-
-		if (password == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(password);
-		}
-
-		if (confirmedPassword == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(confirmedPassword);
-		}
+		objectOutput.writeLong(addressId);
 
 		if (homePhone == null) {
 			objectOutput.writeUTF("");
@@ -406,90 +209,18 @@ public class AMFUserCacheModel implements CacheModel<AMFUser>, Externalizable {
 		else {
 			objectOutput.writeUTF(mobilePhone);
 		}
-
-		if (address == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(address);
-		}
-
-		if (address2 == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(address2);
-		}
-
-		if (city == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(city);
-		}
-
-		if (state == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(state);
-		}
-
-		if (zip == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(zip);
-		}
-
-		if (securityQuestion == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(securityQuestion);
-		}
-
-		if (securityAnswer == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(securityAnswer);
-		}
-
-		if (acceptedTOU == null) {
-			objectOutput.writeUTF("");
-		}
-		else {
-			objectOutput.writeUTF(acceptedTOU);
-		}
 	}
 
 	public String uuid;
 	public long amfUserId;
 	public long groupId;
 	public long companyId;
-	public long userId;
-	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public String firstName;
-	public String lastName;
-	public String emailAddress;
-	public String gender;
-	public int birthDay;
-	public int birthMonth;
-	public int birthYear;
-	public String password;
-	public String confirmedPassword;
+	public String userName;
+	public long userId;
+	public long addressId;
 	public String homePhone;
 	public String mobilePhone;
-	public String address;
-	public String address2;
-	public String city;
-	public String state;
-	public String zip;
-	public String securityQuestion;
-	public String securityAnswer;
-	public String acceptedTOU;
 
 }
