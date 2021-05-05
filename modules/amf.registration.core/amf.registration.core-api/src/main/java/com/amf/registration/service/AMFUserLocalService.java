@@ -14,6 +14,7 @@
 
 package com.amf.registration.service;
 
+import com.amf.registration.exception.AMFUserValidationException;
 import com.amf.registration.model.AMFUser;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -22,8 +23,10 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.model.*;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -118,7 +121,7 @@ public interface AMFUserLocalService
 			String addressLineTwo, String city, String regionId, String zip,
 			String securityQuestion, String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws PortalException;
+		throws AMFUserValidationException, NoSuchGroupException;
 
 	public void clearAMFEventLogAMFUsers(long amfEventLogId);
 
@@ -315,7 +318,8 @@ public interface AMFUserLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AMFUser getAMFUserByGroupUserAndUserName(
-		long groupId, long userId, String userName);
+			long groupId, long userId, String userName)
+		throws NoSuchGroupException;
 
 	/**
 	 * @param groupId

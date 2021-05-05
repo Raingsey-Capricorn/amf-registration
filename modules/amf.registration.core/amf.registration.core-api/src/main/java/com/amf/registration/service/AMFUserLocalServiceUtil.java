@@ -109,7 +109,8 @@ public class AMFUserLocalServiceUtil {
 			String city, String regionId, String zip, String securityQuestion,
 			String securityAnswer, String acceptedTOU,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws com.amf.registration.exception.AMFUserValidationException,
+			   com.liferay.portal.kernel.exception.NoSuchGroupException {
 
 		return getService().addAMFUser(
 			themeDisplay, userName, firstName, lastName, emailAddress, gender,
@@ -392,8 +393,9 @@ public class AMFUserLocalServiceUtil {
 	 * @return
 	 */
 	public static com.amf.registration.model.AMFUser
-		getAMFUserByGroupUserAndUserName(
-			long groupId, long userId, String userName) {
+			getAMFUserByGroupUserAndUserName(
+				long groupId, long userId, String userName)
+		throws com.liferay.portal.kernel.exception.NoSuchGroupException {
 
 		return getService().getAMFUserByGroupUserAndUserName(
 			groupId, userId, userName);

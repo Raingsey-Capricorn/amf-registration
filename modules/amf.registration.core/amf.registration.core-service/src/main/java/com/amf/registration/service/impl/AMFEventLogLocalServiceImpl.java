@@ -14,18 +14,22 @@
 
 package com.amf.registration.service.impl;
 
+import com.amf.registration.exception.NoSuchAMFEventLogException;
 import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.amf.registration.service.base.AMFEventLogLocalServiceBaseImpl;
 import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.*;
+import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserGroupLocalService;
 import com.liferay.portal.kernel.util.Validator;
+import lombok.SneakyThrows;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,10 +68,14 @@ public class AMFEventLogLocalServiceImpl
      * @return
      */
     @Override
-    public HashMap<String, Object> getAMFEventLogs(long groupId, int start, int end) {
+    public HashMap<String, Object> getAMFEventLogs(long groupId, int start, int end) throws NoSuchAMFEventLogException {
         return new HashMap<>() {{
-            put("eventLogs", amfEventLogLocalService.dynamicQuery(getAMFMembersUserNameSearchDynamicQuery(start, end)));
-            put("total", amfEventLogLocalService.dynamicQueryCount(getAMFMembersUserNameSearchDynamicQuery(0, 0)));
+            try {
+                put("eventLogs", amfEventLogLocalService.dynamicQuery(getAMFMembersUserNameSearchDynamicQuery(start, end)));
+                put("total", amfEventLogLocalService.dynamicQueryCount(getAMFMembersUserNameSearchDynamicQuery(0, 0)));
+            } catch (NoSuchGroupException e) {
+                throw new NoSuchAMFEventLogException(e.getMessage());
+            }
         }};
     }
 
@@ -96,10 +104,10 @@ public class AMFEventLogLocalServiceImpl
      * @return
      */
     @Override
-    public HashMap<String, Object> getAMFEventLogBy(long groupId, String status, int start, int end) {
+    public HashMap<String, Object> getAMFEventLogBy(long groupId, String status, int start, int end) throws NoSuchAMFEventLogException {
 
         List<Long> allUserIds = amfEventLogLocalService.dynamicQuery(getDistinctEventLogByStatusSearchDynamicQuery(groupId, status, start, end));
-        List<AMFEventLog> amfEventLogs = allUserIds.stream().map(this::getLatestAMFEventLogByUserId).collect(Collectors.toList());
+        List<AMFEventLog> amfEventLogs = allUserIds.stream().map(ids -> getLatestAMFEventLogByUserId(ids, status)).collect(Collectors.toList());
         return new HashMap<>() {{
             put("eventLogs", amfEventLogs);
             put("total", amfEventLogLocalService.dynamicQueryCount(getDistinctEventLogByStatusSearchDynamicQuery(groupId, status, 0, 0)));
@@ -113,10 +121,10 @@ public class AMFEventLogLocalServiceImpl
      * @return
      */
     @Override
-    public AMFEventLog getAmfEventLogByGroupAndUser(long groupId, long userId) {
+    public AMFEventLog getAmfEventLogByGroupAndUser(long groupId, long userId) throws NoSuchAMFEventLogException {
 
         return (AMFEventLog) amfEventLogLocalService.dynamicQuery(
-                getUserNameSearchDynamicQuery(groupId, userId)).stream().findFirst().get();
+                getUserNameSearchDynamicQuery(groupId, userId)).stream().findFirst().orElseThrow(NoSuchAMFEventLogException::new);
     }
 
     /**
@@ -130,6 +138,7 @@ public class AMFEventLogLocalServiceImpl
         AMFEventLog amfEventLog = AMFEventLogLocalServiceUtil.createAMFEventLog(amfEvenLogId);
         amfEventLog.setUserId(loggedInUser.getUserId());
         amfEventLog.setGroupId(loggedInUser.getGroupId());
+        amfEventLog.setUserGroupId(Arrays.stream(loggedInUser.getUserGroupIds()).findFirst().orElse(0));
         amfEventLog.setStatus(EventStatus.LOGIN);
         amfEventLog.setCreateDate(new Date());
         amfEventLog.setLastLoginDate(loggedInUser.getLastLoginDate());
@@ -173,11 +182,12 @@ public class AMFEventLogLocalServiceImpl
             final int end
     ) {
 
-        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+        DynamicQuery dynamicQuery = dynamicQuery();
         Conjunction conjunctionQuery = RestrictionsFactoryUtil.conjunction();
         if (eventStatus.equals(EventStatus.ALL)) {
             conjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId));
         } else if (Validator.isNotNull(eventStatus) && userId > 0) {
+            dynamicQuery.add(RestrictionsFactoryUtil.eq("groupId", groupId));
             conjunctionQuery.add(RestrictionsFactoryUtil.eq("userId", userId));
             conjunctionQuery.add(RestrictionsFactoryUtil.eq("status", eventStatus));
         }
@@ -202,14 +212,14 @@ public class AMFEventLogLocalServiceImpl
             final int end
     ) {
 
-        DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
+        DynamicQuery dynamicQuery = dynamicQuery();
         if (eventStatus.equals(EventStatus.ALL)) {
             dynamicQuery.setProjection(ProjectionFactoryUtil.groupProperty("userId"));
         } else if (Validator.isNotNull(eventStatus)) {
-            Conjunction conjunctionQuery = RestrictionsFactoryUtil.conjunction();
-            conjunctionQuery.add(RestrictionsFactoryUtil.eq("status", eventStatus));
-            dynamicQuery.add(conjunctionQuery);
-            dynamicQuery.setProjection(ProjectionFactoryUtil.groupProperty("userId"));
+            dynamicQuery.setProjection(ProjectionFactoryUtil.groupProperty("userId"))
+                    .add(RestrictionsFactoryUtil.conjunction()
+                            .add(RestrictionsFactoryUtil.eq("status", eventStatus))
+                    );
         }
         if (start >= 0 && end > 0) {
             dynamicQuery.setLimit(start, end);
@@ -221,14 +231,17 @@ public class AMFEventLogLocalServiceImpl
      * @param userId
      * @return
      */
-    private AMFEventLog getLatestAMFEventLogByUserId(long userId) {
+    @SneakyThrows
+    private AMFEventLog getLatestAMFEventLogByUserId(long userId, String eventStatus) {
 
         DynamicQuery query = dynamicQuery();
         query.add(
                 RestrictionsFactoryUtil.conjunction()
                         .add(RestrictionsFactoryUtil.eq("userId", userId)))
+                .add(RestrictionsFactoryUtil.eq("status", eventStatus))
+
                 .addOrder(OrderFactoryUtil.desc("lastLoginDate")).setLimit(0, 1);
-        return (AMFEventLog) amfEventLogLocalService.dynamicQuery(query).stream().findFirst().get();
+        return (AMFEventLog) amfEventLogLocalService.dynamicQuery(query).stream().findFirst().orElseThrow(NoSuchAMFEventLogException::new);
     }
 
     /**
@@ -238,7 +251,7 @@ public class AMFEventLogLocalServiceImpl
      */
     private DynamicQuery getAMFMembersUserNameSearchDynamicQuery(
             final int start,
-            final int end) {
+            final int end) throws NoSuchGroupException {
 
         DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("userGroupId", getAMFUserGroupID()));
         if (start >= 0 && end > 0) {
@@ -250,17 +263,16 @@ public class AMFEventLogLocalServiceImpl
     /**
      * @return
      */
-    private long getAMFUserGroupID() {
+    private long getAMFUserGroupID() throws NoSuchGroupException {
         try {
             return (long) userGroupLocalService.dynamicQuery(
                     userGroupLocalService.dynamicQuery()
                             .add(RestrictionsFactoryUtil.conjunction()
                                     .add(RestrictionsFactoryUtil.eq("name", "AMF-Community")))
                             .setProjection(ProjectionFactoryUtil.groupProperty("userGroupId"))
-            ).stream().findFirst().get();
+            ).stream().findFirst().orElseThrow(NoSuchGroupException::new);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new NullPointerException("AMD-Community Group is not existing yet. Please add the group using Admin user.");
+            throw new NoSuchGroupException("AMD-Community Group is not existing yet. Please add the group using Admin user.");
         }
     }
 

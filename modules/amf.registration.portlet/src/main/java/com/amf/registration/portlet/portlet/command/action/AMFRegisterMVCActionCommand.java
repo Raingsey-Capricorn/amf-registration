@@ -5,6 +5,7 @@ import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
+import com.liferay.account.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -21,6 +22,13 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import java.text.SimpleDateFormat;
 
+/**
+ * @project-name : amf-registration
+ * @package-name : com.amf.registration.portlet.portlet.command.action
+ * @author       : Pisethraingsey SUON
+ * @email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
+ * @crated-date  : 3/25/2021
+ */
 @Component(
         immediate = true,
         property = {
@@ -65,8 +73,9 @@ public class AMFRegisterMVCActionCommand extends BaseMVCActionCommand {
             );
             SessionMessages.add(actionRequest, "amfUserAdded");
             sendRedirect(actionRequest, actionResponse);
-        } catch (AMFUserValidationException validationException) {
-            validationException.getErrors().forEach(error -> SessionErrors.add(actionRequest, error));
+        } catch (AMFUserValidationException e) {
+            SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());
+            e.getErrors().forEach(error -> SessionErrors.add(actionRequest, error));
             actionResponse.setRenderParameter("mvcRenderCommandName", MVCCommandNames.AMF_REGISTER);
         } catch (Exception e) {
             SessionErrors.add(actionRequest, "serviceErrorDetails", e.getMessage());

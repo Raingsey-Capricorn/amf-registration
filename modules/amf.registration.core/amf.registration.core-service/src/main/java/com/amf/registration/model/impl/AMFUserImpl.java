@@ -123,7 +123,6 @@ public class AMFUserImpl extends AMFUserBaseImpl {
         try {
             return UserLocalServiceUtil.getUser(getUserId()).getEmailAddress();
         } catch (Exception e) {
-            e.printStackTrace();
             return "No-Data";
         }
     }
@@ -142,7 +141,6 @@ public class AMFUserImpl extends AMFUserBaseImpl {
                     address.getRegion().getName()
             );
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

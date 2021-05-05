@@ -30,5 +30,6 @@ import org.osgi.service.component.annotations.Component;
         },
         service = Portlet.class
 )
-public class AMFRegistrationPortlet extends MVCPortlet {
+public class
+AMFRegistrationPortlet extends MVCPortlet {
 }

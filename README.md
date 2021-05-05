@@ -14,6 +14,14 @@ After deploy to the LifeRay server please follow this steps :
     - Then click Register
   - 3 The new user can login from the defautl login link on the top-right corner of the home page.
 
+Disable the built-in sign-up function follow this steps :
+  - From the top-right of the screen, click the 9-dots button, then click on the _Control Panel_ then User Groups
+    - click on _Instance Settings_ then
+    - click on _User Authentication_ then 
+      - uncheck **Allow strangers to create accounts?**
+      - uncheck **Allow strangers to create accounts with a company email address?**
+    - Then here we go
+
 When the user login to the liferay, they will see their own profile card, all events, registration, and login history.
 
 
