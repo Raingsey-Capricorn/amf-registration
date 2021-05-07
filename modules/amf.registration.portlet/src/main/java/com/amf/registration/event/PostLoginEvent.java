@@ -5,6 +5,7 @@ import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;
 import com.liferay.portal.kernel.events.LifecycleEvent;
+import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserGroupLocalServiceUtil;
@@ -40,7 +41,7 @@ public class PostLoginEvent implements LifecycleAction {
             User loggedInUser = userService.getCurrentUser();
             if (loggedInUser.getRoles().stream().noneMatch(desc -> desc.getName().equals("Administrator")) &&
                     UserGroupLocalServiceUtil.getUserGroup(
-                            Arrays.stream(loggedInUser.getUserGroupIds()).findFirst().orElseThrow(NoSuchAMFEventLogException::new))
+                            Arrays.stream(loggedInUser.getUserGroupIds()).findFirst().orElseThrow(NoSuchGroupException::new))
                             .getName().equalsIgnoreCase("amf-community")) {
 
                 AMFEventLogLocalServiceUtil.addAMFEventLog(loggedInUser);

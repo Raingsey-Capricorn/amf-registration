@@ -164,7 +164,6 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             AMFEventLog amfEventLog = createEventLogEntity(registerAMFUser, registerUser);
             AMFEventLogLocalServiceUtil.addAMFUserAMFEventLogs(registerAMFUser.getAmfUserId(), Collections.singletonList(amfEventLog));
 
-
             final boolean portletActions = false;
             final boolean addGroupPermissions = true;
             final boolean addGuestPermissions = true;

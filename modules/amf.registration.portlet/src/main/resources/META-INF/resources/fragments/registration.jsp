@@ -81,7 +81,7 @@
                         </aui:input>
                     </aui:col>
                     <aui:col width="50">
-                        <aui:input name="confirmedPassword"
+                        <aui:input name="confirmedPassword" label="Password Confirmation"
                                    type="password">
                             <aui:validator name="required" errorMessage="error.field-password-confirmation"/>
                         </aui:input>
