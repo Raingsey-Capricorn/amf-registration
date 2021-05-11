@@ -1,16 +1,11 @@
 <%@ page language="java" pageEncoding="UTF-8" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
-<%@ taglib prefix="liferay" uri="http://liferay.com/tld/ui" %>
-<%@ taglib prefix="liferay-ui" uri="http://liferay.com/tld/ui" %>
 
 <%
     String tabIndex = ParamUtil.getString(request, "tabIndex");
-    String selectedTab = String.valueOf(request.getAttribute("selectedTab"));
-    String defaultValue = "Profile";
-    if (selectedTab != null) {
-        defaultValue = selectedTab;
-        tabIndex = defaultValue;
-    }
+    String selectedTab = String.valueOf(request.getAttribute("selectedTab")) == null ?
+            String.valueOf(renderRequest.getPortletSession().getAttribute("selectedTab"))
+            : String.valueOf(request.getAttribute("selectedTab"));
     PortletURL iteratorURL = renderResponse.createRenderURL();
 %>
 

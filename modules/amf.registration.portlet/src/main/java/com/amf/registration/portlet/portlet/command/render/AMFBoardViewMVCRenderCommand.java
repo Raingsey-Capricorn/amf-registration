@@ -5,11 +5,9 @@ import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.portlet.constants.PageConstants;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
-import com.amf.registration.service.AMFUserLocalService;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
-import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -27,11 +25,11 @@ import javax.portlet.RenderResponse;
 import java.util.HashMap;
 
 /**
+ * @author : Pisethraingsey SUON
  * @project-name : amf-registration
  * @package-name : com.amf.registration.portlet.portlet.command.action
- * @author       : Pisethraingsey SUON
- * @email        : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
- * @crated-date  : 4/09/2021
+ * @email : pisethraingsey.suon@gs.liferay.com, raingsey@glean.net
+ * @crated-date : 4/09/2021
  */
 @Component(
         property = {
@@ -58,8 +56,6 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
     @SneakyThrows
     @Override
     public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
-
-        User loggedInUser = userService.getCurrentUser();
         ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
         if (themeDisplay.isSignedIn()) {
             return displayEventBoard(renderRequest);
@@ -94,7 +90,12 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
             boolean viewAllFlag = loggedInUser.getRoles().stream().anyMatch(role -> role.getName().equals("AMF_Superuser") || role.getName().equals("Administrator"));
 
             switch (currentTabIndex) {
-
+                case PageConstants.TAB_PROFILE:
+                    if (!viewAllFlag) {
+                        AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
+                        renderRequest.setAttribute("amfUser", amfUser);
+                    }
+                    break;
                 case PageConstants.TAB_ALL:
                     if (viewAllFlag) {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogs(loggedInUser.getGroupId(), start, end);
@@ -157,8 +158,5 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
 
     @Reference
     private UserService userService;
-
-    @Reference
-    AMFUserLocalService service;
 
 }
