@@ -1,86 +1,92 @@
 <?xml version="1.0"?>
 <!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN"
-		"http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+        "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
 
 <service-builder dependency-injector="ds"
-				 package-path="com.amf.newsletter"
-				 auto-namespace-tables="true">
+                 package-path="com.amf.newsletter"
+                 auto-namespace-tables="true">
 
-	<namespace>AMFNewsletter</namespace>
-	<entity name="AMFIssue"
-			table="amf_issue"
-			local-service="true"
-			remote-service="true"
-			uuid="true">
+    <namespace>AMFNewsletter</namespace>
+    <entity name="AMFIssue"
+            table="amf_issue"
+            local-service="true"
+            remote-service="true"
+            uuid="true">
 
-		<!-- PK fields -->
-		<column name="amfissueId" primary="true" type="long"/>
-		<column name="groupId" type="long"/>
-		<column name="userGroupId" type="long"/>
-		<!-- Audit fields -->
-		<column name="companyId" type="long"/>
-		<column name="userId" type="long"/>
-		<column name="userName" type="String"/>
-		<column name="createDate" type="Date"/>
-		<column name="modifiedDate" type="Date"/>
-		<!-- properties -->
-		<column name="issuedDate" type="Date"/>
-		<column name="issueNumber" type="int"/>
-		<column name="title" type="String"/>
-		<column name="description" type="String"/>
-		<column name="byLine" type="Collection"/>
+        <!-- PK fields -->
+        <column name="amfIssueId" primary="true" type="long"/>
+        <column name="groupId" type="long"/>
+        <column name="userGroupId" type="long"/>
+        <!-- Audit fields -->
+        <column name="companyId" type="long"/>
+        <column name="userId" type="long"/>
+        <column name="userName" type="String"/>
+        <column name="createDate" type="Date"/>
+        <column name="modifiedDate" type="Date"/>
+        <!-- properties -->
+        <column name="issuedDate" type="Date"/>
+        <column name="issueNumber" type="int"/>
+        <column name="title" type="String"/>
+        <column name="description" type="String"/>
+        <column name="byLine" type="Collection"/>
 
-		<order by="desc">
-			<order-column name="issuedDate"/>
-		</order>
+        <!-- relationship -->
+        <column name="articles" type="Collection" entity="AMFArticle" mapping-table="amfissue_article"/>
 
-		<finder name="AMFIssueId" return-type="Collection">
-			<finder-column name="amfissueId"/>
-		</finder>
+        <order by="desc">
+            <order-column name="issuedDate"/>
+        </order>
 
-		<!-- References -->
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
-		<reference entity="AssetTag" package-path="com.liferay.portlet.asset"/>
-	</entity>
+        <finder name="AMFIssueId" return-type="Collection">
+            <finder-column name="amfIssueId"/>
+        </finder>
 
-	<entity
-			name="AMFArticle"
-			table="amf_article"
-			local-service="true"
-			remote-service="true"
-			uuid="true">
+        <!-- References -->
+        <reference entity="AMFArticle" package-path="com.amf.newsletter"/>
+        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
+        <reference entity="AssetTag" package-path="com.liferay.portlet.asset"/>
+    </entity>
 
-		<!-- PK fields -->
-		<column name="amfarticleId" primary="true" type="long"/>
-		<!-- Audit fields -->
-		<column name="companyId" type="long"/>
-		<column name="userId" type="long"/>
-		<column name="userName" type="String"/>
-		<column name="createDate" type="Date"/>
-		<column name="modifiedDate" type="Date"/>
-		<!-- properties -->
-		<column name="issueNumber" type="int"/>
-		<column name="title" type="String"/>
-		<column name="author" type="String"/>
-		<column name="order" type="int"/>
-		<column name="content" type="String"/>
+    <entity
+            name="AMFArticle"
+            table="amf_article"
+            local-service="true"
+            remote-service="true"
+            uuid="true">
 
-		<order by="asc">
-			<order-column name="order"/>
-		</order>
+        <!-- PK fields -->
+        <column name="amfArticleId" primary="true" type="long"/>
+        <!-- Audit fields -->
+        <column name="companyId" type="long"/>
+        <column name="userId" type="long"/>
+        <column name="userName" type="String"/>
+        <column name="createDate" type="Date"/>
+        <column name="modifiedDate" type="Date"/>
+        <!-- properties -->
+        <column name="issueNumber" type="int"/>
+        <column name="title" type="String"/>
+        <column name="author" type="String"/>
+        <column name="order" type="int"/>
+        <column name="content" type="String"/>
 
-		<!-- Finder methods -->
-		<finder name="ArticleId" return-type="Collection">
-			<finder-column name="amfarticleId"/>
-		</finder>
+        <column name="issue" type="Collection" entity="AMFIssue" mapping-table="amfissue_article"/>
+        <order by="asc">
+            <order-column name="order"/>
+        </order>
 
-		<!-- References -->
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
-		<reference entity="AssetTag" package-path="com.liferay.portlet.asset"/>
-	</entity>
-	<exceptions>
-		<exception>AMFAMFIssueValidation</exception>
-		<exception>AMFArticleValidation</exception>
-	</exceptions>
+        <!-- Finder methods -->
+        <finder name="ArticleId" return-type="Collection">
+            <finder-column name="amfArticleId"/>
+        </finder>
+
+        <!-- References -->
+        <reference entity="AMFIssue" package-path="com.amf.newsletter"/>
+        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
+        <reference entity="AssetTag" package-path="com.liferay.portlet.asset"/>
+    </entity>
+    <exceptions>
+        <exception>AMFAMFIssueValidation</exception>
+        <exception>AMFArticleValidation</exception>
+    </exceptions>
 
 </service-builder>

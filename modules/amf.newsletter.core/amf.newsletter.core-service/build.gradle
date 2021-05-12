@@ -1,6 +1,8 @@
 dependencies {
     compile project(":modules:amf.newsletter.core:amf.newsletter.core-api")
     compileOnly group: "com.liferay.portal", name: "release.dxp.api"
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 buildService {
