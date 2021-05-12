@@ -134,6 +134,7 @@
                     </aui:col>
                     <aui:col width="50">
                         <aui:input name="zip" type="number" maxlength="5" pattern="\d*" required="true">
+                            <aui:validator name="maxLength" errorMessage="error.field-zipcode">5</aui:validator>
                             <aui:validator name="number" errorMessage="error.field-zipcode"/>
                         </aui:input>
                     </aui:col>

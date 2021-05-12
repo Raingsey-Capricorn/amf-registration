@@ -5,5 +5,4 @@ dependencies {
     compileOnly group: 'org.hibernate', name: 'hibernate-core', version: '5.4.30.Final'
     compileOnly group: 'com.liferay', name: 'com.liferay.portal.dao.orm.custom.sql', version: '1.0.27'
 
-
 }

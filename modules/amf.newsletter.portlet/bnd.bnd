@@ -1,5 +1,0 @@
-Bundle-Name: amf.newsletter.portlet
-Bundle-SymbolicName: com.amf.newsletter.portlet
-Bundle-Version: 1.0.0
-Export-Package: com.amf.newsletters.portlet.constants
-Import-Package: *; version="0";resolution:=optional
