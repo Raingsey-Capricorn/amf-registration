@@ -4,8 +4,42 @@
 
 .issue-release-title {
   color: deepskyblue;
+  font-weight: 400;
 }
 
-.issue-content {
+.issue-month-tab-title {
+  color: cornflowerblue;
+  font-size: medium;
+  font-weight: 500;
+}
 
+.issue-month-tab-title > div.panel-heading {
+  background-color: lightskyblue;
+  width: 100% !important;
+  padding-left: 20px;
+}
+
+.issue-month-tab-title > div.toggler-content-wrapper {
+  margin-left: -20px;
+}
+
+.issue-month-tab-container > div > div > div > table {
+  border: solid white 1px !important;
+  margin-left: 2%;
+  width: 97.5% !important;
+}
+
+.container-fluid-adjust {
+  margin-left: -36px !important;
+  width: 110% !important;
+  margin-right: auto;
+  max-width: 1280px;
+  padding-left: 37px;
+  padding-right: 12px;
+}
+
+.article-title {
+  font-weight: 403;
+  color: deepskyblue;
+  font-size: larger;
 }
