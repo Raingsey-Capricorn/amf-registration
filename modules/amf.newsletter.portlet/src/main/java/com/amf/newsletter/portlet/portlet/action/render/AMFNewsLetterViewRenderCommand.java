@@ -87,7 +87,6 @@ public class AMFNewsLetterViewRenderCommand implements MVCRenderCommand {
         articleSix.setTitle("Example Title #6");
         articleSix.setNew(true);
 
-
         renderRequest.setAttribute("amfAMFIssues", amfAMFIssues);
         renderRequest.setAttribute("amfAMFArticles", Arrays.asList(articleOne, articleTwo, articleThree, articleFour));
         renderRequest.setAttribute("amfAMFIssueCount", amfAMFIssues.size());
