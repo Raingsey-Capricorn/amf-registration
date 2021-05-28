@@ -1,6 +1,5 @@
 package com.amf.registration.event;
 
-import com.amf.registration.exception.NoSuchAMFEventLogException;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;

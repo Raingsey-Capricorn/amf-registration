@@ -15,11 +15,11 @@
 package com.amf.registration.service.impl;
 
 import com.amf.registration.exception.AMFUserValidationException;
-import com.amf.registration.exception.NoSuchAMFEventLogException;
 import com.amf.registration.model.AMFEventLog;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.service.AMFEventLogLocalService;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
+import com.amf.registration.service.AMFUserGroupService;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.amf.registration.service.base.AMFUserLocalServiceBaseImpl;
 import com.amf.registration.utilities.EventStatus;
@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
+import com.liferay.portal.kernel.exception.NoSuchUserGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.*;
@@ -157,7 +158,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             LayoutSetLocalServiceUtil.addLayoutSet(registerGroup.getGroupId(), true);
             LayoutSetLocalServiceUtil.addLayoutSet(registerGroup.getGroupId(), false);
             UserLocalServiceUtil.addGroupUser(registerGroup.getGroupId(), registerUser.getUserId());
-            UserLocalServiceUtil.addUserGroupUser(getAMFUserGroupID(), registerUser);
+            UserLocalServiceUtil.addUserGroupUser(amfUserGroupService.getAMFUserGroupId(), registerUser);
 
             Address registerAddress = createAddressEntity(userName, addressLineOne, addressLineTwo, city, Long.parseLong(regionId), zip, registerUser);
             AMFUser registerAMFUser = createAMFUserEntity(homePhone, mobilePhone, registerUser, registerAddress);
@@ -361,7 +362,6 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             String userName) {
 
         try {
-
             DynamicQuery dynamicQuery = dynamicQuery().add(RestrictionsFactoryUtil.eq("groupId", groupId));
             if (Validator.isNotNull(userId)) {
                 Disjunction disjunctionQuery = RestrictionsFactoryUtil.disjunction();
@@ -376,33 +376,17 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     }
 
     /**
-     * @return
-     */
-    private long getAMFUserGroupID() throws NoSuchGroupException {
-        try {
-            return (long) userGroupLocalService.dynamicQuery(
-                    userGroupLocalService.dynamicQuery()
-                            .add(RestrictionsFactoryUtil.conjunction()
-                                    .add(RestrictionsFactoryUtil.eq("name", "AMF-Community")))
-                            .setProjection(ProjectionFactoryUtil.groupProperty("userGroupId"))
-            ).stream().findFirst().orElseThrow(NoSuchGroupException::new);
-        } catch (Exception e) {
-            throw new NoSuchGroupException("<b>AMF-Community</b> Group is not existing yet. Please add the group using Admin user.");
-        }
-    }
-
-    /**
      * @param registerUser
      * @param serviceContext
      * @return
      */
     private Group createGroupEntity(final User registerUser, final ServiceContext serviceContext) throws PortalException {
 
-        final var groupId = CounterLocalServiceUtil.increment();
-        final var classNameId = ClassNameLocalServiceUtil.getClassName(com.liferay.portal.kernel.model.User.class.getName()).getClassNameId();
-        final var userOwnerId = registerUser.getUserId();
-        final var companyId = registerUser.getCompanyId();
-        final var uuID = serviceContext.getUuid();
+        final long groupId = CounterLocalServiceUtil.increment();
+        final long classNameId = ClassNameLocalServiceUtil.getClassName(com.liferay.portal.kernel.model.User.class.getName()).getClassNameId();
+        final long userOwnerId = registerUser.getUserId();
+        final long companyId = registerUser.getCompanyId();
+        final String uuID = serviceContext.getUuid();
 
         Group group = GroupLocalServiceUtil.createGroup(groupId);
         group.setClassNameId(classNameId);
@@ -451,12 +435,12 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     ) throws Exception {
 
         try {
-            final var userId = counterLocalService.increment();
-            final var fullName = FullNameGeneratorFactory.getInstance().getFullName(firstName, null, lastName);
-            final var locale = LocaleUtil.fromLanguageId("en_US");
-            final var greeting = LanguageUtil.format(locale, "welcome-x", fullName, false);
-            final var defaultUser = userLocalService.getDefaultUser(themeDisplay.getCompanyId());
-            final var passwordPolicy = defaultUser.getPasswordPolicy();
+            final long userId = counterLocalService.increment();
+            final String fullName = FullNameGeneratorFactory.getInstance().getFullName(firstName, null, lastName);
+            final Locale locale = LocaleUtil.fromLanguageId("en_US");
+            final String greeting = LanguageUtil.format(locale, "welcome-x", fullName, false);
+            final User defaultUser = userLocalService.getDefaultUser(themeDisplay.getCompanyId());
+            final PasswordPolicy passwordPolicy = defaultUser.getPasswordPolicy();
 
             User registerUser = UserLocalServiceUtil.createUser(userId);
             registerUser.setNew(true);
@@ -508,11 +492,11 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
             final String gender,
             final User registerUser) throws PortalException {
 
-        final var contactId = counterLocalService.increment();
-        final var className = User.class.getName();
-        final var classPk = registerUser.getUserId();
-        final var userClassNameId = ClassNameLocalServiceUtil.getClassNameId(User.class);
-        final var accountId = CompanyLocalServiceUtil.getCompanyById(registerUser.getCompanyId()).getAccountId();
+        final long contactId = counterLocalService.increment();
+        final String className = User.class.getName();
+        final long classPk = registerUser.getUserId();
+        final long userClassNameId = ClassNameLocalServiceUtil.getClassNameId(User.class);
+        final long accountId = CompanyLocalServiceUtil.getCompanyById(registerUser.getCompanyId()).getAccountId();
 
         Contact registerContact = ContactLocalServiceUtil.createContact(contactId);
         registerContact.setUserId(registerUser.getUserId());
@@ -540,17 +524,17 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
      * @param end
      * @return
      */
-    private DynamicQuery getDynamicQueryForUserBaseOnRegion(final long regionCode, final int start, final int end) throws NoSuchGroupException {
+    private DynamicQuery getDynamicQueryForUserBaseOnRegion(final long regionCode, final int start, final int end) throws NoSuchUserGroupException {
 
         if (regionCode > 0) {
             List<Long> amfMemberIds = null;
             try {
                 amfMemberIds = UserLocalServiceUtil
-                        .getUserGroupUsers(getAMFUserGroupID())
+                        .getUserGroupUsers(amfUserGroupService.getAMFUserGroupId())
                         .stream()
                         .map(User::getUserId).collect(Collectors.toList());
-            } catch (NoSuchGroupException e) {
-                throw new NoSuchGroupException(e.getMessage());
+            } catch (NoSuchUserGroupException e) {
+                throw new NoSuchUserGroupException(e.getMessage());
             }
             DynamicQuery addressDQ = addressLocalService.dynamicQuery()
                     .add(RestrictionsFactoryUtil.conjunction())
@@ -641,11 +625,11 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
                                         final String zip,
                                         final User registerUser) throws PortalException {
 
-        final var addressId = counterLocalService.increment(Address.class.getName());
-        final var className = Address.class.getName();
-        final var classPk = registerUser.getContactId();
-        final var contactClassNameId = ClassNameLocalServiceUtil.getClassNameId(Contact.class);
-        final var countryId = countryService.getCountryByName("united-states").getCountryId();
+        final long addressId = counterLocalService.increment(Address.class.getName());
+        final String className = Address.class.getName();
+        final long classPk = registerUser.getContactId();
+        final long contactClassNameId = ClassNameLocalServiceUtil.getClassNameId(Contact.class);
+        final long countryId = countryService.getCountryByName("united-states").getCountryId();
 
         Address registerAddress = AddressLocalServiceUtil.createAddress(addressId);
         registerAddress.setUserId(registerUser.getUserId());
@@ -687,7 +671,7 @@ public class AMFUserLocalServiceImpl extends AMFUserLocalServiceBaseImpl {
     private AddressLocalService addressLocalService;
 
     @Reference
-    private UserGroupLocalService userGroupLocalService;
+    private AMFUserGroupService amfUserGroupService;
 
     @Reference
     private UserLocalService userLocalService;

@@ -2,7 +2,6 @@
 
 <portlet:renderURL var="registerURL">
     <portlet:param name="mvcRenderCommandName" value="<%=MVCCommandNames.AMF_REGISTER%>"/>
-<%--    <portlet:param name="redirect" value="/amf/member-register"/>--%>
 </portlet:renderURL>
 
 <portlet:renderURL var="searchURL">

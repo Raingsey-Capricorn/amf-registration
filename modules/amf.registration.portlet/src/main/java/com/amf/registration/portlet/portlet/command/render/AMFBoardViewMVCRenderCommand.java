@@ -1,19 +1,21 @@
 package com.amf.registration.portlet.portlet.command.render;
 
+import com.amf.registration.exception.AMFUserValidationException;
 import com.amf.registration.model.AMFUser;
 import com.amf.registration.portlet.constants.AMFRegistrationPortletKeys;
 import com.amf.registration.portlet.constants.MVCCommandNames;
 import com.amf.registration.portlet.constants.PageConstants;
 import com.amf.registration.service.AMFEventLogLocalServiceUtil;
-import com.amf.registration.service.AMFUserLocalService;
+import com.amf.registration.service.AMFUserGroupServiceUtil;
 import com.amf.registration.service.AMFUserLocalServiceUtil;
 import com.amf.registration.utilities.EventStatus;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
-import com.liferay.portal.kernel.exception.NoSuchGroupException;
+import com.liferay.portal.kernel.exception.NoSuchUserGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.service.UserService;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -58,8 +60,6 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
     @SneakyThrows
     @Override
     public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
-
-        User loggedInUser = userService.getCurrentUser();
         ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
         if (themeDisplay.isSignedIn()) {
             return displayEventBoard(renderRequest);
@@ -75,10 +75,10 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
      */
     private String displayEventBoard(RenderRequest renderRequest) {
 
-        var currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
-        var delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
-        var start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
-        var end = start + delta;
+        int currentPage = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR);
+        int delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, SearchContainer.DEFAULT_DELTA);
+        int start = ((currentPage > 0) ? (currentPage - 1) : 0) * delta;
+        int end = start + delta;
 
         String selectedTab = ParamUtil.getString(renderRequest, "tabIndex");
         if (selectedTab != null && !selectedTab.isEmpty()) {
@@ -91,12 +91,27 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
         HashMap<String, Object> objectHashMap = new HashMap<>();
         try {
             User loggedInUser = userService.getCurrentUser();
-            boolean viewAllFlag = loggedInUser.getRoles().stream().anyMatch(role -> role.getName().equals("AMF_Superuser") || role.getName().equals("Administrator"));
+            boolean isAdministrator = loggedInUser.getRoles().stream().anyMatch(role -> role.getName().equals("AMF_Superuser") || role.getName().equals("Administrator"));
+
+            if (isAdministrator) {
+                try{
+                    boolean userGroupExiting = AMFUserGroupServiceUtil.isAMFUserGroupExiting();
+                }catch (NoSuchUserGroupException e){
+                    SessionErrors.add(renderRequest, "amfUserGroupMissing", AMFUserGroupServiceUtil.MESSAGE);
+                }
+            }
 
             switch (currentTabIndex) {
 
+                case PageConstants.TAB_PROFILE:
+                    if (!isAdministrator) {
+                        AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
+                        renderRequest.setAttribute("amfUser", amfUser);
+                    }
+                    break;
+
                 case PageConstants.TAB_ALL:
-                    if (viewAllFlag) {
+                    if (isAdministrator) {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogs(loggedInUser.getGroupId(), start, end);
                     } else {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.ALL, start, end);
@@ -104,7 +119,7 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
                     break;
 
                 case PageConstants.TAB_REGISTRATION:
-                    if (viewAllFlag) {
+                    if (isAdministrator) {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.REGISTER, start, end);
                     } else {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.REGISTER, start, end);
@@ -112,16 +127,10 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
                     break;
 
                 case PageConstants.TAB_LOGIN:
-                    if (viewAllFlag) {
+                    if (isAdministrator) {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), EventStatus.LOGIN, start, end);
                     } else {
                         objectHashMap = AMFEventLogLocalServiceUtil.getAMFEventLogBy(loggedInUser.getGroupId(), loggedInUser.getUserId(), EventStatus.LOGIN, start, end);
-                    }
-                    break;
-                default:
-                    if (!viewAllFlag) {
-                        AMFUser amfUser = AMFUserLocalServiceUtil.getAMFUserByGroupUserAndUserName(loggedInUser.getGroupId(), loggedInUser.getUserId(), loggedInUser.getScreenName());
-                        renderRequest.setAttribute("amfUser", amfUser);
                     }
                     break;
             }
@@ -132,8 +141,9 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
             return "/fragments/events-board.jsp";
         } catch (PortalException pe) {
             return "/fragments/events-board.jsp";
-        } catch (Exception e) {
+        }  catch (Exception e) {
             e.printStackTrace();
+        }finally {
             return "/fragments/events-board.jsp";
         }
     }
@@ -157,8 +167,5 @@ public class AMFBoardViewMVCRenderCommand implements MVCRenderCommand {
 
     @Reference
     private UserService userService;
-
-    @Reference
-    AMFUserLocalService service;
 
 }

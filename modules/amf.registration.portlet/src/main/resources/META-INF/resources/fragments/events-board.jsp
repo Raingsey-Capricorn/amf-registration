@@ -1,20 +1,16 @@
 <%@ page language="java" pageEncoding="UTF-8" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
-<%@ taglib prefix="liferay" uri="http://liferay.com/tld/ui" %>
-<%@ taglib prefix="liferay-ui" uri="http://liferay.com/tld/ui" %>
 
 <%
     String tabIndex = ParamUtil.getString(request, "tabIndex");
-    String selectedTab = String.valueOf(request.getAttribute("selectedTab"));
-    String defaultValue = "Profile";
-    if (selectedTab != null) {
-        defaultValue = selectedTab;
-        tabIndex = defaultValue;
-    }
+    String selectedTab = String.valueOf(request.getAttribute("selectedTab")) == null ?
+            String.valueOf(renderRequest.getPortletSession().getAttribute("selectedTab"))
+            : String.valueOf(request.getAttribute("selectedTab"));
     PortletURL iteratorURL = renderResponse.createRenderURL();
 %>
 
 <div class="container-fluid-1280">
+    <liferay-ui:error  key="amfUserGroupMissing" message="error.amf-usergroup-not-available"/>
     <b><liferay-ui:message key="amf-registration.caption"/></b>
     <liferay-ui:tabs names="Profile,All,Registration,Login"
                      tabsValues="Profile,All,Registration,Login"
