@@ -17,6 +17,7 @@
         <liferay-ui:message arguments='<%= SessionErrors.get(liferayPortletRequest, "serviceErrorDetails") %>'
                             key="error.registration-service-error"/>
     </liferay-ui:error>
+    <liferay-ui:error key="amfUserGroupMissing" message="error.amf-usergroup-not-available"/>
     <liferay-ui:error key="invalidUserName" message="error.field-duplicate-username"/>
     <liferay-ui:error key="zipCodeInvalid" message="error.field-zipcode"/>
     <liferay-ui:error key="stateInvalid" message="error.field-address"/>
