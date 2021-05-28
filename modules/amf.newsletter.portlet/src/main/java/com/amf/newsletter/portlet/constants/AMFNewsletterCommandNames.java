@@ -1,4 +1,4 @@
-package com.amf.newsletter.constants;
+package com.amf.newsletter.portlet.constants;
 
 /**
  * @author : Raingsey
@@ -8,5 +8,6 @@ package com.amf.newsletter.constants;
  * @crated-date : 5/12/2021
  */
 public final class AMFNewsletterCommandNames {
-    public static final String VIEW = "/newsletter";
+    public static final String VIEW     = "/newsletter";
+    public static final String DETAILS  = "/newsletter/details";
 }

@@ -13,7 +13,7 @@
 					 type="pills">
 
 		<liferay-ui:section>
-			<%@ include file="fragments/sections/newsletter-content-info.jsp" %>
+			<%@ include file="fragments/sections/issue-summary.jsp" %>
 		</liferay-ui:section>
 
 		<liferay-ui:section>

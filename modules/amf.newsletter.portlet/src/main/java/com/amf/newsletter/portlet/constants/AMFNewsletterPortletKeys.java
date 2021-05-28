@@ -1,4 +1,4 @@
-package com.amf.newsletter.constants;
+package com.amf.newsletter.portlet.constants;
 
 /**
  * @author Raingsey

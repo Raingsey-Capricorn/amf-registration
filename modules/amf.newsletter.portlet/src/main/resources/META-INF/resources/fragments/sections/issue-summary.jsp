@@ -1,8 +1,9 @@
-<%@ taglib prefix="liferay-aui" uri="http://liferay.com/tld/ui" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.amf.newsletter.model.AMFIssue" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
 
+<portlet:renderURL var="detailsURL">
+    <liferay-ui:param name="mvcRenderCommand" value="<%=AMFNewsletterCommandNames.DETAILS%>"/>
+    <liferay-ui:param name="issueNumber" value="${amfAMFIssue.getIssueNumber}"/>
+</portlet:renderURL>
 <div class="container-fluid-adjust">
     <c:forEach items="${amfAMFIssues}"
                var="issue"
@@ -21,7 +22,12 @@
                                                      keyProperty="amfAMFIssueLogId">
                         <liferay-aui:search-container-column-text>
                             <h6 class="issue-release-title">Issue #<%=amfAMFIssue.getFormattedIssueDateTitle()%></h6>
-                            <h2 class="issue-title"><%=amfAMFIssue.getTitle()%></h2>
+                            <%--<clay:link href="${detailsURL}"
+                                       label="<%=amfAMFIssue.getTitle()%>"
+                                       cssClass="issue-title"/>--%>
+                            <aui:button  cssClass="" onClick="${detailsURL}" value="<%=amfAMFIssue.getTitle()%>"/>
+
+
                             <c:forEach items="${amfAMFArticles}"
                                        var="article" varStatus="loop">
                                 <h5 class="article-title">${article.title}</h5>
@@ -30,6 +36,7 @@
                     </liferay-ui:search-container-row>
                     <liferay-ui:search-iterator markupView="lexicon" paginate="true"/>
                 </liferay-ui:search-container>
+
             </liferay-ui:panel>
         </liferay-ui:panel-container>
 
