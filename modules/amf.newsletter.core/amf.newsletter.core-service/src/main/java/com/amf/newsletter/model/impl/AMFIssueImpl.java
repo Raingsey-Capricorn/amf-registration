@@ -52,7 +52,7 @@ public class AMFIssueImpl extends AMFIssueBaseImpl {
      */
     @Override
     public String getFormattedIssueDateTitle() {
-        return String.format("%d, %s", getIssueNumber(), new SimpleDateFormat("MMM dd, yyyy").format(getIssuedDate()));
+        return String.format("%d, %s", getIssueNumber(), new SimpleDateFormat("MMM dd, yyyy").format(getIssueDate()));
     }
 
     /**
@@ -60,6 +60,6 @@ public class AMFIssueImpl extends AMFIssueBaseImpl {
      */
     @Override
     public String getIssueDateFormatAsMonth() {
-        return new SimpleDateFormat("MMMM").format(getIssuedDate());
+        return new SimpleDateFormat("MMMM").format(getIssueDate());
     }
 }

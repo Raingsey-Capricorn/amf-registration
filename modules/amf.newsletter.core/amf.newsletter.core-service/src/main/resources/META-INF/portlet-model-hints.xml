@@ -14,6 +14,7 @@
 		<field name="author" type="String" />
 		<field name="order" type="int" />
 		<field name="content" type="String" />
+		<field name="journalId" type="long" />
 	</model>
 	<model name="com.amf.newsletter.model.AMFIssue">
 		<field name="uuid" type="String" />
@@ -25,9 +26,10 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="issuedDate" type="Date" />
+		<field name="issueDate" type="Date" />
 		<field name="issueNumber" type="int" />
 		<field name="title" type="String" />
+		<field name="journalId" type="long" />
 		<field name="description" type="String" />
 	</model>
 </model-hints>

@@ -80,9 +80,9 @@ public class AMFIssueModelImpl
 		{"groupId", Types.BIGINT}, {"userGroupId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
 		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
-		{"modifiedDate", Types.TIMESTAMP}, {"issuedDate", Types.TIMESTAMP},
+		{"modifiedDate", Types.TIMESTAMP}, {"issueDate", Types.TIMESTAMP},
 		{"issueNumber", Types.INTEGER}, {"title", Types.VARCHAR},
-		{"description", Types.VARCHAR}
+		{"journalId", Types.BIGINT}, {"description", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -98,22 +98,23 @@ public class AMFIssueModelImpl
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("issuedDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("issueDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("issueNumber", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("journalId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table amf_issue (uuid_ VARCHAR(75) null,amfIssueId LONG not null primary key,groupId LONG,userGroupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,issuedDate DATE null,issueNumber INTEGER,title VARCHAR(75) null,description VARCHAR(75) null)";
+		"create table amf_issue (uuid_ VARCHAR(75) null,amfIssueId LONG not null primary key,groupId LONG,userGroupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,issueDate DATE null,issueNumber INTEGER,title VARCHAR(75) null,journalId LONG,description VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table amf_issue";
 
 	public static final String ORDER_BY_JPQL =
-		" ORDER BY amfIssue.issuedDate DESC";
+		" ORDER BY amfIssue.issueDate DESC";
 
 	public static final String ORDER_BY_SQL =
-		" ORDER BY amf_issue.issuedDate DESC";
+		" ORDER BY amf_issue.issueDate DESC";
 
 	public static final String DATA_SOURCE = "liferayDataSource";
 
@@ -150,7 +151,7 @@ public class AMFIssueModelImpl
 	 *		#getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long ISSUEDDATE_COLUMN_BITMASK = 16L;
+	public static final long ISSUEDATE_COLUMN_BITMASK = 16L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -190,9 +191,10 @@ public class AMFIssueModelImpl
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setIssuedDate(soapModel.getIssuedDate());
+		model.setIssueDate(soapModel.getIssueDate());
 		model.setIssueNumber(soapModel.getIssueNumber());
 		model.setTitle(soapModel.getTitle());
+		model.setJournalId(soapModel.getJournalId());
 		model.setDescription(soapModel.getDescription());
 
 		return model;
@@ -386,9 +388,9 @@ public class AMFIssueModelImpl
 		attributeSetterBiConsumers.put(
 			"modifiedDate",
 			(BiConsumer<AMFIssue, Date>)AMFIssue::setModifiedDate);
-		attributeGetterFunctions.put("issuedDate", AMFIssue::getIssuedDate);
+		attributeGetterFunctions.put("issueDate", AMFIssue::getIssueDate);
 		attributeSetterBiConsumers.put(
-			"issuedDate", (BiConsumer<AMFIssue, Date>)AMFIssue::setIssuedDate);
+			"issueDate", (BiConsumer<AMFIssue, Date>)AMFIssue::setIssueDate);
 		attributeGetterFunctions.put("issueNumber", AMFIssue::getIssueNumber);
 		attributeSetterBiConsumers.put(
 			"issueNumber",
@@ -396,6 +398,9 @@ public class AMFIssueModelImpl
 		attributeGetterFunctions.put("title", AMFIssue::getTitle);
 		attributeSetterBiConsumers.put(
 			"title", (BiConsumer<AMFIssue, String>)AMFIssue::setTitle);
+		attributeGetterFunctions.put("journalId", AMFIssue::getJournalId);
+		attributeSetterBiConsumers.put(
+			"journalId", (BiConsumer<AMFIssue, Long>)AMFIssue::setJournalId);
 		attributeGetterFunctions.put("description", AMFIssue::getDescription);
 		attributeSetterBiConsumers.put(
 			"description",
@@ -614,17 +619,17 @@ public class AMFIssueModelImpl
 
 	@JSON
 	@Override
-	public Date getIssuedDate() {
-		return _issuedDate;
+	public Date getIssueDate() {
+		return _issueDate;
 	}
 
 	@Override
-	public void setIssuedDate(Date issuedDate) {
+	public void setIssueDate(Date issueDate) {
 		if (_columnOriginalValues == Collections.EMPTY_MAP) {
 			_setColumnOriginalValues();
 		}
 
-		_issuedDate = issuedDate;
+		_issueDate = issueDate;
 	}
 
 	@JSON
@@ -660,6 +665,21 @@ public class AMFIssueModelImpl
 		}
 
 		_title = title;
+	}
+
+	@JSON
+	@Override
+	public long getJournalId() {
+		return _journalId;
+	}
+
+	@Override
+	public void setJournalId(long journalId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_journalId = journalId;
 	}
 
 	@JSON
@@ -751,9 +771,10 @@ public class AMFIssueModelImpl
 		amfIssueImpl.setUserName(getUserName());
 		amfIssueImpl.setCreateDate(getCreateDate());
 		amfIssueImpl.setModifiedDate(getModifiedDate());
-		amfIssueImpl.setIssuedDate(getIssuedDate());
+		amfIssueImpl.setIssueDate(getIssueDate());
 		amfIssueImpl.setIssueNumber(getIssueNumber());
 		amfIssueImpl.setTitle(getTitle());
+		amfIssueImpl.setJournalId(getJournalId());
 		amfIssueImpl.setDescription(getDescription());
 
 		amfIssueImpl.resetOriginalValues();
@@ -765,7 +786,7 @@ public class AMFIssueModelImpl
 	public int compareTo(AMFIssue amfIssue) {
 		int value = 0;
 
-		value = DateUtil.compareTo(getIssuedDate(), amfIssue.getIssuedDate());
+		value = DateUtil.compareTo(getIssueDate(), amfIssue.getIssueDate());
 
 		value = value * -1;
 
@@ -878,13 +899,13 @@ public class AMFIssueModelImpl
 			amfIssueCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		Date issuedDate = getIssuedDate();
+		Date issueDate = getIssueDate();
 
-		if (issuedDate != null) {
-			amfIssueCacheModel.issuedDate = issuedDate.getTime();
+		if (issueDate != null) {
+			amfIssueCacheModel.issueDate = issueDate.getTime();
 		}
 		else {
-			amfIssueCacheModel.issuedDate = Long.MIN_VALUE;
+			amfIssueCacheModel.issueDate = Long.MIN_VALUE;
 		}
 
 		amfIssueCacheModel.issueNumber = getIssueNumber();
@@ -896,6 +917,8 @@ public class AMFIssueModelImpl
 		if ((title != null) && (title.length() == 0)) {
 			amfIssueCacheModel.title = null;
 		}
+
+		amfIssueCacheModel.journalId = getJournalId();
 
 		amfIssueCacheModel.description = getDescription();
 
@@ -988,9 +1011,10 @@ public class AMFIssueModelImpl
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private Date _issuedDate;
+	private Date _issueDate;
 	private int _issueNumber;
 	private String _title;
+	private long _journalId;
 	private String _description;
 
 	public <T> T getColumnValue(String columnName) {
@@ -1031,9 +1055,10 @@ public class AMFIssueModelImpl
 		_columnOriginalValues.put("userName", _userName);
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
-		_columnOriginalValues.put("issuedDate", _issuedDate);
+		_columnOriginalValues.put("issueDate", _issueDate);
 		_columnOriginalValues.put("issueNumber", _issueNumber);
 		_columnOriginalValues.put("title", _title);
+		_columnOriginalValues.put("journalId", _journalId);
 		_columnOriginalValues.put("description", _description);
 	}
 
@@ -1076,13 +1101,15 @@ public class AMFIssueModelImpl
 
 		columnBitmasks.put("modifiedDate", 256L);
 
-		columnBitmasks.put("issuedDate", 512L);
+		columnBitmasks.put("issueDate", 512L);
 
 		columnBitmasks.put("issueNumber", 1024L);
 
 		columnBitmasks.put("title", 2048L);
 
-		columnBitmasks.put("description", 4096L);
+		columnBitmasks.put("journalId", 4096L);
+
+		columnBitmasks.put("description", 8192L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

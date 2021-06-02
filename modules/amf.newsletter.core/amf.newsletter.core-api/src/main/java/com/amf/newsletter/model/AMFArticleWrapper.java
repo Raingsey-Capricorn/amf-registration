@@ -55,6 +55,7 @@ public class AMFArticleWrapper
 		attributes.put("author", getAuthor());
 		attributes.put("order", getOrder());
 		attributes.put("content", getContent());
+		attributes.put("journalId", getJournalId());
 
 		return attributes;
 	}
@@ -132,6 +133,12 @@ public class AMFArticleWrapper
 		if (content != null) {
 			setContent(content);
 		}
+
+		Long journalId = (Long)attributes.get("journalId");
+
+		if (journalId != null) {
+			setJournalId(journalId);
+		}
 	}
 
 	/**
@@ -192,6 +199,16 @@ public class AMFArticleWrapper
 	@Override
 	public int getIssueNumber() {
 		return model.getIssueNumber();
+	}
+
+	/**
+	 * Returns the journal ID of this amf article.
+	 *
+	 * @return the journal ID of this amf article
+	 */
+	@Override
+	public long getJournalId() {
+		return model.getJournalId();
 	}
 
 	/**
@@ -337,6 +354,16 @@ public class AMFArticleWrapper
 	@Override
 	public void setIssueNumber(int issueNumber) {
 		model.setIssueNumber(issueNumber);
+	}
+
+	/**
+	 * Sets the journal ID of this amf article.
+	 *
+	 * @param journalId the journal ID of this amf article
+	 */
+	@Override
+	public void setJournalId(long journalId) {
+		model.setJournalId(journalId);
 	}
 
 	/**

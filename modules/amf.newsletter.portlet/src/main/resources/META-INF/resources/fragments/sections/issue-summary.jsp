@@ -1,9 +1,12 @@
 <%@ include file="/META-INF/resources/init.jsp" %>
 
 <portlet:renderURL var="detailsURL">
-    <liferay-ui:param name="mvcRenderCommand" value="<%=AMFNewsletterCommandNames.DETAILS%>"/>
-    <liferay-ui:param name="issueNumber" value="${amfAMFIssue.getIssueNumber}"/>
+    <liferay-ui:param name="mvcRenderCommandName" value="<%=AMFNewsletterCommandNames.DETAILS%>"/>
+    <liferay-ui:param name="issueNumber" value="${issueNumber}"/>
 </portlet:renderURL>
+<%
+    String issueNumber = null;
+%>
 <div class="container-fluid-adjust">
     <c:forEach items="${amfAMFIssues}"
                var="issue"
@@ -21,17 +24,39 @@
                                                      modelVar="amfAMFIssue"
                                                      keyProperty="amfAMFIssueLogId">
                         <liferay-aui:search-container-column-text>
-                            <h6 class="issue-release-title">Issue #<%=amfAMFIssue.getFormattedIssueDateTitle()%></h6>
-                            <%--<clay:link href="${detailsURL}"
-                                       label="<%=amfAMFIssue.getTitle()%>"
-                                       cssClass="issue-title"/>--%>
-                            <aui:button  cssClass="" onClick="${detailsURL}" value="<%=amfAMFIssue.getTitle()%>"/>
+                            <h6 class="issue-release-title">
+                                Issue #<%=amfAMFIssue.getFormattedIssueDateTitle()%>
+                            </h6>
 
 
-                            <c:forEach items="${amfAMFArticles}"
-                                       var="article" varStatus="loop">
-                                <h5 class="article-title">${article.title}</h5>
-                            </c:forEach>
+                            <%--<input:renderURL  onClick="function click(e){
+                                alert(e);
+                            }">
+                                <%=amfAMFIssue.getTitle()%>
+                            </input:ren>--%>
+
+                            <a <%--href="${detailsURL}"--%> onclick=
+
+
+                                <%--"<%= issueNumber= String.valueOf(amfAMFIssue.getIssueNumber())%>"--%> ></a>
+                            <aui:button
+                                    onClick="alert(e);"><%=amfAMFIssue.getTitle()%>
+                            </aui:button>
+
+
+
+                            <ul>
+                                <c:forEach items="${amfAMFArticles}"
+                                           var="article" varStatus="loop">
+                                    <li>
+                                        <clay:link href="${detailsURL}"
+                                                   label="${article.title}"
+                                                   cssClass="article-title"
+                                        />
+                                    </li>
+                                </c:forEach>
+                            </ul>
+
                         </liferay-aui:search-container-column-text>
                     </liferay-ui:search-container-row>
                     <liferay-ui:search-iterator markupView="lexicon" paginate="true"/>

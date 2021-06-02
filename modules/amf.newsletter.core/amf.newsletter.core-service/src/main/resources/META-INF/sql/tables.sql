@@ -17,7 +17,8 @@ create table amf_article (
 	title VARCHAR(75) null,
 	author VARCHAR(75) null,
 	order_ INTEGER,
-	content VARCHAR(75) null
+	content VARCHAR(75) null,
+	journalId LONG
 );
 
 create table amf_issue (
@@ -30,8 +31,9 @@ create table amf_issue (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	issuedDate DATE null,
+	issueDate DATE null,
 	issueNumber INTEGER,
 	title VARCHAR(75) null,
+	journalId LONG,
 	description VARCHAR(75) null
 );

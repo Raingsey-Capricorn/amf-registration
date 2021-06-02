@@ -219,18 +219,18 @@ public interface AMFIssueModel
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
-	 * Returns the issued date of this amf issue.
+	 * Returns the issue date of this amf issue.
 	 *
-	 * @return the issued date of this amf issue
+	 * @return the issue date of this amf issue
 	 */
-	public Date getIssuedDate();
+	public Date getIssueDate();
 
 	/**
-	 * Sets the issued date of this amf issue.
+	 * Sets the issue date of this amf issue.
 	 *
-	 * @param issuedDate the issued date of this amf issue
+	 * @param issueDate the issue date of this amf issue
 	 */
-	public void setIssuedDate(Date issuedDate);
+	public void setIssueDate(Date issueDate);
 
 	/**
 	 * Returns the issue number of this amf issue.
@@ -260,6 +260,20 @@ public interface AMFIssueModel
 	 * @param title the title of this amf issue
 	 */
 	public void setTitle(String title);
+
+	/**
+	 * Returns the journal ID of this amf issue.
+	 *
+	 * @return the journal ID of this amf issue
+	 */
+	public long getJournalId();
+
+	/**
+	 * Sets the journal ID of this amf issue.
+	 *
+	 * @param journalId the journal ID of this amf issue
+	 */
+	public void setJournalId(long journalId);
 
 	/**
 	 * Returns the description of this amf issue.

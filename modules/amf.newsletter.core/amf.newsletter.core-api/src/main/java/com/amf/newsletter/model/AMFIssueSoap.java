@@ -42,9 +42,10 @@ public class AMFIssueSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
-		soapModel.setIssuedDate(model.getIssuedDate());
+		soapModel.setIssueDate(model.getIssueDate());
 		soapModel.setIssueNumber(model.getIssueNumber());
 		soapModel.setTitle(model.getTitle());
+		soapModel.setJournalId(model.getJournalId());
 		soapModel.setDescription(model.getDescription());
 
 		return soapModel;
@@ -171,12 +172,12 @@ public class AMFIssueSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
-	public Date getIssuedDate() {
-		return _issuedDate;
+	public Date getIssueDate() {
+		return _issueDate;
 	}
 
-	public void setIssuedDate(Date issuedDate) {
-		_issuedDate = issuedDate;
+	public void setIssueDate(Date issueDate) {
+		_issueDate = issueDate;
 	}
 
 	public int getIssueNumber() {
@@ -193,6 +194,14 @@ public class AMFIssueSoap implements Serializable {
 
 	public void setTitle(String title) {
 		_title = title;
+	}
+
+	public long getJournalId() {
+		return _journalId;
+	}
+
+	public void setJournalId(long journalId) {
+		_journalId = journalId;
 	}
 
 	public String getDescription() {
@@ -212,9 +221,10 @@ public class AMFIssueSoap implements Serializable {
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
-	private Date _issuedDate;
+	private Date _issueDate;
 	private int _issueNumber;
 	private String _title;
+	private long _journalId;
 	private String _description;
 
 }

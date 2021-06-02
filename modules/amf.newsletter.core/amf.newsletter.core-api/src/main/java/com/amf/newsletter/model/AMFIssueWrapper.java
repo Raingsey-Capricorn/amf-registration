@@ -52,9 +52,10 @@ public class AMFIssueWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("issuedDate", getIssuedDate());
+		attributes.put("issueDate", getIssueDate());
 		attributes.put("issueNumber", getIssueNumber());
 		attributes.put("title", getTitle());
+		attributes.put("journalId", getJournalId());
 		attributes.put("description", getDescription());
 
 		return attributes;
@@ -116,10 +117,10 @@ public class AMFIssueWrapper
 			setModifiedDate(modifiedDate);
 		}
 
-		Date issuedDate = (Date)attributes.get("issuedDate");
+		Date issueDate = (Date)attributes.get("issueDate");
 
-		if (issuedDate != null) {
-			setIssuedDate(issuedDate);
+		if (issueDate != null) {
+			setIssueDate(issueDate);
 		}
 
 		Integer issueNumber = (Integer)attributes.get("issueNumber");
@@ -132,6 +133,12 @@ public class AMFIssueWrapper
 
 		if (title != null) {
 			setTitle(title);
+		}
+
+		Long journalId = (Long)attributes.get("journalId");
+
+		if (journalId != null) {
+			setJournalId(journalId);
 		}
 
 		String description = (String)attributes.get("description");
@@ -208,21 +215,21 @@ public class AMFIssueWrapper
 	}
 
 	/**
+	 * Returns the issue date of this amf issue.
+	 *
+	 * @return the issue date of this amf issue
+	 */
+	@Override
+	public Date getIssueDate() {
+		return model.getIssueDate();
+	}
+
+	/**
 	 * @return
 	 */
 	@Override
 	public String getIssueDateFormatAsMonth() {
 		return model.getIssueDateFormatAsMonth();
-	}
-
-	/**
-	 * Returns the issued date of this amf issue.
-	 *
-	 * @return the issued date of this amf issue
-	 */
-	@Override
-	public Date getIssuedDate() {
-		return model.getIssuedDate();
 	}
 
 	/**
@@ -233,6 +240,16 @@ public class AMFIssueWrapper
 	@Override
 	public int getIssueNumber() {
 		return model.getIssueNumber();
+	}
+
+	/**
+	 * Returns the journal ID of this amf issue.
+	 *
+	 * @return the journal ID of this amf issue
+	 */
+	@Override
+	public long getJournalId() {
+		return model.getJournalId();
 	}
 
 	/**
@@ -371,13 +388,13 @@ public class AMFIssueWrapper
 	}
 
 	/**
-	 * Sets the issued date of this amf issue.
+	 * Sets the issue date of this amf issue.
 	 *
-	 * @param issuedDate the issued date of this amf issue
+	 * @param issueDate the issue date of this amf issue
 	 */
 	@Override
-	public void setIssuedDate(Date issuedDate) {
-		model.setIssuedDate(issuedDate);
+	public void setIssueDate(Date issueDate) {
+		model.setIssueDate(issueDate);
 	}
 
 	/**
@@ -388,6 +405,16 @@ public class AMFIssueWrapper
 	@Override
 	public void setIssueNumber(int issueNumber) {
 		model.setIssueNumber(issueNumber);
+	}
+
+	/**
+	 * Sets the journal ID of this amf issue.
+	 *
+	 * @param journalId the journal ID of this amf issue
+	 */
+	@Override
+	public void setJournalId(long journalId) {
+		model.setJournalId(journalId);
 	}
 
 	/**

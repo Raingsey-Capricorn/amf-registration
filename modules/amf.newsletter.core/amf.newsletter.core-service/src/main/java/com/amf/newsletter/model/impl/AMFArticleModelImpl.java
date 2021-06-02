@@ -80,7 +80,8 @@ public class AMFArticleModelImpl
 		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
 		{"modifiedDate", Types.TIMESTAMP}, {"issueNumber", Types.INTEGER},
 		{"title", Types.VARCHAR}, {"author", Types.VARCHAR},
-		{"order_", Types.INTEGER}, {"content", Types.VARCHAR}
+		{"order_", Types.INTEGER}, {"content", Types.VARCHAR},
+		{"journalId", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -99,10 +100,11 @@ public class AMFArticleModelImpl
 		TABLE_COLUMNS_MAP.put("author", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("order_", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("content", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("journalId", Types.BIGINT);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table amf_article (uuid_ VARCHAR(75) null,amfArticleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,issueNumber INTEGER,title VARCHAR(75) null,author VARCHAR(75) null,order_ INTEGER,content VARCHAR(75) null)";
+		"create table amf_article (uuid_ VARCHAR(75) null,amfArticleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,issueNumber INTEGER,title VARCHAR(75) null,author VARCHAR(75) null,order_ INTEGER,content VARCHAR(75) null,journalId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table amf_article";
 
@@ -183,6 +185,7 @@ public class AMFArticleModelImpl
 		model.setAuthor(soapModel.getAuthor());
 		model.setOrder(soapModel.getOrder());
 		model.setContent(soapModel.getContent());
+		model.setJournalId(soapModel.getJournalId());
 
 		return model;
 	}
@@ -390,6 +393,10 @@ public class AMFArticleModelImpl
 		attributeGetterFunctions.put("content", AMFArticle::getContent);
 		attributeSetterBiConsumers.put(
 			"content", (BiConsumer<AMFArticle, String>)AMFArticle::setContent);
+		attributeGetterFunctions.put("journalId", AMFArticle::getJournalId);
+		attributeSetterBiConsumers.put(
+			"journalId",
+			(BiConsumer<AMFArticle, Long>)AMFArticle::setJournalId);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -653,6 +660,21 @@ public class AMFArticleModelImpl
 		_content = content;
 	}
 
+	@JSON
+	@Override
+	public long getJournalId() {
+		return _journalId;
+	}
+
+	@Override
+	public void setJournalId(long journalId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_journalId = journalId;
+	}
+
 	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(
@@ -725,6 +747,7 @@ public class AMFArticleModelImpl
 		amfArticleImpl.setAuthor(getAuthor());
 		amfArticleImpl.setOrder(getOrder());
 		amfArticleImpl.setContent(getContent());
+		amfArticleImpl.setJournalId(getJournalId());
 
 		amfArticleImpl.resetOriginalValues();
 
@@ -878,6 +901,8 @@ public class AMFArticleModelImpl
 			amfArticleCacheModel.content = null;
 		}
 
+		amfArticleCacheModel.journalId = getJournalId();
+
 		return amfArticleCacheModel;
 	}
 
@@ -964,6 +989,7 @@ public class AMFArticleModelImpl
 	private String _author;
 	private int _order;
 	private String _content;
+	private long _journalId;
 
 	public <T> T getColumnValue(String columnName) {
 		columnName = _attributeNames.getOrDefault(columnName, columnName);
@@ -1006,6 +1032,7 @@ public class AMFArticleModelImpl
 		_columnOriginalValues.put("author", _author);
 		_columnOriginalValues.put("order_", _order);
 		_columnOriginalValues.put("content", _content);
+		_columnOriginalValues.put("journalId", _journalId);
 	}
 
 	private static final Map<String, String> _attributeNames;
@@ -1053,6 +1080,8 @@ public class AMFArticleModelImpl
 		columnBitmasks.put("order_", 1024L);
 
 		columnBitmasks.put("content", 2048L);
+
+		columnBitmasks.put("journalId", 4096L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

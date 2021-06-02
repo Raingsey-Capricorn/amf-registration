@@ -45,6 +45,7 @@ public class AMFArticleSoap implements Serializable {
 		soapModel.setAuthor(model.getAuthor());
 		soapModel.setOrder(model.getOrder());
 		soapModel.setContent(model.getContent());
+		soapModel.setJournalId(model.getJournalId());
 
 		return soapModel;
 	}
@@ -194,6 +195,14 @@ public class AMFArticleSoap implements Serializable {
 		_content = content;
 	}
 
+	public long getJournalId() {
+		return _journalId;
+	}
+
+	public void setJournalId(long journalId) {
+		_journalId = journalId;
+	}
+
 	private String _uuid;
 	private long _amfArticleId;
 	private long _companyId;
@@ -206,5 +215,6 @@ public class AMFArticleSoap implements Serializable {
 	private String _author;
 	private int _order;
 	private String _content;
+	private long _journalId;
 
 }

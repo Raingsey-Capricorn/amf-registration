@@ -17,6 +17,7 @@ import javax.portlet.RenderResponse;
  * @crated-date : 5/12/2021
  */
 @Component(
+        immediate = true,
         property = {
                 "javax.portlet.name=" + AMFNewsletterPortletKeys.AMFNEWSLETTER,
                 "mvc.command.name=" + AMFNewsletterCommandNames.DETAILS

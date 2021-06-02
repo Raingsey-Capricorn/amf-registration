@@ -259,4 +259,18 @@ public interface AMFArticleModel
 	 */
 	public void setContent(String content);
 
+	/**
+	 * Returns the journal ID of this amf article.
+	 *
+	 * @return the journal ID of this amf article
+	 */
+	public long getJournalId();
+
+	/**
+	 * Sets the journal ID of this amf article.
+	 *
+	 * @param journalId the journal ID of this amf article
+	 */
+	public void setJournalId(long journalId);
+
 }

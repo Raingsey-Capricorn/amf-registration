@@ -63,7 +63,7 @@ public class AMFArticleCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -89,6 +89,8 @@ public class AMFArticleCacheModel
 		sb.append(order);
 		sb.append(", content=");
 		sb.append(content);
+		sb.append(", journalId=");
+		sb.append(journalId);
 		sb.append("}");
 
 		return sb.toString();
@@ -155,6 +157,8 @@ public class AMFArticleCacheModel
 			amfArticleImpl.setContent(content);
 		}
 
+		amfArticleImpl.setJournalId(journalId);
+
 		amfArticleImpl.resetOriginalValues();
 
 		return amfArticleImpl;
@@ -179,6 +183,8 @@ public class AMFArticleCacheModel
 
 		order = objectInput.readInt();
 		content = objectInput.readUTF();
+
+		journalId = objectInput.readLong();
 	}
 
 	@Override
@@ -230,6 +236,8 @@ public class AMFArticleCacheModel
 		else {
 			objectOutput.writeUTF(content);
 		}
+
+		objectOutput.writeLong(journalId);
 	}
 
 	public String uuid;
@@ -244,5 +252,6 @@ public class AMFArticleCacheModel
 	public String author;
 	public int order;
 	public String content;
+	public long journalId;
 
 }

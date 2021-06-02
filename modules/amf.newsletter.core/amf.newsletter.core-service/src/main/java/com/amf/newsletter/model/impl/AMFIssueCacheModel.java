@@ -62,7 +62,7 @@ public class AMFIssueCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -82,12 +82,14 @@ public class AMFIssueCacheModel
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", issuedDate=");
-		sb.append(issuedDate);
+		sb.append(", issueDate=");
+		sb.append(issueDate);
 		sb.append(", issueNumber=");
 		sb.append(issueNumber);
 		sb.append(", title=");
 		sb.append(title);
+		sb.append(", journalId=");
+		sb.append(journalId);
 		sb.append(", description=");
 		sb.append(description);
 		sb.append("}");
@@ -133,11 +135,11 @@ public class AMFIssueCacheModel
 			amfIssueImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
-		if (issuedDate == Long.MIN_VALUE) {
-			amfIssueImpl.setIssuedDate(null);
+		if (issueDate == Long.MIN_VALUE) {
+			amfIssueImpl.setIssueDate(null);
 		}
 		else {
-			amfIssueImpl.setIssuedDate(new Date(issuedDate));
+			amfIssueImpl.setIssueDate(new Date(issueDate));
 		}
 
 		amfIssueImpl.setIssueNumber(issueNumber);
@@ -148,6 +150,8 @@ public class AMFIssueCacheModel
 		else {
 			amfIssueImpl.setTitle(title);
 		}
+
+		amfIssueImpl.setJournalId(journalId);
 
 		if (description == null) {
 			amfIssueImpl.setDescription("");
@@ -177,10 +181,12 @@ public class AMFIssueCacheModel
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
-		issuedDate = objectInput.readLong();
+		issueDate = objectInput.readLong();
 
 		issueNumber = objectInput.readInt();
 		title = objectInput.readUTF();
+
+		journalId = objectInput.readLong();
 		description = objectInput.readUTF();
 	}
 
@@ -212,7 +218,7 @@ public class AMFIssueCacheModel
 
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
-		objectOutput.writeLong(issuedDate);
+		objectOutput.writeLong(issueDate);
 
 		objectOutput.writeInt(issueNumber);
 
@@ -222,6 +228,8 @@ public class AMFIssueCacheModel
 		else {
 			objectOutput.writeUTF(title);
 		}
+
+		objectOutput.writeLong(journalId);
 
 		if (description == null) {
 			objectOutput.writeUTF("");
@@ -240,9 +248,10 @@ public class AMFIssueCacheModel
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public long issuedDate;
+	public long issueDate;
 	public int issueNumber;
 	public String title;
+	public long journalId;
 	public String description;
 
 }

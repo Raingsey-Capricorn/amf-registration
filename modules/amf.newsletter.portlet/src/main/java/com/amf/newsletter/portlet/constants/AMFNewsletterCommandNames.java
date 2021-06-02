@@ -8,6 +8,6 @@ package com.amf.newsletter.portlet.constants;
  * @crated-date : 5/12/2021
  */
 public final class AMFNewsletterCommandNames {
-    public static final String VIEW     = "/newsletter";
-    public static final String DETAILS  = "/newsletter/details";
+    public static final String VIEW     = "/newsletters";
+    public static final String DETAILS  = "/newsletters/details";
 }

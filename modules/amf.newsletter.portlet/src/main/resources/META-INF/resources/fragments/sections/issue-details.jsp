@@ -3,8 +3,23 @@
 <%@ taglib prefix="liferay-aui" uri="http://liferay.com/tld/ui" %>
 
 <div class="container-fluid-adjust">
-    <h2>Hello from the other side !</h2>
-    <%--<c:forEach items="${amfAMFIssues}"
+
+    <%-- issue-date --%>
+
+    <%-- Sissue Title--%>
+    <%-- Authurs' name list--%>
+    <%-- Issue content--%>
+    <%-- last articles--%>
+    <%-- article's content --%>
+
+    <%-- last articles--%>
+    <%-- article's content --%>
+
+    <%-- last articles--%>
+    <%-- article's content --%>
+
+    <%--
+    <c:forEach items="${amfAMFIssues}"
                var="issue"
                varStatus="loop">
         <liferay-ui:panel-container accordion="true" extended="true">

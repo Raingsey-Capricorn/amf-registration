@@ -24,9 +24,10 @@
         <column name="createDate" type="Date"/>
         <column name="modifiedDate" type="Date"/>
         <!-- properties -->
-        <column name="issuedDate" type="Date"/>
+        <column name="issueDate" type="Date"/>
         <column name="issueNumber" type="int"/>
         <column name="title" type="String"/>
+        <column name="journalId" type="long"/>
         <column name="description" type="String"/>
         <column name="byLine" type="Collection"/>
 
@@ -34,7 +35,7 @@
         <column name="articles" type="Collection" entity="AMFArticle" mapping-table="amfissue_article"/>
 
         <order by="desc">
-            <order-column name="issuedDate"/>
+            <order-column name="issueDate"/>
         </order>
 
         <finder name="AMFIssueId" return-type="Collection">
@@ -68,6 +69,7 @@
         <column name="author" type="String"/>
         <column name="order" type="int"/>
         <column name="content" type="String"/>
+        <column name="journalId" type="long"/>
 
         <column name="issue" type="Collection" entity="AMFIssue" mapping-table="amfissue_article"/>
         <order by="asc">

@@ -14,17 +14,18 @@
 
 package com.amf.newsletter.service.impl;
 
+import com.amf.newsletter.exception.NoSuchAMFIssueException;
 import com.amf.newsletter.model.AMFArticle;
 import com.amf.newsletter.model.AMFIssue;
 import com.amf.newsletter.service.AMFArticleLocalServiceUtil;
+import com.amf.newsletter.service.AMFIssueLocalService;
 import com.amf.newsletter.service.AMFIssueLocalServiceUtil;
 import com.amf.newsletter.service.base.AMFIssueLocalServiceBaseImpl;
-
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
-
-import lombok.SneakyThrows;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -110,19 +111,19 @@ public class AMFIssueLocalServiceImpl extends AMFIssueLocalServiceBaseImpl {
         articleSeven.setNew(true);
         try {
             AMFIssue amfIssueOne = AMFIssueLocalServiceUtil.createAMFIssue(CounterLocalServiceUtil.increment(AMFIssue.class.getName()));
-            amfIssueOne.setIssuedDate(new SimpleDateFormat("MMM dd,yyyy").parse("January 02,2021"));
+            amfIssueOne.setIssueDate(new SimpleDateFormat("MMM dd,yyyy").parse("January 02,2021"));
             amfIssueOne.setIssueNumber(new Random().nextInt(100));
             amfIssueOne.setTitle("Tech-Trench?");
             amfIssueOne.setDescription("Tech-Trench - People tend to grab the techy-stuffs every day");
 
             AMFIssue amfIssueTwo = AMFIssueLocalServiceUtil.createAMFIssue(CounterLocalServiceUtil.increment(AMFIssue.class.getName()));
-            amfIssueTwo.setIssuedDate(new SimpleDateFormat("MMM dd,yyyy").parse("February 02,2021"));
+            amfIssueTwo.setIssueDate(new SimpleDateFormat("MMM dd,yyyy").parse("February 02,2021"));
             amfIssueTwo.setIssueNumber(new Random().nextInt(100));
             amfIssueTwo.setTitle("Tech-Trench?");
             amfIssueTwo.setDescription("Tech-Trench - People tend to grab the techy-stuffs every day");
 
             AMFIssue amfIssueThree = AMFIssueLocalServiceUtil.createAMFIssue(CounterLocalServiceUtil.increment(AMFIssue.class.getName()));
-            amfIssueThree.setIssuedDate(new SimpleDateFormat("MMM dd,yyyy").parse("March 12,2021"));
+            amfIssueThree.setIssueDate(new SimpleDateFormat("MMM dd,yyyy").parse("March 12,2021"));
             amfIssueThree.setIssueNumber(new Random().nextInt(100));
             amfIssueThree.setTitle("Tech-Trench?");
             amfIssueThree.setDescription("Tech-Trench - People tend to grab the techy-stuffs every day");
@@ -136,4 +137,7 @@ public class AMFIssueLocalServiceImpl extends AMFIssueLocalServiceBaseImpl {
             return Collections.emptyList();
         }
     }
+
+
+
 }
