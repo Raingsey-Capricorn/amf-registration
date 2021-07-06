@@ -14,25 +14,24 @@
 
 package com.amf.newsletter.service.impl;
 
-import com.amf.newsletter.exception.NoSuchAMFIssueException;
 import com.amf.newsletter.model.AMFArticle;
 import com.amf.newsletter.model.AMFIssue;
 import com.amf.newsletter.service.AMFArticleLocalServiceUtil;
-import com.amf.newsletter.service.AMFIssueLocalService;
 import com.amf.newsletter.service.AMFIssueLocalServiceUtil;
 import com.amf.newsletter.service.base.AMFIssueLocalServiceBaseImpl;
+import com.amf.newsletter.service.persistence.AMFIssueUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import lombok.SneakyThrows;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 /**
  * The implementation of the amf issue local service.
@@ -138,6 +137,58 @@ public class AMFIssueLocalServiceImpl extends AMFIssueLocalServiceBaseImpl {
         }
     }
 
+    /**
+     * @param issueDate
+     * @return
+     */
+    public List<AMFIssue> findByAMFIssueDate(Date issueDate) {
+        return AMFIssueUtil.findByAMFIssueDate(issueDate);
+    }
 
+    /**
+     * @param date
+     * @return
+     */
+    @SneakyThrows
+    public List<AMFIssue> getAMFIssuesWithinMonth(Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date firstDateOfMonth = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.firstDayOfMonth()).toString());
+        Date lastDateOfMonth = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.lastDayOfMonth()).toString());
 
+        return amfIssueLocalService.dynamicQuery(amfIssueLocalService.dynamicQuery()
+                .add(RestrictionsFactoryUtil.between("issueDate", firstDateOfMonth, lastDateOfMonth))
+        );
+    }
+
+    /**
+     * @param date
+     * @return
+     */
+    @SneakyThrows
+    public List<AMFIssue> getAMFIssuesWithinYear(Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date firstDateOfYear = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.firstDayOfYear()).toString());
+        Date lastDateOfYear = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.lastDayOfYear()).toString());
+
+        return amfIssueLocalService.dynamicQuery(amfIssueLocalService.dynamicQuery()
+                .add(RestrictionsFactoryUtil.between("issueDate", firstDateOfYear, lastDateOfYear))
+        );
+    }
+
+    /**
+     * @param date
+     * @param issueNumber
+     * @return
+     */
+    @SneakyThrows
+    public List<AMFIssue> getAMFIssuesWithinMonth(Date date, int issueNumber) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date firstDateOfMonth = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.firstDayOfMonth()).toString());
+        Date lastDateOfMonth = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.lastDayOfMonth()).toString());
+
+        return amfIssueLocalService.dynamicQuery(amfIssueLocalService.dynamicQuery()
+                .add(RestrictionsFactoryUtil.le("issueNumber", issueNumber))
+                .add(RestrictionsFactoryUtil.between("issueDate", firstDateOfMonth, lastDateOfMonth))
+        );
+    }
 }

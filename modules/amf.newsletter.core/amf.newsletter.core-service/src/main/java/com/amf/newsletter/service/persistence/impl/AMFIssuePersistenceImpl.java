@@ -55,6 +55,8 @@ import java.io.Serializable;
 
 import java.lang.reflect.InvocationHandler;
 
+import java.sql.Timestamp;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1803,6 +1805,538 @@ public class AMFIssuePersistenceImpl
 	private static final String _FINDER_COLUMN_AMFISSUEID_AMFISSUEID_2 =
 		"amfIssue.amfIssueId = ?";
 
+	private FinderPath _finderPathWithPaginationFindByAMFIssueDate;
+	private FinderPath _finderPathWithoutPaginationFindByAMFIssueDate;
+	private FinderPath _finderPathCountByAMFIssueDate;
+
+	/**
+	 * Returns all the amf issues where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @return the matching amf issues
+	 */
+	@Override
+	public List<AMFIssue> findByAMFIssueDate(Date issueDate) {
+		return findByAMFIssueDate(
+			issueDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the amf issues where issueDate = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFIssueModelImpl</code>.
+	 * </p>
+	 *
+	 * @param issueDate the issue date
+	 * @param start the lower bound of the range of amf issues
+	 * @param end the upper bound of the range of amf issues (not inclusive)
+	 * @return the range of matching amf issues
+	 */
+	@Override
+	public List<AMFIssue> findByAMFIssueDate(
+		Date issueDate, int start, int end) {
+
+		return findByAMFIssueDate(issueDate, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the amf issues where issueDate = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFIssueModelImpl</code>.
+	 * </p>
+	 *
+	 * @param issueDate the issue date
+	 * @param start the lower bound of the range of amf issues
+	 * @param end the upper bound of the range of amf issues (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching amf issues
+	 */
+	@Override
+	public List<AMFIssue> findByAMFIssueDate(
+		Date issueDate, int start, int end,
+		OrderByComparator<AMFIssue> orderByComparator) {
+
+		return findByAMFIssueDate(
+			issueDate, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the amf issues where issueDate = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFIssueModelImpl</code>.
+	 * </p>
+	 *
+	 * @param issueDate the issue date
+	 * @param start the lower bound of the range of amf issues
+	 * @param end the upper bound of the range of amf issues (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching amf issues
+	 */
+	@Override
+	public List<AMFIssue> findByAMFIssueDate(
+		Date issueDate, int start, int end,
+		OrderByComparator<AMFIssue> orderByComparator, boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByAMFIssueDate;
+				finderArgs = new Object[] {_getTime(issueDate)};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByAMFIssueDate;
+			finderArgs = new Object[] {
+				_getTime(issueDate), start, end, orderByComparator
+			};
+		}
+
+		List<AMFIssue> list = null;
+
+		if (useFinderCache) {
+			list = (List<AMFIssue>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (AMFIssue amfIssue : list) {
+					if (!Objects.equals(issueDate, amfIssue.getIssueDate())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(3);
+			}
+
+			sb.append(_SQL_SELECT_AMFISSUE_WHERE);
+
+			boolean bindIssueDate = false;
+
+			if (issueDate == null) {
+				sb.append(_FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_1);
+			}
+			else {
+				bindIssueDate = true;
+
+				sb.append(_FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_2);
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(AMFIssueModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindIssueDate) {
+					queryPos.add(new Timestamp(issueDate.getTime()));
+				}
+
+				list = (List<AMFIssue>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching amf issue
+	 * @throws NoSuchAMFIssueException if a matching amf issue could not be found
+	 */
+	@Override
+	public AMFIssue findByAMFIssueDate_First(
+			Date issueDate, OrderByComparator<AMFIssue> orderByComparator)
+		throws NoSuchAMFIssueException {
+
+		AMFIssue amfIssue = fetchByAMFIssueDate_First(
+			issueDate, orderByComparator);
+
+		if (amfIssue != null) {
+			return amfIssue;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("issueDate=");
+		sb.append(issueDate);
+
+		sb.append("}");
+
+		throw new NoSuchAMFIssueException(sb.toString());
+	}
+
+	/**
+	 * Returns the first amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching amf issue, or <code>null</code> if a matching amf issue could not be found
+	 */
+	@Override
+	public AMFIssue fetchByAMFIssueDate_First(
+		Date issueDate, OrderByComparator<AMFIssue> orderByComparator) {
+
+		List<AMFIssue> list = findByAMFIssueDate(
+			issueDate, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching amf issue
+	 * @throws NoSuchAMFIssueException if a matching amf issue could not be found
+	 */
+	@Override
+	public AMFIssue findByAMFIssueDate_Last(
+			Date issueDate, OrderByComparator<AMFIssue> orderByComparator)
+		throws NoSuchAMFIssueException {
+
+		AMFIssue amfIssue = fetchByAMFIssueDate_Last(
+			issueDate, orderByComparator);
+
+		if (amfIssue != null) {
+			return amfIssue;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("issueDate=");
+		sb.append(issueDate);
+
+		sb.append("}");
+
+		throw new NoSuchAMFIssueException(sb.toString());
+	}
+
+	/**
+	 * Returns the last amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching amf issue, or <code>null</code> if a matching amf issue could not be found
+	 */
+	@Override
+	public AMFIssue fetchByAMFIssueDate_Last(
+		Date issueDate, OrderByComparator<AMFIssue> orderByComparator) {
+
+		int count = countByAMFIssueDate(issueDate);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<AMFIssue> list = findByAMFIssueDate(
+			issueDate, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the amf issues before and after the current amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param amfIssueId the primary key of the current amf issue
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next amf issue
+	 * @throws NoSuchAMFIssueException if a amf issue with the primary key could not be found
+	 */
+	@Override
+	public AMFIssue[] findByAMFIssueDate_PrevAndNext(
+			long amfIssueId, Date issueDate,
+			OrderByComparator<AMFIssue> orderByComparator)
+		throws NoSuchAMFIssueException {
+
+		AMFIssue amfIssue = findByPrimaryKey(amfIssueId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			AMFIssue[] array = new AMFIssueImpl[3];
+
+			array[0] = getByAMFIssueDate_PrevAndNext(
+				session, amfIssue, issueDate, orderByComparator, true);
+
+			array[1] = amfIssue;
+
+			array[2] = getByAMFIssueDate_PrevAndNext(
+				session, amfIssue, issueDate, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected AMFIssue getByAMFIssueDate_PrevAndNext(
+		Session session, AMFIssue amfIssue, Date issueDate,
+		OrderByComparator<AMFIssue> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(3);
+		}
+
+		sb.append(_SQL_SELECT_AMFISSUE_WHERE);
+
+		boolean bindIssueDate = false;
+
+		if (issueDate == null) {
+			sb.append(_FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_1);
+		}
+		else {
+			bindIssueDate = true;
+
+			sb.append(_FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(AMFIssueModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		if (bindIssueDate) {
+			queryPos.add(new Timestamp(issueDate.getTime()));
+		}
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(amfIssue)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<AMFIssue> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the amf issues where issueDate = &#63; from the database.
+	 *
+	 * @param issueDate the issue date
+	 */
+	@Override
+	public void removeByAMFIssueDate(Date issueDate) {
+		for (AMFIssue amfIssue :
+				findByAMFIssueDate(
+					issueDate, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+
+			remove(amfIssue);
+		}
+	}
+
+	/**
+	 * Returns the number of amf issues where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @return the number of matching amf issues
+	 */
+	@Override
+	public int countByAMFIssueDate(Date issueDate) {
+		FinderPath finderPath = _finderPathCountByAMFIssueDate;
+
+		Object[] finderArgs = new Object[] {_getTime(issueDate)};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_AMFISSUE_WHERE);
+
+			boolean bindIssueDate = false;
+
+			if (issueDate == null) {
+				sb.append(_FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_1);
+			}
+			else {
+				bindIssueDate = true;
+
+				sb.append(_FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindIssueDate) {
+					queryPos.add(new Timestamp(issueDate.getTime()));
+				}
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_1 =
+		"amfIssue.issueDate IS NULL";
+
+	private static final String _FINDER_COLUMN_AMFISSUEDATE_ISSUEDATE_2 =
+		"amfIssue.issueDate = ?";
+
 	public AMFIssuePersistenceImpl() {
 		Map<String, String> dbColumnNames = new HashMap<String, String>();
 
@@ -2747,6 +3281,24 @@ public class AMFIssuePersistenceImpl
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByAMFIssueId",
 			new String[] {Long.class.getName()}, new String[] {"amfIssueId"},
 			false);
+
+		_finderPathWithPaginationFindByAMFIssueDate = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByAMFIssueDate",
+			new String[] {
+				Date.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			},
+			new String[] {"issueDate"}, true);
+
+		_finderPathWithoutPaginationFindByAMFIssueDate = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByAMFIssueDate",
+			new String[] {Date.class.getName()}, new String[] {"issueDate"},
+			true);
+
+		_finderPathCountByAMFIssueDate = _createFinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByAMFIssueDate",
+			new String[] {Date.class.getName()}, new String[] {"issueDate"},
+			false);
 	}
 
 	@Deactivate
@@ -2800,6 +3352,14 @@ public class AMFIssuePersistenceImpl
 	protected FinderCache finderCache;
 
 	protected TableMapper<AMFIssue, AMFArticle> amfIssueToAMFArticleTableMapper;
+
+	private static Long _getTime(Date date) {
+		if (date == null) {
+			return null;
+		}
+
+		return date.getTime();
+	}
 
 	private static final String _SQL_SELECT_AMFISSUE =
 		"SELECT amfIssue FROM AMFIssue amfIssue";

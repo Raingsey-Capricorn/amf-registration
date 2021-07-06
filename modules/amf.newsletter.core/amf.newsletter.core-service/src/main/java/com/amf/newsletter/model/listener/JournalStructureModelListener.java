@@ -156,7 +156,7 @@ public class JournalStructureModelListener extends BaseModelListener<JournalArti
                     issueNumber = Integer.parseInt(document.selectSingleNode("/root/dynamic-element[@name='issueNumber']/dynamic-content").getText());
                 }
                 if (AMFIssueCacheModel.class.getDeclaredField(fName) != null && fName.equals("issueDate")) {
-                    issueDate = new SimpleDateFormat("dd-mm-yyyy").parse(document.selectSingleNode("/root/dynamic-element[@name='issueDate']/dynamic-content").getText());
+                    issueDate = new SimpleDateFormat("yyyy-MM-dd").parse(document.selectSingleNode("/root/dynamic-element[@name='issueDate']/dynamic-content").getText());
                 }
                 if (AMFIssueCacheModel.class.getDeclaredField(fName) != null && fName.equals("description")) {
                     description = document.selectSingleNode("/root/dynamic-element[@name='description']/dynamic-content").getText();

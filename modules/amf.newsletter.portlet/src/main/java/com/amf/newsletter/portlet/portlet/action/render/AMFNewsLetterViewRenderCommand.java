@@ -4,16 +4,17 @@ import com.amf.newsletter.model.AMFArticle;
 import com.amf.newsletter.model.AMFIssue;
 import com.amf.newsletter.portlet.constants.AMFNewsletterCommandNames;
 import com.amf.newsletter.portlet.constants.AMFNewsletterPortletKeys;
-import com.amf.newsletter.service.AMFArticleLocalServiceUtil;
-import com.amf.newsletter.service.AMFIssueLocalServiceUtil;
+import com.amf.newsletter.service.*;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -91,6 +92,11 @@ public class AMFNewsLetterViewRenderCommand implements MVCRenderCommand {
         renderRequest.setAttribute("amfAMFIssues", amfAMFIssues);
         renderRequest.setAttribute("amfAMFArticles", Arrays.asList(articleOne, articleTwo, articleThree, articleFour));
         renderRequest.setAttribute("amfAMFIssueCount", amfAMFIssues.size());
+
         return "/view.jsp";
     }
+
+    /*
+    @Reference
+    private AMFArticleService amfArticleLocalService;*/
 }

@@ -287,6 +287,17 @@ public class AMFIssueLocalServiceWrapper
 			uuid, groupId);
 	}
 
+	/**
+	 * @param issueDate
+	 * @return
+	 */
+	@Override
+	public java.util.List<com.amf.newsletter.model.AMFIssue> findByAMFIssueDate(
+		java.util.Date issueDate) {
+
+		return _amfIssueLocalService.findByAMFIssueDate(issueDate);
+	}
+
 	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
@@ -428,6 +439,36 @@ public class AMFIssueLocalServiceWrapper
 	@Override
 	public int getAMFIssuesCount() {
 		return _amfIssueLocalService.getAMFIssuesCount();
+	}
+
+	/**
+	 * @param date
+	 * @return
+	 */
+	@Override
+	public java.util.List<com.amf.newsletter.model.AMFIssue>
+		getAMFIssuesWithinMonth(java.util.Date date) {
+
+		return _amfIssueLocalService.getAMFIssuesWithinMonth(date);
+	}
+
+	/**
+	 * @param date
+	 * @param issueNumber
+	 * @return
+	 */
+	@Override
+	public java.util.List<com.amf.newsletter.model.AMFIssue>
+		getAMFIssuesWithinMonth(java.util.Date date, int issueNumber) {
+
+		return _amfIssueLocalService.getAMFIssuesWithinMonth(date, issueNumber);
+	}
+
+	@Override
+	public java.util.List<com.amf.newsletter.model.AMFIssue>
+		getAMFIssuesWithinYear(java.util.Date date) {
+
+		return _amfIssueLocalService.getAMFIssuesWithinYear(date);
 	}
 
 	@Override

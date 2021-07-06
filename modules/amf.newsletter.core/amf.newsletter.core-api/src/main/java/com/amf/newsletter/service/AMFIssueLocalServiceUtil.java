@@ -278,6 +278,16 @@ public class AMFIssueLocalServiceUtil {
 		return getService().fetchAMFIssueByUuidAndGroupId(uuid, groupId);
 	}
 
+	/**
+	 * @param issueDate
+	 * @return
+	 */
+	public static java.util.List<com.amf.newsletter.model.AMFIssue>
+		findByAMFIssueDate(java.util.Date issueDate) {
+
+		return getService().findByAMFIssueDate(issueDate);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 
@@ -405,6 +415,33 @@ public class AMFIssueLocalServiceUtil {
 	 */
 	public static int getAMFIssuesCount() {
 		return getService().getAMFIssuesCount();
+	}
+
+	/**
+	 * @param date
+	 * @return
+	 */
+	public static java.util.List<com.amf.newsletter.model.AMFIssue>
+		getAMFIssuesWithinMonth(java.util.Date date) {
+
+		return getService().getAMFIssuesWithinMonth(date);
+	}
+
+	/**
+	 * @param date
+	 * @param issueNumber
+	 * @return
+	 */
+	public static java.util.List<com.amf.newsletter.model.AMFIssue>
+		getAMFIssuesWithinMonth(java.util.Date date, int issueNumber) {
+
+		return getService().getAMFIssuesWithinMonth(date, issueNumber);
+	}
+
+	public static java.util.List<com.amf.newsletter.model.AMFIssue>
+		getAMFIssuesWithinYear(java.util.Date date) {
+
+		return getService().getAMFIssuesWithinYear(date);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery

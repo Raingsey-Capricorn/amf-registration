@@ -19,6 +19,8 @@ import com.amf.newsletter.model.AMFIssue;
 
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
 
+import java.util.Date;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -514,6 +516,149 @@ public interface AMFIssuePersistence extends BasePersistence<AMFIssue> {
 	 * @return the number of matching amf issues
 	 */
 	public int countByAMFIssueId(long amfIssueId);
+
+	/**
+	 * Returns all the amf issues where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @return the matching amf issues
+	 */
+	public java.util.List<AMFIssue> findByAMFIssueDate(Date issueDate);
+
+	/**
+	 * Returns a range of all the amf issues where issueDate = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFIssueModelImpl</code>.
+	 * </p>
+	 *
+	 * @param issueDate the issue date
+	 * @param start the lower bound of the range of amf issues
+	 * @param end the upper bound of the range of amf issues (not inclusive)
+	 * @return the range of matching amf issues
+	 */
+	public java.util.List<AMFIssue> findByAMFIssueDate(
+		Date issueDate, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the amf issues where issueDate = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFIssueModelImpl</code>.
+	 * </p>
+	 *
+	 * @param issueDate the issue date
+	 * @param start the lower bound of the range of amf issues
+	 * @param end the upper bound of the range of amf issues (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching amf issues
+	 */
+	public java.util.List<AMFIssue> findByAMFIssueDate(
+		Date issueDate, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<AMFIssue>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the amf issues where issueDate = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>AMFIssueModelImpl</code>.
+	 * </p>
+	 *
+	 * @param issueDate the issue date
+	 * @param start the lower bound of the range of amf issues
+	 * @param end the upper bound of the range of amf issues (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching amf issues
+	 */
+	public java.util.List<AMFIssue> findByAMFIssueDate(
+		Date issueDate, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<AMFIssue>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching amf issue
+	 * @throws NoSuchAMFIssueException if a matching amf issue could not be found
+	 */
+	public AMFIssue findByAMFIssueDate_First(
+			Date issueDate,
+			com.liferay.portal.kernel.util.OrderByComparator<AMFIssue>
+				orderByComparator)
+		throws NoSuchAMFIssueException;
+
+	/**
+	 * Returns the first amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching amf issue, or <code>null</code> if a matching amf issue could not be found
+	 */
+	public AMFIssue fetchByAMFIssueDate_First(
+		Date issueDate,
+		com.liferay.portal.kernel.util.OrderByComparator<AMFIssue>
+			orderByComparator);
+
+	/**
+	 * Returns the last amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching amf issue
+	 * @throws NoSuchAMFIssueException if a matching amf issue could not be found
+	 */
+	public AMFIssue findByAMFIssueDate_Last(
+			Date issueDate,
+			com.liferay.portal.kernel.util.OrderByComparator<AMFIssue>
+				orderByComparator)
+		throws NoSuchAMFIssueException;
+
+	/**
+	 * Returns the last amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching amf issue, or <code>null</code> if a matching amf issue could not be found
+	 */
+	public AMFIssue fetchByAMFIssueDate_Last(
+		Date issueDate,
+		com.liferay.portal.kernel.util.OrderByComparator<AMFIssue>
+			orderByComparator);
+
+	/**
+	 * Returns the amf issues before and after the current amf issue in the ordered set where issueDate = &#63;.
+	 *
+	 * @param amfIssueId the primary key of the current amf issue
+	 * @param issueDate the issue date
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next amf issue
+	 * @throws NoSuchAMFIssueException if a amf issue with the primary key could not be found
+	 */
+	public AMFIssue[] findByAMFIssueDate_PrevAndNext(
+			long amfIssueId, Date issueDate,
+			com.liferay.portal.kernel.util.OrderByComparator<AMFIssue>
+				orderByComparator)
+		throws NoSuchAMFIssueException;
+
+	/**
+	 * Removes all the amf issues where issueDate = &#63; from the database.
+	 *
+	 * @param issueDate the issue date
+	 */
+	public void removeByAMFIssueDate(Date issueDate);
+
+	/**
+	 * Returns the number of amf issues where issueDate = &#63;.
+	 *
+	 * @param issueDate the issue date
+	 * @return the number of matching amf issues
+	 */
+	public int countByAMFIssueDate(Date issueDate);
 
 	/**
 	 * Caches the amf issue in the entity cache if it is enabled.

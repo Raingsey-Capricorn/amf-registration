@@ -36,7 +36,10 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.*;
 import java.util.List;
+
+import lombok.SneakyThrows;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -225,6 +228,12 @@ public interface AMFIssueLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AMFIssue fetchAMFIssueByUuidAndGroupId(String uuid, long groupId);
 
+	/**
+	 * @param issueDate
+	 * @return
+	 */
+	public List<AMFIssue> findByAMFIssueDate(java.util.Date issueDate);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
@@ -321,6 +330,28 @@ public interface AMFIssueLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getAMFIssuesCount();
+
+	/**
+	 * @param date
+	 * @return
+	 */
+	@SneakyThrows
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFIssue> getAMFIssuesWithinMonth(java.util.Date date);
+
+	/**
+	 * @param date
+	 * @param issueNumber
+	 * @return
+	 */
+	@SneakyThrows
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFIssue> getAMFIssuesWithinMonth(
+		java.util.Date date, int issueNumber);
+
+	@SneakyThrows
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFIssue> getAMFIssuesWithinYear(java.util.Date date);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(

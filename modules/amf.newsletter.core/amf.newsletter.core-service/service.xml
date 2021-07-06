@@ -42,6 +42,10 @@
             <finder-column name="amfIssueId"/>
         </finder>
 
+        <finder name="AMFIssueDate" return-type="Collection">
+            <finder-column name="issueDate"/>
+        </finder>
+
         <!-- References -->
         <reference entity="AMFArticle" package-path="com.amf.newsletter"/>
         <reference entity="AssetEntry" package-path="com.liferay.portlet.asset"/>
