@@ -1,6 +1,4 @@
-<%@ page language="java" pageEncoding="UTF-8" %>
 <%@ include file="/META-INF/resources/init.jsp" %>
-<%@ taglib prefix="liferay-ui" uri="http://liferay.com/tld/ui" %>
 <%
 	final String dynamicTabName = "2021,2020,2019,2018";
 %>

@@ -438,6 +438,10 @@ public class AMFIssueLocalServiceUtil {
 		return getService().getAMFIssuesWithinMonth(date, issueNumber);
 	}
 
+	/**
+	 * @param date
+	 * @return
+	 */
 	public static java.util.List<com.amf.newsletter.model.AMFIssue>
 		getAMFIssuesWithinYear(java.util.Date date) {
 
@@ -476,12 +480,6 @@ public class AMFIssueLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
-	}
-
-	public static java.util.List<com.amf.newsletter.model.AMFIssue>
-		getSampleAMFAmfIssues() {
-
-		return getService().getSampleAMFAmfIssues();
 	}
 
 	public static boolean hasAMFArticleAMFIssue(

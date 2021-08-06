@@ -36,7 +36,10 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
+
+import lombok.SneakyThrows;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -268,6 +271,16 @@ public interface AMFArticleLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AMFArticle> getAMFArticles(int start, int end);
+
+	/**
+	 * @param issueNumber
+	 * @param date
+	 * @return
+	 */
+	@SneakyThrows
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AMFArticle> getAMFArticlesByIssueNumberWithinMonth(
+		int issueNumber, Date date);
 
 	/**
 	 * Returns the number of amf articles.

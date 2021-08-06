@@ -332,6 +332,19 @@ public class AMFArticleLocalServiceUtil {
 	}
 
 	/**
+	 * @param issueNumber
+	 * @param date
+	 * @return
+	 */
+	public static java.util.List<com.amf.newsletter.model.AMFArticle>
+		getAMFArticlesByIssueNumberWithinMonth(
+			int issueNumber, java.util.Date date) {
+
+		return getService().getAMFArticlesByIssueNumberWithinMonth(
+			issueNumber, date);
+	}
+
+	/**
 	 * Returns the number of amf articles.
 	 *
 	 * @return the number of amf articles

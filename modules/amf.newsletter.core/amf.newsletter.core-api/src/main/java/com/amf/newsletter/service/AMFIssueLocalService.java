@@ -349,6 +349,10 @@ public interface AMFIssueLocalService
 	public List<AMFIssue> getAMFIssuesWithinMonth(
 		java.util.Date date, int issueNumber);
 
+	/**
+	 * @param date
+	 * @return
+	 */
 	@SneakyThrows
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AMFIssue> getAMFIssuesWithinYear(java.util.Date date);
@@ -374,9 +378,6 @@ public interface AMFIssueLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AMFIssue> getSampleAMFAmfIssues();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasAMFArticleAMFIssue(long amfArticleId, long amfIssueId);

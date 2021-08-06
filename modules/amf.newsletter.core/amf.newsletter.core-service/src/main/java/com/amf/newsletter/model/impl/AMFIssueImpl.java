@@ -15,7 +15,9 @@
 package com.amf.newsletter.model.impl;
 
 import com.amf.newsletter.model.AMFArticle;
+import com.amf.newsletter.model.AMFIssue;
 import com.amf.newsletter.service.AMFArticleLocalServiceUtil;
+import com.amf.newsletter.service.AMFIssueLocalServiceUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -44,7 +46,7 @@ public class AMFIssueImpl extends AMFIssueBaseImpl {
      */
     @Override
     public List<AMFArticle> getAMFArticles() {
-        return AMFArticleLocalServiceUtil.getAMFIssueAMFArticles(getAmfIssueId());
+        return AMFArticleLocalServiceUtil.getAMFArticlesByIssueNumberWithinMonth(getIssueNumber(), getCreateDate());
     }
 
     /**
@@ -61,5 +63,13 @@ public class AMFIssueImpl extends AMFIssueBaseImpl {
     @Override
     public String getIssueDateFormatAsMonth() {
         return new SimpleDateFormat("MMMM").format(getIssueDate());
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<AMFIssue> getIssuesWithinMonth() {
+        return AMFIssueLocalServiceUtil.getAMFIssuesWithinMonth(getIssueDate());
     }
 }

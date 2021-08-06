@@ -21,13 +21,20 @@ import com.amf.newsletter.service.AMFIssueLocalServiceUtil;
 import com.amf.newsletter.service.base.AMFArticleLocalServiceBaseImpl;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
+import com.liferay.petra.sql.dsl.spi.query.OrderBy;
 import com.liferay.portal.aop.AopService;
 
+import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import lombok.SneakyThrows;
 import org.osgi.service.component.annotations.Component;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -55,4 +62,21 @@ public class AMFArticleLocalServiceImpl extends AMFArticleLocalServiceBaseImpl {
      *
      * Never reference this class directly. Use <code>com.amf.newsletter.service.AMFArticleLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>com.amf.newsletter.service.AMFArticleLocalServiceUtil</code>.
      */
+    /**
+     * @param issueNumber
+     * @param date
+     * @return
+     */
+    @SneakyThrows
+    public List<AMFArticle> getAMFArticlesByIssueNumberWithinMonth(int issueNumber, Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date firstDateOfMonth = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.firstDayOfMonth()).toString());
+        Date lastDateOfMonth = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.with(TemporalAdjusters.lastDayOfMonth()).toString());
+
+        return amfArticleLocalService.dynamicQuery(amfArticleLocalService.dynamicQuery()
+                .add(RestrictionsFactoryUtil.eq("issueNumber", issueNumber))
+                .add(RestrictionsFactoryUtil.between("createDate", firstDateOfMonth, lastDateOfMonth))
+                .addOrder(OrderFactoryUtil.desc("createDate"))
+        );
+    }
 }

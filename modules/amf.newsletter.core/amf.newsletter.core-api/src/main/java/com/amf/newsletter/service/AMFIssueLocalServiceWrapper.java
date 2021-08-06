@@ -464,6 +464,10 @@ public class AMFIssueLocalServiceWrapper
 		return _amfIssueLocalService.getAMFIssuesWithinMonth(date, issueNumber);
 	}
 
+	/**
+	 * @param date
+	 * @return
+	 */
 	@Override
 	public java.util.List<com.amf.newsletter.model.AMFIssue>
 		getAMFIssuesWithinYear(java.util.Date date) {
@@ -507,13 +511,6 @@ public class AMFIssueLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _amfIssueLocalService.getPersistedModel(primaryKeyObj);
-	}
-
-	@Override
-	public java.util.List<com.amf.newsletter.model.AMFIssue>
-		getSampleAMFAmfIssues() {
-
-		return _amfIssueLocalService.getSampleAMFAmfIssues();
 	}
 
 	@Override

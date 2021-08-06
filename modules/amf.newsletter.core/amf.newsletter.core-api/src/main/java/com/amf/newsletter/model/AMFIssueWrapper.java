@@ -243,6 +243,14 @@ public class AMFIssueWrapper
 	}
 
 	/**
+	 * @return
+	 */
+	@Override
+	public java.util.List<AMFIssue> getIssuesWithinMonth() {
+		return model.getIssuesWithinMonth();
+	}
+
+	/**
 	 * Returns the journal ID of this amf issue.
 	 *
 	 * @return the journal ID of this amf issue

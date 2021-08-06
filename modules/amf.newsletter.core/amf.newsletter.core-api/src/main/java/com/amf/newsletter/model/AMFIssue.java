@@ -71,4 +71,9 @@ public interface AMFIssue extends AMFIssueModel, PersistedModel {
 	 */
 	public String getIssueDateFormatAsMonth();
 
+	/**
+	 * @return
+	 */
+	public java.util.List<AMFIssue> getIssuesWithinMonth();
+
 }
