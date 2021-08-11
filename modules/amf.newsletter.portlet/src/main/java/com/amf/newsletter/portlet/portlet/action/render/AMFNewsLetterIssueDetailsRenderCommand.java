@@ -1,8 +1,11 @@
 package com.amf.newsletter.portlet.portlet.action.render;
 
+import com.amf.newsletter.model.AMFIssue;
 import com.amf.newsletter.portlet.constants.AMFNewsletterCommandNames;
 import com.amf.newsletter.portlet.constants.AMFNewsletterPortletKeys;
+import com.amf.newsletter.service.AMFIssueLocalServiceUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.kernel.util.ParamUtil;
 import org.osgi.service.component.annotations.Component;
 
 import javax.portlet.PortletException;
@@ -35,11 +38,15 @@ public class AMFNewsLetterIssueDetailsRenderCommand implements MVCRenderCommand 
      */
     @Override
     public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
-        System.out.println();
-
-//        renderRequest.setAttribute("amfAMFIssues", amfAMFIssues);
-//        renderRequest.setAttribute("amfAMFArticles", Arrays.asList(articleOne, articleTwo, articleThree, articleFour));
-//        renderRequest.setAttribute("amfAMFIssueCount", amfAMFIssues.size());
+        AMFIssue amfIssue;
+        long issueId = ParamUtil.getLong(renderRequest, "issueId");
+        if (issueId > 0) {
+            amfIssue = AMFIssueLocalServiceUtil.fetchAMFIssue(issueId);
+            renderRequest.getPortletSession().setAttribute("amfIssue", amfIssue);
+        } else {
+            amfIssue = (AMFIssue) renderRequest.getPortletSession().getAttribute("amfIssue");
+        }
+        renderRequest.setAttribute("amfIssue", amfIssue);
         return "/fragments/sections/issue-details.jsp";
     }
 }

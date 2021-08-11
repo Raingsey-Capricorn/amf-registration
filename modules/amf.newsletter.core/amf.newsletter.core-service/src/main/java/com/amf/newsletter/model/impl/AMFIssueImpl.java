@@ -15,12 +15,14 @@
 package com.amf.newsletter.model.impl;
 
 import com.amf.newsletter.model.AMFArticle;
+import com.amf.newsletter.model.AMFArticleModel;
 import com.amf.newsletter.model.AMFIssue;
 import com.amf.newsletter.service.AMFArticleLocalServiceUtil;
 import com.amf.newsletter.service.AMFIssueLocalServiceUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The extended model implementation for the AMFIssue service. Represents a row in the &quot;amf_issue&quot; database table, with each column mapped to a property of this class.
@@ -71,5 +73,10 @@ public class AMFIssueImpl extends AMFIssueBaseImpl {
     @Override
     public List<AMFIssue> getIssuesWithinMonth() {
         return AMFIssueLocalServiceUtil.getAMFIssuesWithinMonth(getIssueDate());
+    }
+
+    @Override
+    public List<String> getByLines() {
+        return getAMFArticles().stream().map(AMFArticleModel::getAuthor).collect(Collectors.toList());
     }
 }

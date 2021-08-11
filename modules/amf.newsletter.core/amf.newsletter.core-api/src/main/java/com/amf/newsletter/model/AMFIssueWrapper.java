@@ -166,6 +166,11 @@ public class AMFIssueWrapper
 		return model.getAmfIssueId();
 	}
 
+	@Override
+	public java.util.List<String> getByLines() {
+		return model.getByLines();
+	}
+
 	/**
 	 * Returns the company ID of this amf issue.
 	 *

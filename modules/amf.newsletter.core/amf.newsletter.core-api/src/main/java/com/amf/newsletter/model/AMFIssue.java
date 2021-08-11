@@ -76,4 +76,6 @@ public interface AMFIssue extends AMFIssueModel, PersistedModel {
 	 */
 	public java.util.List<AMFIssue> getIssuesWithinMonth();
 
+	public java.util.List<String> getByLines();
+
 }

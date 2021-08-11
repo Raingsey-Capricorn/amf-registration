@@ -104,7 +104,7 @@ public class AMFArticleModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table amf_article (uuid_ VARCHAR(75) null,amfArticleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,issueNumber INTEGER,title VARCHAR(75) null,author VARCHAR(75) null,order_ INTEGER,content VARCHAR(75) null,journalId LONG)";
+		"create table amf_article (uuid_ VARCHAR(75) null,amfArticleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,issueNumber INTEGER,title VARCHAR(75) null,author VARCHAR(75) null,order_ INTEGER,content VARCHAR(500) null,journalId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table amf_article";
 

@@ -3,19 +3,21 @@
 }
 
 .issue-release-title {
-  color: cornflowerblue;
   font-weight: 400;
+  background-color: transparent !important;
+  border: none !important;
+  color: cornflowerblue !important;
 }
+
+.issue-release-title:hover {
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+
 
 .issue-title {
   font-weight: bold;
   font-size: large;
-  color: cornflowerblue !important;
-}
-
-.article-title {
-  font-weight: bold;
-  font-size: medium;
   color: cornflowerblue !important;
 }
 
@@ -26,7 +28,6 @@
 }
 
 .issue-month-tab-title > div.panel-heading {
-  background-color: lightskyblue;
   width: 100% !important;
   padding-left: 20px;
 }
@@ -38,7 +39,6 @@
 
 .issue-month-tab-container > div > div > div > table {
   border: solid white 1px !important;
-  margin-left: 2%;
   width: 96.5% !important;
 }
 
@@ -55,7 +55,14 @@
 
 .article-title {
   font-weight: 403;
-  color: deepskyblue;
   font-size: larger;
   margin-left: 20px;
+  background-color: transparent !important;
+  border: none !important;
+  color: cornflowerblue !important;
+}
+
+.article-title:hover {
+  text-decoration: underline !important;
+  cursor: pointer;
 }

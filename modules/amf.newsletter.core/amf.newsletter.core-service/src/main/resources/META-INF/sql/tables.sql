@@ -17,7 +17,7 @@ create table amf_article (
 	title VARCHAR(75) null,
 	author VARCHAR(75) null,
 	order_ INTEGER,
-	content VARCHAR(75) null,
+	content VARCHAR(500) null,
 	journalId LONG
 );
 

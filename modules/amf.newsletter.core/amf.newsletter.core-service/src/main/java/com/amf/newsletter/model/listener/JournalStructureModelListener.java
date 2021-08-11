@@ -87,7 +87,7 @@ public class JournalStructureModelListener extends BaseModelListener<JournalArti
                 if (AMFArticleCacheModel.class.getDeclaredField(fieldName) != null && fieldName.equals("author")) {
                     author = document.selectSingleNode("/root/dynamic-element[@name='author']/dynamic-content").getText();
                 }
-                if (AMFArticleCacheModel.class.getDeclaredField(fieldName) != null && fieldName.equals("description")) {
+                if (AMFArticleCacheModel.class.getDeclaredField(fieldName) != null && fieldName.equals("content")) {
                     content = document.selectSingleNode("/root/dynamic-element[@name='content']/dynamic-content").getText();
                 }
             } catch (Exception e) {
