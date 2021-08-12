@@ -11,6 +11,8 @@ import org.osgi.service.component.annotations.Component;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author : Raingsey
@@ -43,8 +45,13 @@ public class AMFNewsLetterIssueDetailsRenderCommand implements MVCRenderCommand 
         if (issueId > 0) {
             amfIssue = AMFIssueLocalServiceUtil.fetchAMFIssue(issueId);
             renderRequest.getPortletSession().setAttribute("amfIssue", amfIssue);
-        } else {
+        } else if (renderRequest.getPortletSession().getAttribute("amfIssue") != null) {
             amfIssue = (AMFIssue) renderRequest.getPortletSession().getAttribute("amfIssue");
+        } else{
+            List<AMFIssue> amfAMFIssues = AMFIssueLocalServiceUtil.getAMFIssuesWithinYear(new Date());
+            renderRequest.setAttribute("amfIssues", amfAMFIssues);
+            renderRequest.setAttribute("amfIssueCount", amfAMFIssues.size());
+            return "/view.jsp";
         }
         renderRequest.setAttribute("amfIssue", amfIssue);
         return "/fragments/sections/issue-details.jsp";

@@ -46,7 +46,10 @@
                                                     <aui:button id="articleLink"
                                                                 type="submit"
                                                                 cssClass="article-title"
+                                                                onClick="storeArticleId(this)"
                                                                 value="${article.title}"
+                                                                name="${article.amfArticleId}"
+                                                                useNamespace="false"
                                                     />
                                                 </li>
                                             </c:forEach>
@@ -63,12 +66,8 @@
     </c:forEach>
 </div>
 
-
-
-
-
-
-
-
-
-
+<script>
+    function storeArticleId(element) {
+        sessionStorage.setItem('articleId', element.name);
+    }
+</script>

@@ -27,3 +27,8 @@
     </c:forEach>
 
 </div>
+<script>
+    AUI().ready(function () {
+        document.getElementById(sessionStorage.getItem('articleId')).scrollIntoView();
+    });
+</script>
